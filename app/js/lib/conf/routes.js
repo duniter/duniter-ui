@@ -21,7 +21,8 @@ module.exports = (app) => {
       url: '/about',
       template: require('views/about'),
       resolve: {
-        version: () => (window.duniter && window.duniter.version) || 'unknown version'
+        summary: (BMA) => BMA.webmin.summary(),
+        version: (summary) => summary && 'v' + summary.version || 'unknown version'
       },
       controller: 'AboutController'
     }).

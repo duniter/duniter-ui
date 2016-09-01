@@ -106,9 +106,8 @@ module.exports = ($scope, $state, $http, $timeout, $interval, BMA, summary, UIUt
       openWindow(window.location.origin + '/#/about', {
         position: 'center',
         height: 380,
-        width: 500
+        width: 510
       }, function(subwin) {
-        subwin.window.duniter = window.duniter;
         subwin.window.gui = window.gui;
         subwin.on('closed', () => {
           aboutWin = null;
@@ -150,7 +149,7 @@ module.exports = ($scope, $state, $http, $timeout, $interval, BMA, summary, UIUt
     co(function*() {
       try {
         const latest = yield $http.get(LATEST_RELEASE_URL);
-        const local_string_version = (window.duniter && window.duniter.version) || ('v' + summary.version) || "";
+        const local_string_version = 'v' + summary.version;
         const m = local_string_version.match(/^v([\d.]+)([ab]?\d*)/);
         const localVersion = (m && m[1]) || "";
         const localSuffix = m && m[2];
