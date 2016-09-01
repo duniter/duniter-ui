@@ -80,5 +80,4 @@ module.exports = () => {
   homeControllers.controller('KeyController',              require('./controllers/main/settings/tabs/KeyController'));
   homeControllers.controller('GraphsController',           require('./controllers/main/graphs/GraphsController'));
   homeControllers.controller('GraphsBlockchainController', require('./controllers/main/graphs/GraphsBlockchainController'));
-  homeControllers.controller('GraphsAccountsController',   require('./controllers/main/graphs/GraphsAccountsController'));
 };

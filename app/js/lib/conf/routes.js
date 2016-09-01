@@ -220,18 +220,6 @@ module.exports = (app) => {
       controller: 'GraphsController'
     }).
 
-    state('main.graphs.accounts', {
-      url: '/accounts',
-      resolve: {
-        summary: (BMA) => BMA.webmin.summary(),
-        bmapi: (BMA, summary) => co(function *() {
-          return BMA.instance(summary.host);
-        })
-      },
-      template: require('views/main/graphs/accounts'),
-      controller: 'GraphsAccountsController'
-    }).
-
     state('main.graphs.blockchain', {
       url: '/blockchain',
       template: require('views/main/graphs/blockchain'),
