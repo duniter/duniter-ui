@@ -32,22 +32,18 @@ block content
           a.waves-effect.waves-light(ui-sref="main.home.overview")
             i.fa.fa-2x.fa-home.left
             span {{ 'top.menu.overview' | translate }}
+        li
+          a.waves-effect.waves-light(ng-click="openWallet()")
+            i.fa.fa-2x.fa-suitcase.left
+            span {{ 'top.menu.wallet' | translate }}
         li(ng-class="{ active: menu == 'graphs' }")
           a.waves-effect.waves-light(ui-sref="main.graphs.blockchain")
             i.fa.fa-2x.fa-database.left
             span {{ 'top.menu.data' | translate }}
         li(ng-class="{ active: menu == 'settings' }")
-          a.waves-effect.waves-light(ui-sref="main.settings.backup")
+          a.waves-effect.waves-light(ui-sref="main.settings.logs")
             i.fa.fa-2x.fa-gear.left
             span {{ 'top.menu.settings' | translate }}
-        li
-          a.waves-effect.waves-light(ng-click="openWallet()")
-            i.fa.fa-2x.fa-suitcase.left
-            span {{ 'top.menu.wallet' | translate }}
-        li
-          a.waves-effect.waves-light(ui-sref="logs" target="_blank")
-            i.fa.fa-2x.fa-align-left.left
-            span {{ 'top.menu.logs' | translate }}
       ul.right
         li: a.waves-effect.waves-light.dropdown-button(href="#!" data-activates="about" data-badge="{{ notifications.help.length }}"): i.material-icons info_outline
         li: a.waves-effect.waves-light.dropdown-button(href="#!" data-activates="serveractions"): i.material-icons more_vert

@@ -171,6 +171,12 @@ module.exports = (app) => {
       controller: 'DataController'
     }).
 
+    state('main.settings.logs', {
+      url: '/logs',
+      template: require('views/main/settings/tabs/logs'),
+      controller: 'LogsSettingsController'
+    }).
+
     state('main.settings.backup', {
       url: '/backup',
       template: require('views/main/settings/tabs/backup'),

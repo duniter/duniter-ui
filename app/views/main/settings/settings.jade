@@ -14,6 +14,9 @@ main.home-main.main-screen
     .row
       .col.s12
         ul.tabs
+          li.tab.col.s2: a(href="#main.settings.logs")
+            i.fa.fa-newspaper-o &nbsp;
+            = " {{ 'settings.tabs.logs' | translate }}"
           li.tab.col.s2: a(href="#main.settings.backup")
             i.fa.fa-folder-open &nbsp;
             = " {{ 'settings.tabs.backup' | translate }}"

@@ -1,0 +1,33 @@
+.container
+  .row
+    .s12.center
+      .card
+        .card-action
+          i.fa.fa-newspaper-o.fa-5x
+          h1.card-title(translate="settings.logs.title")
+          p(translate="settings.logs.consult.message")
+
+          .row
+            .col.s12
+              a.btn-large.waves-effect.waves-light(ui-sref="logs" target="_blank")
+                i.fa.fa-2x.fa-search.left
+                span {{ 'settings.logs.consult.button' | translate }}
+        .card-action
+
+          blockquote.left-align.blue.lighten-5(translate="settings.logs.share.message")
+
+          .row
+            .col.s12
+              a.blue.btn-large.waves-effect.waves-light(ng-click="shareLogs()" ng-class="{ disabled: generating }")
+                i.left.fa.fa-globe
+                span(translate="settings.logs.share.button")
+
+              pre.pre(ng-show="link || generating")
+                .preloader-wrapper.active.small(ng-if="generating")
+                  .spinner-layer.spinner-blue-only
+                    .circle-clipper.left
+                      .circle
+                div(ng-if="generating") {{ 'settings.logs.share.generating' | translate }}
+                a(ng-href="{{ link }}" target="_blank") {{ link }}
+
+              blockquote.left-align.red.lighten-5(ng-show="error") {{ 'settings.logs.share.error' | translate }} <b>{{ error }}</b>
