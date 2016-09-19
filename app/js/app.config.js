@@ -21,6 +21,10 @@ module.exports = () => {
   require('js/services/importer')(duniterApp);
   require('js/services/base58')(duniterApp);
 
+  window.onresize = () => {
+    window.onResize && window.onResize(window);
+  };
+
   window.openWindow = function openWindow(url, options, callback) {
     if (window.gui) {
       // Duniter Desktop
