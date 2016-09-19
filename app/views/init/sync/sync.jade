@@ -1,7 +1,7 @@
 main
   .container
     .row
-      form.s12.center
+      .s12.center
         .card
           .card-content
             i.fa.fa-cloud-download.fa-5x
@@ -9,25 +9,47 @@ main
             p(translate="sync.message")
 
           .card-action
-            .row
-              .input-field.col.s6.m5
-                i.prefix.material-icons language
-                input#host(type="text" ng-model="host")
-                label(for="host") {{ 'sync.host' | translate }}
+            form.row
+              .input-field.col.s12.m3
+                p
+                  input(type="radio", name="groupeMode", value="simplified", id="radio1", ng-model="sync_mode", ng-disabled="synchronizing")
+                  label(for="radio1") {{ 'sync.mode.simplified' | translate }}
+                p
+                  input(type="radio", name="groupeMode", value="manual", id="radio2", ng-model="sync_mode", ng-disabled="synchronizing")
+                  label(for="radio2") {{ 'sync.mode.manual' | translate }}
+              .input-field.col.s12.m6
+                .input-field.col.s12(ng-show="sync_mode == 'simplified'")
+                  select.browser-default(ng-model="simplified_host", ng-change="checkNode()", ng-disabled="synchronizing")
+                    option(value="", disabled, selected) {{ 'sync.simplified.default_option' | translate }}
+                    optgroup(label="{{ 'sync.simplified.currency' | translate }} « TestNet »")
+                      option(value="duniter.org:8999") duniter.org {{ 'sync.simplified.main_mirror' | translate }}
+                      option(value="test-net.duniter.fr:9201") test-net.duniter.fr {{ 'sync.simplified.official_mirror' | translate }}
+                  label {{ 'sync.simplified.choose' | translate }}
 
-              .input-field.col.s6.m3
-                i.prefix.fa.fa-plug
-                input#port(type="number" ng-model="port")
-                label(for="port") {{ 'sync.port' | translate }}
+                .input-field.col.s8(ng-show="sync_mode != 'simplified'")
+                  i.prefix.material-icons language
+                  input#host(type="text" ng-model="host")
+                  label(for="host") {{ 'sync.host' | translate }}
 
-              .col.s12.m4
+                .input-field.col.s4(ng-show="sync_mode != 'simplified'")
+                  i.prefix.fa.fa-plug
+                  input#port(type="number" ng-model="port")
+                  label(for="port") {{ 'sync.port' | translate }}
+
+              .col.s12.m3
                 .preloader-wrapper.active.small(ng-if="checking")
                   .spinner-layer.spinner-blue-only
                     .circle-clipper.left
                       .circle
-                button.btn-large.waves-effect.waves-light(ng-show="!checking" ng-disabled="!(host && port)|| synchronizing" ng-click="checkNode()")
-                  i.left.fa.fa-wifi
-                  span(translate="sync.check")
+                .input-field(ng-show="sync_mode != 'simplified'")
+                  button.btn-large.waves-effect.waves-light(ng-show="!checking" ng-disabled="synchronizing || (sync_mode != 'simplified' && !(host && port))" ng-click="checkNode()")
+                    i.left.fa.fa-wifi
+                    span(translate="sync.check")
+
+            .row
+              .col.s12
+                blockquote.card-panel.left-align(ng-show="sync_error") {{ sync_error | translate }}
+                blockquote.info.card-panel.left-align(ng-show="sync_message") {{ sync_message }}
 
             .row: button.btn-large.waves-effect.waves-light(ng-disabled="!checked_host || synchronizing" ng-click="startSync()")
               i.left.fa.fa-cloud-download

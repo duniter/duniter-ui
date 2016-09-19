@@ -7,6 +7,8 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
   let syncWS = BMA.webmin.ws();
 
   UIUtils.enableInputs();
+  $scope.sync_mode = 'simplified';
+  $scope.simplified_host = '';
   $scope.synchronizing = false;
   $scope.sync_failed = false;
   $scope.host = $stateParams.host || localStorage.getItem('sync_host') || '';
@@ -16,6 +18,13 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
   $scope.remote_current = null;
 
   $scope.checkNode = () => co(function *() {
+    $scope.checked_host = '';
+    $scope.sync_error = '';
+    $scope.sync_message = '';
+    if ($scope.sync_mode == 'simplified') {
+      $scope.host = $scope.simplified_host.split(':')[0];
+      $scope.port = parseInt($scope.simplified_host.split(':')[1]);
+    }
     $scope.checking = true;
     try {
       const current = yield BMA.webmin.server.testSync({
@@ -27,7 +36,14 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
         $scope.remote_current = current;
         $scope.checked_host = targetHost;
       }
+      UIUtils.toast('sync.ready.node.part1');
+      $timeout(() => {
+        if (!$scope.synchronizing) {
+          UIUtils.toast('sync.ready.node.part2');
+        }
+      }, 6000);
     } catch (e) {
+      $scope.sync_error = 'sync.error.unreachable.try.another.node';
     }
     $scope.checking = false;
     return $scope.checked_host ? true : false;
@@ -39,6 +55,7 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
     $scope.sync_failed = false;
     $scope.synchronizing = true;
     return co(function *() {
+      $scope.sync_message = (yield $translate('sync.started.node')) + ' ' + $scope.checked_host;
       let sp = $scope.checked_host.split(':');
       let translatedErr = yield $translate('err.sync.interrupted');
       syncWS.on(undefined, (data) => {
@@ -53,7 +70,7 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
           if (data.value === true) {
             $state.go('index');
           } else {
-            $state.go('error', { err: errorMessage });
+            $state.go('error', { err: (errorMessage) });
           }
         } else {
           let changed = true;
