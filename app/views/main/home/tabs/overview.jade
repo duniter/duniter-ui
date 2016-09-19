@@ -100,3 +100,23 @@
             span {{ monetaryMass }}&nbsp;UD
         .card-action
           p {{ 'home.current.mmass' | translate }}
+
+    .col.s6.m3
+      .card.proof-card
+        .card-content
+          i.fa.fa-dashboard.fa-5x
+          .card-title
+            span.proof-mesure {{ pow_total }}
+            span.proof-unit {{ 'home.pow.unit' | translate }}
+        .card-action
+          div(ng-show="!pow_waiting && lastNearPoW")
+            p.hash
+              span {{ lastNearPoW.slice(0,8) }}
+              .progress
+                .indeterminate
+          div(ng-show="pow_mirror")
+            p
+              span {{ 'home.pow.is_mirror' | translate }}
+          div(ng-show="!pow_mirror && pow_waiting")
+            p
+              span {{ 'home.pow.is_waiting' | translate }}

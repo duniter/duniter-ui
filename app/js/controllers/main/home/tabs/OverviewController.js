@@ -17,6 +17,8 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
 
   $(".dropdown-button").dropdown({ constrainwidth: false });
 
+  $scope.lastNearPoW = '';
+  $scope.totalPoW = '...';
   $scope.sync_state = 'home.pulling.state.unkown';
   $scope.network_percent = 0;
   $scope.peer_percent = 0;
@@ -31,6 +33,13 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
       $scope.sync_time = moment($scope.last_pulling).fromNow();
     }
   }, 1000);
+
+  $scope.loadPowData = () => co(function*() {
+    let res = yield BMA.webmin.powSummary();
+    $scope.pow_total = res.total;
+    $scope.pow_mirror = res.mirror;
+    $scope.pow_waiting = res.waiting;
+  });
 
   ws.on(undefined, (data) => {
     if (data.type === 'started') {
@@ -73,6 +82,16 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
         start_block = 0;
       }
     }
+    if (data.type === 'pow') {
+      const pow = data.value;
+      if (pow.found) {
+        $scope.lastNearPoW = '#' + pow.hash;
+        $scope.loadPowData();
+      } else {
+        $scope.pow_waiting = false;
+        $scope.lastNearPoW = '#' + pow.hash;
+      }
+    }
   });
 
   function bindBlockWS() {
@@ -113,7 +132,10 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   return co(function *() {
     yield $scope.startServer();
     try {
-      yield bmapi.origin.network.peering.self();
+      yield [
+        bmapi.origin.network.peering.self(),
+        $scope.loadPowData()
+      ];
     } catch (e) {
       console.log(e);
       $scope.should_reconfigure = true;

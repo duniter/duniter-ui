@@ -147,6 +147,7 @@ module.exports = (angular) => {
             getImportURL: () => httpProtocol() + server + '/webmin/data/duniter_import',
             ws: () => ws(wsProtocol() + server + '/webmin/ws'),
             summary: getResource('/webmin/summary'),
+            powSummary: getResource('/webmin/summary/pow'),
             logsExport: (nbLines) => getResource('/webmin/logs/export/' + nbLines)(),
             server: {
               http: {
