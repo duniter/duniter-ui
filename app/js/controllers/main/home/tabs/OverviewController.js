@@ -5,7 +5,9 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   let co = require('co');
   let moment = require('moment');
 
-  bindBlockWS();
+  bindBlockWS(() => {
+    $scope.loadPowData();
+  });
   const UD = summary.parameters.c * summary.current.monetaryMass / summary.current.membersCount;
   $scope.current = summary.current;
   $scope.monetaryMass = parseInt(summary.current.monetaryMass / UD);
@@ -86,7 +88,6 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
       const pow = data.value;
       if (pow.found) {
         $scope.lastNearPoW = '#' + pow.hash;
-        $scope.loadPowData();
       } else {
         $scope.pow_waiting = false;
         $scope.lastNearPoW = '#' + pow.hash;
@@ -94,10 +95,11 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
     }
   });
 
-  function bindBlockWS() {
+  function bindBlockWS(cb) {
     BMA.websocket.block().on(undefined, (block) => {
       $scope.current = block;
       $scope.$apply();
+      cb && cb();
     });
   }
   
