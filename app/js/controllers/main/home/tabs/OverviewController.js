@@ -87,10 +87,13 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
     if (data.type === 'pow') {
       const pow = data.value;
       if (pow.found) {
+        $scope.pow_waiting = true;
         $scope.lastNearPoW = '#' + pow.hash;
+        $scope.$apply();
       } else {
         $scope.pow_waiting = false;
         $scope.lastNearPoW = '#' + pow.hash;
+        $scope.$apply();
       }
     }
   });
