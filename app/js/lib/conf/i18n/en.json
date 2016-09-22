@@ -176,7 +176,7 @@
   "settings.data.reset.experimental": "This functionality is still considered experimental. If you encounters strange behaviors, please stop the software and reset manually your node by removing all the files BUT conf.json under ~/.config/ucoin/ucoin_default, and restart the software.",
   "settings.cpu.title": "CPU settings",
   "settings.cpu.message": "You can adjust the CPU power dedicated to proof-of-work computation. The higher the value, the faster is your node, the higher the chances you have to compute a block early.",
-  "settings.cpu.warning": "Only <b>one core</b> is dedicated to proof-of-work computation currently. Setting CPU to 100% does not mean 100% of all cores will be used, but only one of them. Also, the process won't really use 100% but rather more than 90% of the dedicated core.",
+  "settings.cpu.warning": "<b>Up to 8 cores</b> of your machine are dedicated to proof-of-work computation currently. Also, setting CPU to 100% does not mean Duniter will use 100% of each core, but will use as much as possible each of them, as a core is also shared with other programs.",
   "settings.cpu.range": "% of CPU power core dedicated to proof-of-work :",
   "settings.cpu.power": "Core power:",
   "settings.cpu.saved": "CPU settings saved.",
