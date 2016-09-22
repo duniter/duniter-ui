@@ -17,6 +17,7 @@ module.exports = ($scope, $state, BMA, summary, PubkeyGenerator) => {
     $scope.$parent.conf.idty_entropy = '';
     $scope.$parent.conf.idty_password = '';
     $state.reload();
+    $scope.restartServer();
   });
 
   PubkeyGenerator($scope);
