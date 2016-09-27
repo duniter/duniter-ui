@@ -1,7 +1,7 @@
 const
   request = require('request'),
   fs = require('fs'),
-  unzip = require('unzip');
+  unzip = require('unzip2');
 
 const CESIUM_RELEASE = '0.3.5';
 
