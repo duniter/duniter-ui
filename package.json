@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "adm-zip": "0.4.7",
+    "core-util-is": "1.0.2",
     "mocha": "2.2.5",
     "process-nextick-args": "1.0.7",
     "request": "2.31.0",
