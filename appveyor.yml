@@ -10,6 +10,7 @@ install:
   - echo %ADDON_VERSION%
   - ps: Install-Product node $env:nodejs_version $env:platform
   - node -v
-  - npm install -g npm
-  - npm install -g nw-gyp node-pre-gyp
   - npm install
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
