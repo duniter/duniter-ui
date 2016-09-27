@@ -23,12 +23,15 @@
     "underscore": "1.8.3"
   },
   "scripts": {
-    "postinstall": "node \"node_modules/bower/bin/bower\" install --allow-root && node \"node_modules/brunch/bin/brunch\" build && node cesium.js && mv cesium public/ && cp misc/cesium.js public/cesium/config.js"
+    "postinstall": "node \"node_modules/bower/bin/bower\" install --allow-root && node \"node_modules/brunch/bin/brunch\" build && node cesium.js && mv cesium public/ && cp misc/cesium.js public/cesium/config.js",
+    "test": "mocha --growl tests/"
   },
   "devDependencies": {
     "adm-zip": "0.4.7",
+    "mocha": "2.2.5",
     "process-nextick-args": "1.0.7",
     "request": "2.31.0",
+    "should": "11.1.0",
     "tmp": "0.0.29",
     "util-deprecate": "1.0.2"
   }
