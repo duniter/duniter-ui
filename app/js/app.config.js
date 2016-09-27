@@ -21,6 +21,10 @@ module.exports = () => {
   require('js/services/importer')(duniterApp);
   require('js/services/base58')(duniterApp);
 
+  window.duniterChildCallback = function(gui) {
+    window.gui = gui;
+  };
+
   window.onresize = () => {
     window.onResize && window.onResize(window);
   };
