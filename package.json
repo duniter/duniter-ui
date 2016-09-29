@@ -26,6 +26,22 @@
     "postinstall": "node \"node_modules/bower/bin/bower\" install --allow-root && node \"node_modules/brunch/bin/brunch\" build && node cesium.js && mv cesium public/ && cp misc/cesium.js public/cesium/config.js",
     "test": "mocha --growl tests/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:duniter/duniter-ui.git"
+  },
+  "keywords": [
+    "duniter",
+    "ucoin",
+    "openudc",
+    "crypto-currency"
+  ],
+  "author": "Cedric Moreau <cem.moreau@gmail.com>",
+  "license": "AGPL-3.0",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/duniter/duniter-ui/issues"
+  },
   "devDependencies": {
     "adm-zip": "0.4.7",
     "core-util-is": "1.0.2",
