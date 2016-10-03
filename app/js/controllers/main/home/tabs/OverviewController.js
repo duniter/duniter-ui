@@ -8,9 +8,10 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   bindBlockWS(() => {
     $scope.loadPowData();
   });
-  const UD = summary.parameters.c * summary.current.monetaryMass / summary.current.membersCount;
+  const M = summary.current.monetaryMass || 0;
+  const UD = summary.parameters.c * M / summary.current.membersCount;
   $scope.current = summary.current;
-  $scope.monetaryMass = parseInt(summary.current.monetaryMass / UD);
+  $scope.monetaryMass = parseInt(M / UD) || 0;
   $scope.server_started = true;
   $scope.server_stopped = false;
   $scope.phones = [];
@@ -101,6 +102,9 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   function bindBlockWS(cb) {
     BMA.websocket.block().on(undefined, (block) => {
       $scope.current = block;
+      const M = $scope.current.monetaryMass || 0;
+      const UD = summary.parameters.c * M / $scope.current.membersCount;
+      $scope.monetaryMass = parseInt(M / UD) || 0;
       $scope.$apply();
       cb && cb();
     });
