@@ -23,6 +23,13 @@
 
           include ../../includes/network_remote
 
-          .row: button.btn-large.waves-effect.waves-light(ui-sref="configure.create.parameters")
-            i.left.fa.fa-check
-            span(translate="configuration.create_network.button.validate")
+          .row
+            .col.s12
+
+              button.orange.btn-large.waves-effect.waves-light.button-cancel(ui-sref="index")
+                i.left.fa.fa-sign-out
+                span(translate="configuration.create_currency.cancel")
+
+              button.btn-large.waves-effect.waves-light.button-next(ui-sref="configure.create.parameters")
+                i.left.fa.fa-check
+                span(translate="configuration.create_network.button.validate")

@@ -17,6 +17,13 @@
 
           .row
 
-            button.btn-large.waves-effect.waves-light(ng-disabled="!$parent.conf.idty_uid || !$parent.conf.idty_entropy || !$parent.conf.idty_password" ng-click="accept()")
-              span(translate="configuration.create_uid.create_button")
+            .col.s12
+
+              button.orange.btn-large.waves-effect.waves-light.button-cancel(ui-sref="index")
+                i.left.fa.fa-sign-out
+                span(translate="configuration.create_currency.cancel")
+
+              button.button-next.btn-large.waves-effect.waves-light(ng-disabled="!$parent.conf.idty_uid || !$parent.conf.idty_entropy || !$parent.conf.idty_password" ng-click="accept()")
+                i.left.fa.fa-check
+                span(translate="configuration.create_uid.create_button")
 
