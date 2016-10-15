@@ -9,7 +9,12 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
     $scope.loadPowData();
   });
   const M = summary.current.monetaryMass || 0;
-  const UD = summary.parameters.c * M / summary.current.membersCount;
+  // const nbUDperYear = Math.ceil(365.25 * 3600 * 24 / summary.parameters.dt);
+  // const globalC = Math.round(Math.pow(1 + summary.parameters.c, nbUDperYear) * 100) / 100 - 1;
+  let UD = summary.parameters.ud0;
+  if (summary.lastUD) {
+    UD = (1 + summary.parameters.c) * summary.lastUD;
+  }
   $scope.current = summary.current;
   $scope.monetaryMass = parseInt(M / UD) || 0;
   $scope.server_started = true;
@@ -103,7 +108,10 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
     BMA.websocket.block().on(undefined, (block) => {
       $scope.current = block;
       const M = $scope.current.monetaryMass || 0;
-      const UD = summary.parameters.c * M / $scope.current.membersCount;
+      let UD = summary.parameters.ud0;
+      if (summary.lastUD) {
+        UD = (1 + summary.parameters.c) * summary.lastUD;
+      }
       $scope.monetaryMass = parseInt(M / UD) || 0;
       $scope.$apply();
       cb && cb();
