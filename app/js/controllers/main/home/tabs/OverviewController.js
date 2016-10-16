@@ -8,12 +8,12 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   bindBlockWS(() => {
     $scope.loadPowData();
   });
-  const M = summary.current.monetaryMass || 0;
+  let M = summary.current.monetaryMass || 0;
   // const nbUDperYear = Math.ceil(365.25 * 3600 * 24 / summary.parameters.dt);
   // const globalC = Math.round(Math.pow(1 + summary.parameters.c, nbUDperYear) * 100) / 100 - 1;
   let UD = summary.parameters.ud0;
-  if (summary.lastUD) {
-    UD = (1 + summary.parameters.c) * summary.lastUD;
+  if (summary.lastUDBlock) {
+    UD = (1 + summary.parameters.c) * summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase);
   }
   $scope.current = summary.current;
   $scope.monetaryMass = parseInt(M / UD) || 0;
@@ -107,10 +107,10 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   function bindBlockWS(cb) {
     BMA.websocket.block().on(undefined, (block) => {
       $scope.current = block;
-      const M = $scope.current.monetaryMass || 0;
+      let M = summary.current.monetaryMass || 0;
       let UD = summary.parameters.ud0;
-      if (summary.lastUD) {
-        UD = (1 + summary.parameters.c) * summary.lastUD;
+      if (summary.lastUDBlock) {
+        UD = (1 + summary.parameters.c) * summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase);
       }
       $scope.monetaryMass = parseInt(M / UD) || 0;
       $scope.$apply();
