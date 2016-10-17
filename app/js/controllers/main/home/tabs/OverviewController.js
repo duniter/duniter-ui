@@ -13,7 +13,8 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   // const globalC = Math.round(Math.pow(1 + summary.parameters.c, nbUDperYear) * 100) / 100 - 1;
   let UD = summary.parameters.ud0;
   if (summary.lastUDBlock) {
-    UD = (1 + summary.parameters.c) * summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase);
+    const N = summary.current.membersCount;
+    UD = parseInt((summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / N).toFixed(0));
   }
   $scope.current = summary.current;
   $scope.monetaryMass = parseInt(M / UD) || 0;
@@ -110,7 +111,8 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
       let M = summary.current.monetaryMass || 0;
       let UD = summary.parameters.ud0;
       if (summary.lastUDBlock) {
-        UD = (1 + summary.parameters.c) * summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase);
+        const N = summary.current.membersCount;
+        UD = parseInt((summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / N).toFixed(0));
       }
       $scope.monetaryMass = parseInt(M / UD) || 0;
       $scope.$apply();
