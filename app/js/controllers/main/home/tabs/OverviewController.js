@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
+module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
 
   let co = require('co');
   let moment = require('moment');
@@ -151,13 +151,13 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, bmapi, ws) => {
   return co(function *() {
     yield $scope.startServer();
     try {
-      yield [
-        bmapi.origin.network.peering.self(),
-        $scope.loadPowData()
-      ];
+      yield $scope.loadPowData();
+      const reachable = yield BMA.webmin.isNodePubliclyReachable();
+      if (!reachable || !reachable.success) {
+        $scope.should_reconfigure = true;
+      }
     } catch (e) {
       console.log(e);
-      $scope.should_reconfigure = true;
     }
   });
 };

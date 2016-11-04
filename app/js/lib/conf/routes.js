@@ -124,10 +124,7 @@ module.exports = (app) => {
       url: '/overview',
       template: require('views/main/home/tabs/overview'),
       resolve: {
-        startHttp: (BMA) => BMA.webmin.server.http.start(),
-        bmapi: (BMA, summary) => co(function *() {
-          return BMA.instance(summary.host);
-        })
+        startHttp: (BMA) => BMA.webmin.server.http.start()
       },
       controller: 'OverviewController'
     }).

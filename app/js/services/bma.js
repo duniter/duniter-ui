@@ -145,6 +145,7 @@ module.exports = (angular) => {
           webmin: {
             getExportURL: () => httpProtocol() + server + '/webmin/data/duniter_export',
             getImportURL: () => httpProtocol() + server + '/webmin/data/duniter_import',
+            isNodePubliclyReachable: getResource('/webmin/server/reachable'),
             ws: () => ws(wsProtocol() + server + '/webmin/ws'),
             summary: getResource('/webmin/summary'),
             powSummary: getResource('/webmin/summary/pow'),
