@@ -1,17 +1,1 @@
-.row
-  .col.s12.m4
-    select.browser-default(ng-model="$parent.conf.local_ipv4")
-      option(value="" translate="configuration.create_network.none")
-      option(ng-repeat="inet in local_neti | filter : 'IPv4'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.local_ipv4}}") {{ inet.name }}
-    label {{ 'configuration.create_network.local_ipv4' | translate }}
 
-  .col.s12.m5
-    select.browser-default(ng-model="$parent.conf.local_ipv6")
-      option(value="" selected translate="configuration.create_network.none")
-      option(ng-repeat="inet in local_neti | filter : 'IPv6'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.local_ipv6}}") {{ inet.name }}
-    label {{ 'configuration.create_network.local_ipv6' | translate }}
-
-  .input-field.col.s6.m3
-    i.prefix.fa.fa-plug
-    input#lport(type="number" ng-model="$parent.conf.lport")
-    label(for="lport") {{ 'configuration.create_network.port' | translate }}

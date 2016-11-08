@@ -45,6 +45,8 @@ module.exports = ($scope, $http, $state, BMA, UIUtils, netinterfaces, firstConf)
   }
 
   $scope.saveConf = () => co(function *() {
+    $scope.$parent.conf.lport = $scope.$parent.conf.rport;
+    $scope.$parent.conf.remote_ipv6 = $scope.$parent.conf.local_ipv6;
     yield BMA.webmin.server.netConf({
       conf: $scope.$parent.conf
     });
