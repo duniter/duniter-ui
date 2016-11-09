@@ -40,15 +40,11 @@
 
               .row
 
-              .col.s12.m8
-                .input-field
-                  i.prefix.material-icons language
-                  input#dns(type="text" ng-model="$parent.conf.dns")
-                  label(for="dns") {{ 'configuration.create_network.dns' | translate }}
-
               .col.s12.m4.upnp
                 input#upnp.filled-in(type="checkbox" ng-model="$parent.conf.upnp")
                 label(for="upnp") {{ 'configuration.create_network.upnp' | translate }}
+
+            .row
 
             .col.s12.m6.common-network
               h1.card-title(translate="configuration.create_network.port.title")
@@ -57,6 +53,14 @@
                 i.prefix.fa.fa-plug
                 input#rport(type="number" ng-model="$parent.conf.rport")
                 label(for="rport") {{ 'configuration.create_network.port' | translate }}
+
+            .col.s12.m6.common-network
+              h1.card-title(translate="configuration.create_network.dns.title")
+              p(translate="configuration.create_network.dns.message")
+              .input-field
+                i.prefix.material-icons language
+                input#dns(type="text" ng-model="$parent.conf.dns")
+                label(for="dns") {{ 'configuration.create_network.dns' | translate }}
 
           .row: button.btn-large.waves-effect.waves-light(ng-click="saveConf()")
             i.left.fa.fa-check
