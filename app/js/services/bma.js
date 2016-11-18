@@ -143,10 +143,10 @@ module.exports = (angular) => {
 
         return {
           webmin: {
-            getExportURL: () => httpProtocol() + server + '/webmin/data/duniter_export',
-            getImportURL: () => httpProtocol() + server + '/webmin/data/duniter_import',
+            getExportURL: () => httpProtocol() + "localhost:10500" + '/webmin/data/duniter_export',
+            getImportURL: () => httpProtocol() + "localhost:10500" + '/webmin/data/duniter_import',
             isNodePubliclyReachable: getResource('/webmin/server/reachable'),
-            ws: () => ws(wsProtocol() + server + '/webmin/ws'),
+            ws: () => ws(wsProtocol() + "localhost:10500" + '/webmin/ws'),
             summary: getResource('/webmin/summary'),
             powSummary: getResource('/webmin/summary/pow'),
             logsExport: (nbLines) => getResource('/webmin/logs/export/' + nbLines)(),
@@ -208,10 +208,10 @@ module.exports = (angular) => {
           },
           websocket: {
             block: function() {
-              return bmaWS(server, '/ws/block');
+              return bmaWS("localhost", '/ws/block');
             },
             peer: function() {
-              return bmaWS(server, '/ws/peer');
+              return bmaWS("localhost", '/ws/peer');
             }
           },
           origin: {
