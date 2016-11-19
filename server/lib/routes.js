@@ -9,32 +9,6 @@ const handleRequest = require('../lib/network').handleRequest;
 const WebSocketServer = require('ws').Server;
 
 module.exports = {
-    bma: function(webminCtrl, app) {
-        redirectRequest(app.get.bind(app), '/bma',                   webminCtrl.summary);
-        handleRequest(app.get.bind(app), '/webmin/summary/pow',               webminCtrl.powSummary);
-        handleRequest(app.get.bind(app),   '/webmin/logs/export/:quantity',     webminCtrl.logsExport);
-        handleRequest(app.post.bind(app), '/webmin/key/preview',               webminCtrl.previewPubkey);
-        handleRequest(app.get.bind(app),  '/webmin/server/reachable',          webminCtrl.isNodePubliclyReachable);
-        handleRequest(app.get.bind(app),  '/webmin/server/http/start',         webminCtrl.startHTTP);
-        handleRequest(app.get.bind(app),  '/webmin/server/http/stop',          webminCtrl.stopHTTP);
-        handleRequest(app.get.bind(app),  '/webmin/server/http/upnp/open',     webminCtrl.openUPnP);
-        handleRequest(app.get.bind(app),  '/webmin/server/http/upnp/regular',  webminCtrl.regularUPnP);
-        handleRequest(app.get.bind(app),  '/webmin/server/preview_next',       webminCtrl.previewNext);
-        handleRequest(app.post.bind(app), '/webmin/server/send_conf',          webminCtrl.sendConf);
-        handleRequest(app.post.bind(app), '/webmin/server/net_conf',           webminCtrl.applyNetworkConf);
-        handleRequest(app.post.bind(app), '/webmin/server/key_conf',           webminCtrl.applyNewKeyConf);
-        handleRequest(app.post.bind(app), '/webmin/server/cpu_conf',           webminCtrl.applyCPUConf);
-        handleRequest(app.get.bind(app),  '/webmin/server/republish_selfpeer', webminCtrl.publishANewSelfPeer);
-        handleRequest(app.post.bind(app), '/webmin/server/test_sync',          webminCtrl.testPeer);
-        handleRequest(app.post.bind(app), '/webmin/server/start_sync',         webminCtrl.startSync);
-        handleRequest(app.get.bind(app),  '/webmin/server/auto_conf_network',  webminCtrl.autoConfNetwork);
-        handleRequest(app.get.bind(app),  '/webmin/server/services/start_all', webminCtrl.startAllServices);
-        handleRequest(app.get.bind(app),  '/webmin/server/services/stop_all',  webminCtrl.stopAllServices);
-        handleRequest(app.get.bind(app),  '/webmin/server/reset/data',         webminCtrl.resetData);
-        handleRequest(app.get.bind(app),  '/webmin/network/interfaces',        webminCtrl.listInterfaces);
-        //app.httpGETFile('/webmin/data/duniter_export',     webminCtrl.exportData);
-        handleRequest(app.post.bind(app), '/webmin/data/duniter_import',       webminCtrl.importData);
-    },
     webmin: function(webminCtrl, app) {
         handleRequest(app.get.bind(app), '/webmin/summary',                   webminCtrl.summary);
         handleRequest(app.get.bind(app), '/webmin/summary/pow',               webminCtrl.powSummary);

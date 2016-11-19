@@ -47,7 +47,8 @@ module.exports = ($scope, $http, $state, BMA, Webmin) => {
   });
 
   $scope.accept = () => co(function *() {
-    let res = yield BMA.blockchain.block_add({
+    const node_address = $scope.$parent.conf.local_ipv4 || $scope.$parent.conf.local_ipv6;
+    let res = yield BMA(node_address + ":" + $scope.$parent.conf.lport).blockchain.block_add({
       block: $scope.generated
     });
     if (res.number == 0) {

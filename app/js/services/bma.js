@@ -1,6 +1,6 @@
-var co = require('co');
-var _ = require('underscore');
-var conf = require('../lib/conf/conf');
+const co = require('co');
+const _ = require('underscore');
+const conf = require('../lib/conf/conf');
 
 module.exports = (angular) => {
 
@@ -15,8 +15,7 @@ module.exports = (angular) => {
             return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
         }
 
-        function BMA(server) {
-
+        function BMA(host) {
             function getResource(uri, protocol) {
                 return function (params) {
                     return $q.when(httpGet(uri, params, protocol));
@@ -40,7 +39,8 @@ module.exports = (angular) => {
                         }
                     });
                     config.params = queryParams;
-                    $http.get((protocol || httpProtocol()) + server + uri + suffix, config)
+                    const url = (protocol || httpProtocol()) + host + uri + suffix;
+                    $http.get(url, config)
                         .success(function (data, status, headers, config) {
                             resolve(data);
                         })
@@ -69,7 +69,8 @@ module.exports = (angular) => {
                             }
                         });
                         config.params = queryParams;
-                        $http.post(httpProtocol() + server + uri + suffix, data, config)
+                        const url = httpProtocol() + host + uri + suffix;
+                        $http.post(url, data, config)
                             .success(function (data, status, headers, config) {
                                 resolve(data);
                             })
@@ -81,15 +82,15 @@ module.exports = (angular) => {
             }
 
             function bmaGET(uri) {
-                return getResource('/bma' + uri);
+                return getResource('' + uri);
             }
 
             function bmaPOST(uri) {
-                return postResource('/bma' + uri);
+                return postResource('' + uri);
             }
 
-            function bmaWS(server, uri) {
-                return ws(wsProtocol() + server + '/bma' + uri);
+            function bmaWS(uri) {
+                return ws(wsProtocol() +  host + '' + uri);
             }
 
             let wsMap = {};
@@ -170,10 +171,10 @@ module.exports = (angular) => {
                 },
                 websocket: {
                     block: function () {
-                        return bmaWS("localhost", '/ws/block');
+                        return bmaWS('/ws/block');
                     },
                     peer: function () {
-                        return bmaWS("localhost", '/ws/peer');
+                        return bmaWS('/ws/peer');
                     }
                 },
                 origin: {
@@ -186,10 +187,6 @@ module.exports = (angular) => {
             }
         }
 
-        let server = window.location.hostname;
-        let port = window.location.port;
-        var service = BMA([server, port].join(':'));
-        service.instance = BMA;
-        return service;
+        return BMA;
     });
 };

@@ -106,7 +106,7 @@ module.exports = ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) => {
   });
 
   function bindBlockWS(cb) {
-    BMA.websocket.block().on(undefined, (block) => {
+    BMA(summary.host).websocket.block().on(undefined, (block) => {
       $scope.current = block;
       let M = summary.current.monetaryMass || 0;
       let UD = summary.parameters.ud0;

@@ -133,8 +133,9 @@ module.exports = (app) => {
       url: '/network',
       template: require('views/main/home/tabs/network'),
       resolve: {
-        peers: (Webmin) => co(function *() {
-          return BMA.network.peers();
+        peers: (Webmin, BMA) => co(function *() {
+          const summary = yield Webmin.summary();
+          return BMA(summary.host).network.peers();
         })
       },
       controller: 'HomeNetworkController'
@@ -154,10 +155,11 @@ module.exports = (app) => {
       url: '/data',
       template: require('views/main/settings/tabs/data'),
       resolve: {
-        peers: (Webmin) => co(function *() {
+        peers: (Webmin, BMA) => co(function *() {
           try {
-            let self = yield BMA.network.peering.self();
-            let res = yield BMA.network.peers();
+            const summary = yield Webmin.summary();
+            let self = yield BMA(summary.host).network.peering.self();
+            let res = yield BMA(summary.host).network.peers();
             return _.filter(res.peers, (p) => p.pubkey != self.pubkey && p.status == 'UP');
           } catch (e) {
             console.error(e);

@@ -32,8 +32,8 @@ module.exports = ($scope, $state, $timeout, BMA, Webmin, UIUtils, Graph) => {
   $scope.updateGraphs = () => {
     return co(function *() {
       let summary = yield Webmin.summary();
-      let parameters = yield BMA.currency.parameters();
-      let blocks = yield BMA.blockchain.blocks({
+      let parameters = yield BMA(summary.host).currency.parameters();
+      let blocks = yield BMA(summary.host).blockchain.blocks({
         count: $scope.blocksCount,
         from: Math.max(0, summary.current.number - $scope.blocksCount)
       });

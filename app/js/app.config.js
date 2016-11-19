@@ -1,7 +1,6 @@
 module.exports = () => {
-
-  require('./services/webmin')(angular);
   require('./services/bma')(angular);
+  require('./services/webmin')(angular);
 
   const duniterApp = angular.module('duniterUIApp', [
     'ui.router',
