@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $http, $state, $location, BMA, UIUtils) => {
+module.exports = ($scope, $http, $state, $location, BMA, Webmin, UIUtils) => {
 
   UIUtils.enableTabs();
 
@@ -12,9 +12,9 @@ module.exports = ($scope, $http, $state, $location, BMA, UIUtils) => {
   $(".dropdown-button").dropdown({ constrainwidth: false });
 
   $scope.fullReset = () => co(function *() {
-    yield BMA.webmin.server.http.stop();
-    yield BMA.webmin.server.services.stopAll();
-    yield BMA.webmin.server.resetData();
+    yield Webmin.server.http.stop();
+    yield Webmin.server.services.stopAll();
+    yield Webmin.server.resetData();
     $state.go('index');
   });
 };

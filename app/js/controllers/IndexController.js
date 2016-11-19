@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $http, $state, BMA, summary, UIUtils) => {
+module.exports = ($scope, $http, $state, BMA, Webmin, summary, UIUtils) => {
 
   UIUtils.changeTitle(summary.version);
 
@@ -10,7 +10,7 @@ module.exports = ($scope, $http, $state, BMA, summary, UIUtils) => {
   co(function *() {
     let connected = false;
     try {
-      let summary = yield BMA.webmin.summary();
+      let summary = yield Webmin.summary();
       if (summary.current) {
         return $state.go('main.home.overview');
       }

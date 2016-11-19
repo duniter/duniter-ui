@@ -2,7 +2,7 @@
 
 const co = require('co');
 
-module.exports = ($scope, BMA) => {
+module.exports = ($scope, Webmin) => {
   
   $scope.generating = false;
   $scope.error = '';
@@ -12,7 +12,7 @@ module.exports = ($scope, BMA) => {
       try {
         $scope.error = '';
         $scope.generating = true;
-        const res = yield BMA.webmin.logsExport(2000);
+        const res = yield Webmin.logsExport(2000);
         $scope.link = res.link;
       } catch (e) {
         $scope.error = (e && e.message) || e || 'Unknown error';

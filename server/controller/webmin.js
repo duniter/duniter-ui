@@ -18,6 +18,8 @@ const duniter = require('duniter');
 const contacter = require('duniter/app/lib/contacter');
 const bma = require('duniter/app/lib/streams/bma');
 const network = require('duniter/app/lib/system/network');
+const constants = require('duniter/app/lib/constants');
+const ucp = require('duniter/app/lib/ucp/buid');
 
 module.exports = (duniterServer) => {
   return new WebAdmin(duniterServer);
@@ -113,14 +115,7 @@ function WebAdmin (duniterServer) {
   });
 
   this.startHTTP = () => co(function *() {
-    yield pluggedDALP;
-    try {
-      yield bmapi.openConnections();
       return { success: true };
-    } catch (e) {
-      logger.error(e);
-      return { success: false };
-    }
   });
 
   this.openUPnP = () => co(function *() {
@@ -145,8 +140,6 @@ function WebAdmin (duniterServer) {
   });
 
   this.stopHTTP = () => co(function *() {
-    yield pluggedDALP;
-    return bmapi.closeConnections();
   });
 
   this.previewNext = () => co(function *() {
@@ -199,7 +192,6 @@ function WebAdmin (duniterServer) {
       yield bmapi.closeConnections();
       yield server.loadConf();
       bmapi = yield bma(server, null, true);
-      return bmapi.openConnections();
     });
     yield pluggedConfP;
     const buid = '0-E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855';
@@ -258,7 +250,7 @@ function WebAdmin (duniterServer) {
       yield bmapi.closeConnections();
       yield server.loadConf();
       bmapi = yield bma(server, null, true);
-      yield bmapi.openConnections();
+     // yield bmapi.openConnections();
       yield server.recomputeSelfPeer();
     });
     yield pluggedConfP;

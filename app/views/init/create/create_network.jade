@@ -2,34 +2,73 @@
   .row
     form.s12.center
       .card
-        .card-content
+        .card-action
           i.fa.fa-globe.fa-5x
           h1.card-title(translate="configuration.create_network.title")
-          p(translate="configuration.create_network.message")
 
-        .row: buttn.btn-large.waves-effect.waves-light(ng-click="autoconfig()")
-          i.left.fa.fa-magic
-          span(translate="configuration.create_network.button.autoconf")
+          .row: buttn.btn-large.waves-effect.waves-light(ng-click="autoconfig()")
+            i.left.fa.fa-magic
+            span(translate="configuration.create_network.button.autoconf")
 
-        .card-action
+          .row
+            .col.s12.m6.common-network
 
-          h1.card-title(translate="configuration.create_network.local.title")
-          p(translate="configuration.create_network.local.message")
+              h1.card-title(translate="configuration.create_network.ipv6.title")
+              p(translate="configuration.create_network.ipv6.message")
 
-          include ../../includes/network_local
+              select.browser-default(ng-model="$parent.conf.local_ipv6")
+                option(value="" selected translate="configuration.create_network.none")
+                option(ng-repeat="inet in local_neti | filter : 'IPv6'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.local_ipv6}}") {{ inet.name }}
+              label {{ 'configuration.create_network.local_ipv6' | translate }}
 
-          h1.card-title(translate="configuration.create_network.remote.title")
-          p(translate="configuration.create_network.remote.message")
+            .col.s12.m6.common-network
 
-          include ../../includes/network_remote
+              h1.card-title(translate="configuration.create_network.ipv4.title")
+              p(translate="configuration.create_network.ipv4.message")
+
+              .col.s12.m6
+                select.browser-default(ng-model="$parent.conf.local_ipv4")
+                  option(value="" translate="configuration.create_network.none")
+                  option(ng-repeat="inet in local_neti | filter : 'IPv4'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.local_ipv4}}") {{ inet.name }}
+                label {{ 'configuration.create_network.local_ipv4' | translate }}
+
+              .col.s12.m6
+                select.browser-default(ng-model="$parent.conf.remote_ipv4")
+                  option(value="" selected translate="configuration.create_network.none")
+                  option(ng-repeat="inet in remote_neti | filter : 'IPv4'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.remote_ipv4}}") {{ inet.name }}
+                label {{ 'configuration.create_network.remote_ipv4' | translate }}
+
+              .row
+
+              .col.s12.m4.upnp
+                input#upnp.filled-in(type="checkbox" ng-model="$parent.conf.upnp")
+                label(for="upnp") {{ 'configuration.create_network.upnp' | translate }}
+
+            .row
+
+            .col.s12.m6.common-network
+              h1.card-title(translate="configuration.create_network.port.title")
+              p(translate="configuration.create_network.port.message")
+              .input-field.col.s6
+                i.prefix.fa.fa-plug
+                input#rport(type="number" ng-model="$parent.conf.rport")
+                label(for="rport") {{ 'configuration.create_network.port' | translate }}
+
+            .col.s12.m6.common-network
+              h1.card-title(translate="configuration.create_network.dns.title")
+              p(translate="configuration.create_network.dns.message")
+              .input-field
+                i.prefix.material-icons language
+                input#dns(type="text" ng-model="$parent.conf.dns")
+                label(for="dns") {{ 'configuration.create_network.dns' | translate }}
 
           .row
             .col.s12
 
-              button.orange.btn-large.waves-effect.waves-light.button-cancel(ui-sref="index")
-                i.left.fa.fa-sign-out
-                span(translate="configuration.create_currency.cancel")
-
               button.btn-large.waves-effect.waves-light.button-next(ui-sref="configure.create.parameters")
                 i.left.fa.fa-check
                 span(translate="configuration.create_network.button.validate")
+
+              button.orange.btn-large.waves-effect.waves-light.button-cancel(ui-sref="index")
+                i.left.fa.fa-sign-out
+                span(translate="configuration.create_currency.cancel")

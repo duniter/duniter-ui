@@ -18,6 +18,7 @@ const handleRequest = (method, uri, promiseFunc) => {
     });
 };
 
+
 module.exports = {
     handleRequest
 };

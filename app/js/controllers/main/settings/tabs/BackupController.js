@@ -1,8 +1,8 @@
 "use strict";
 
-module.exports = ($scope, Importer, BMA) => {
+module.exports = ($scope, Importer, Webmin) => {
 
-  $scope.export_link = BMA.webmin.getExportURL();
+  $scope.export_link = Webmin.getExportURL();
 
   Importer($scope);
 };

@@ -11,8 +11,8 @@ module.exports = (app) => {
       url: '/',
       template: require('views/index'),
       resolve: {
-        ws: (BMA) => BMA.webmin.ws(),
-        summary: (BMA) => BMA.webmin.summary()
+        ws: (Webmin) => Webmin.ws(),
+        summary: (Webmin) => Webmin.summary()
       },
       controller: 'IndexController'
     }).
@@ -21,7 +21,7 @@ module.exports = (app) => {
       url: '/about',
       template: require('views/about'),
       resolve: {
-        summary: (BMA) => BMA.webmin.summary(),
+        summary: (Webmin) => Webmin.summary(),
         version: (summary) => summary && 'v' + summary.version || 'unknown version'
       },
       controller: 'AboutController'
@@ -78,7 +78,7 @@ module.exports = (app) => {
       url: '/create/network',
       template: require('views/init/create/create_network'),
       resolve: {
-        netinterfaces: (BMA) => resolveNetworkAutoConf(BMA),
+        netinterfaces: (Webmin) => resolveNetworkAutoConf(Webmin),
         firstConf: () => true
       },
       controller: 'NetworkController'
@@ -107,8 +107,8 @@ module.exports = (app) => {
       url: '/main',
       template: require('views/main/main'),
       resolve: {
-        ws: (BMA) => BMA.webmin.ws(),
-        summary: (BMA) => BMA.webmin.summary()
+        ws: (Webmin) => Webmin.ws(),
+        summary: (Webmin) => Webmin.summary()
       },
       controller: 'MainController'
     }).
@@ -124,7 +124,7 @@ module.exports = (app) => {
       url: '/overview',
       template: require('views/main/home/tabs/overview'),
       resolve: {
-        startHttp: (BMA) => BMA.webmin.server.http.start()
+        startHttp: (Webmin) => Webmin.server.http.start()
       },
       controller: 'OverviewController'
     }).
@@ -133,7 +133,7 @@ module.exports = (app) => {
       url: '/network',
       template: require('views/main/home/tabs/network'),
       resolve: {
-        peers: (BMA) => co(function *() {
+        peers: (Webmin) => co(function *() {
           return BMA.network.peers();
         })
       },
@@ -145,7 +145,7 @@ module.exports = (app) => {
       url: '/settings',
       template: require('views/main/settings/settings'),
       resolve: {
-        summary: (BMA) => BMA.webmin.summary()
+        summary: (Webmin) => Webmin.summary()
       },
       controller: 'SettingsController'
     }).
@@ -154,7 +154,7 @@ module.exports = (app) => {
       url: '/data',
       template: require('views/main/settings/tabs/data'),
       resolve: {
-        peers: (BMA) => co(function *() {
+        peers: (Webmin) => co(function *() {
           try {
             let self = yield BMA.network.peering.self();
             let res = yield BMA.network.peers();
@@ -184,7 +184,7 @@ module.exports = (app) => {
       url: '/cpu',
       template: require('views/main/settings/tabs/cpu'),
       resolve: {
-        summary: (BMA) => BMA.webmin.summary()
+        summary: (Webmin) => Webmin.summary()
       },
       controller: 'CPUController'
     }).
@@ -198,7 +198,7 @@ module.exports = (app) => {
     state('main.settings.network', {
       url: '/network',
       resolve: {
-        netinterfaces: (BMA) => resolveNetworkAutoConf(BMA),
+        netinterfaces: (Webmin) => resolveNetworkAutoConf(Webmin),
         firstConf: () => false
       },
       template: require('views/main/settings/tabs/network'),
@@ -238,7 +238,7 @@ module.exports = (app) => {
     //state('graphs.network', {
     //  url: '/network',
     //  resolve: {
-    //    netinterfaces: (BMA) => resolveNetworkAutoConf(BMA),
+    //    netinterfaces: (Webmin) => resolveNetworkAutoConf(Webmin),
     //    firstConf: () => false
     //  },
     //  template: require('views/graphs/network'),
@@ -260,7 +260,7 @@ module.exports = (app) => {
       url: '/logs',
       template: require('views/logs'),
       resolve: {
-        ws: (BMA) => BMA.webmin.ws()
+        ws: (Webmin) => Webmin.ws()
       },
       controller: 'LogsController'
     }).
@@ -283,9 +283,9 @@ module.exports = (app) => {
     });
   });
 
-  function resolveNetworkAutoConf(BMA) {
+  function resolveNetworkAutoConf(Webmin) {
     return co(function *() {
-      let netinterfaces = yield BMA.webmin.network.interfaces();
+      let netinterfaces = yield Webmin.network.interfaces();
       return netinterfaces || { local: {}, remote: {} };
     });
   }

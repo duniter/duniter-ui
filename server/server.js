@@ -3,10 +3,11 @@
 
 const co      = require('co');
 const duniter = require('duniter');
+const bodyParser = require('body-parser');
 const http    = require('http');
 const express = require('express');
 const path    = require('path');
-const webminController = require('./controller/webmin.controller');
+const webminController = require('./controller/webmin.js');
 
 const HOME_DUNITER_DATA_FOLDER = 'rml8';
 
@@ -38,8 +39,15 @@ duniter.statics.cli((duniterServer) => co(function*() {
          * Sur appel de l'URL /abc
          */
         app.use(express.static(path.join('..', 'public')));
-        require('./lib/routes').webmin(webminController(duniterServer), app);
-        require('./lib/routes').webminWS(webminController(duniterServer))(app);
+
+        app.use(bodyParser.urlencoded({
+            extended: true
+        }));
+        app.use(bodyParser.json());
+
+        const wbmin = webminController(duniterServer);
+        require('./lib/routes').webmin(wbmin, app);
+        require('./lib/routes').webminWS(wbmin)(app);
 
 
         const httpServer = http.createServer(app);
