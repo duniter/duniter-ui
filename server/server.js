@@ -46,13 +46,12 @@ duniter.statics.cli((duniterServer) => co(function*() {
         app.use(bodyParser.json());
 
         const wbmin = webminController(duniterServer);
-        require('./lib/routes').webmin(wbmin, app);
-        require('./lib/routes').webminWS(wbmin)(app);
-
-
         const httpServer = http.createServer(app);
         httpServer.listen(PORT, HOTE);
         console.log("Serveur web disponible a l'adresse http://%s:%s", HOTE, PORT);
+
+        require('./lib/routes').webmin(wbmin, app);
+        require('./lib/routes').webminWS(wbmin)(httpServer);
 
         /****************************************/
 
