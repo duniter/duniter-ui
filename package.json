@@ -23,7 +23,7 @@
     "underscore": "1.8.3"
   },
   "scripts": {
-    "postinstall": "npm run webadminInstall && npm run localCesiumInstall && npm run publicCesiumInstall",
+    "postinstall": "npm run webadminInstall && npm run localCesiumInstall",
     "webadminInstall": "node \"node_modules/bower/bin/bower\" install --allow-root && node \"node_modules/brunch/bin/brunch\" build",
     "localCesiumInstall": "node cesium.js && mv cesium public/ && cp misc/cesium.js public/cesium/config.js",
     "publicCesiumInstall": "git clone https://github.com/duniter/cesium.git && node misc/duniterConfigToCesium.js && cd cesium && npm install",
