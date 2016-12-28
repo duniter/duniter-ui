@@ -1,6 +1,6 @@
 module.exports = (app) => {
 
-  app.factory('PubkeyGenerator', function($timeout, BMA) {
+  app.factory('PubkeyGenerator', function($timeout, Webmin) {
 
     var co = require('co');
 
@@ -28,7 +28,7 @@ module.exports = (app) => {
       }
 
       $scope.previewPubkey = () => co(function *() {
-        let data = yield BMA.webmin.key.preview({
+        let data = yield Webmin.key.preview({
           conf: $scope.$parent.conf
         });
         $scope.pubkey_preview = data.pubkey;

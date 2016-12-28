@@ -2,13 +2,13 @@
 
 const co = require('co');
 
-module.exports = ($scope, $http, $state, $timeout, UIUtils, summary, BMA) => {
+module.exports = ($scope, $http, $state, $timeout, UIUtils, summary, Webmin) => {
 
   $scope.cpuPower = parseInt(summary.conf.cpu * 100);
 
   $scope.updateCPUpower = () => co(function *() {
     $scope.savingCPU = true;
-    yield BMA.webmin.server.cpuConf({
+    yield Webmin.server.cpuConf({
       cpu: parseFloat(($scope.cpuPower / 100).toFixed(2))
     });
     UIUtils.toast('settings.cpu.saved');

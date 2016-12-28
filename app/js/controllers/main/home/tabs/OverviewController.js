@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
+module.exports = ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) => {
 
   let co = require('co');
   let moment = require('moment');
@@ -44,7 +44,7 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
   }, 1000);
 
   $scope.loadPowData = () => co(function*() {
-    let res = yield BMA.webmin.powSummary();
+    let res = yield Webmin.powSummary();
     $scope.pow_total = res.total;
     $scope.pow_mirror = res.mirror;
     $scope.pow_waiting = res.waiting;
@@ -106,7 +106,7 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
   });
 
   function bindBlockWS(cb) {
-    BMA.websocket.block().on(undefined, (block) => {
+    BMA(summary.host).websocket.block().on(undefined, (block) => {
       $scope.current = block;
       let M = summary.current.monetaryMass || 0;
       let UD = summary.parameters.ud0;
@@ -124,7 +124,7 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
     $scope.reconfiguring = true;
     let delay = Q.delay(1000);
     try {
-      let netinferfaces = yield BMA.webmin.network.interfaces();
+      let netinferfaces = yield Webmin.network.interfaces();
       let conf = {};
       conf.local_ipv4 = netinferfaces.auto.local.ipv4 || '';
       conf.local_ipv6 = netinferfaces.auto.local.ipv6 || '';
@@ -134,7 +134,7 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
       conf.rport = netinferfaces.auto.remote.port || 9330;
       conf.upnp = netinferfaces.auto.remote.upnp || false;
       conf.dns = netinferfaces.auto.remote.dns || '';
-      yield BMA.webmin.server.netConf({
+      yield Webmin.server.netConf({
         conf: conf
       });
       yield delay;
@@ -152,7 +152,7 @@ module.exports = ($scope, $interval, BMA, UIUtils, summary, ws) => {
     yield $scope.startServer();
     try {
       yield $scope.loadPowData();
-      const reachable = yield BMA.webmin.isNodePubliclyReachable();
+      const reachable = yield Webmin.isNodePubliclyReachable();
       if (!reachable || !reachable.success) {
         $scope.should_reconfigure = true;
       }

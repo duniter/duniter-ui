@@ -2,9 +2,9 @@
 
 var co = require('co');
 
-module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA, UIUtils) => {
+module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA, UIUtils, Webmin) => {
 
-  let syncWS = BMA.webmin.ws();
+  let syncWS = Webmin.ws();
 
   UIUtils.enableInputs();
   $scope.sync_mode = 'simplified';
@@ -27,7 +27,7 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
     }
     $scope.checking = true;
     try {
-      const current = yield BMA.webmin.server.testSync({
+      const current = yield Webmin.server.testSync({
         host: $scope.host,
         port: $scope.port
       });
@@ -65,7 +65,7 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
           $scope.sync_failed = data.value;
           let errorMessage = data.msg && (data.msg.message || data.msg);
           errorMessage = translatedErr + ' « ' + errorMessage + ' »';
-          BMA.webmin.server.republishNewSelfPeer()
+          Webmin.server.republishNewSelfPeer()
             .then(() => console.log('Peer republished'));
           if (data.value === true) {
             $state.go('index');
@@ -87,10 +87,10 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA
           }
         }
       });
-      yield BMA.webmin.server.autoConfNetwork();
+      yield Webmin.server.autoConfNetwork();
       localStorage.setItem("sync_host", sp[0]);
       localStorage.setItem("sync_port", sp[1]);
-      BMA.webmin.server.startSync({
+      Webmin.server.startSync({
         host: sp[0],
         port: sp[1],
         to: $scope.to,

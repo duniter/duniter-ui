@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $state, $http, $timeout, $interval, BMA, summary, UIUtils, Base58) => {
+module.exports = ($scope, $state, $http, $timeout, $interval, BMA, Webmin, summary, UIUtils, Base58) => {
 
   const local_host = summary.host.split(':')[0]; // We suppose IPv4 configuration
   const local_port = summary.host.split(':')[1];
@@ -121,9 +121,9 @@ module.exports = ($scope, $state, $http, $timeout, $interval, BMA, summary, UIUt
   $scope.startServer = () => {
     $scope.server_stopped = false;
     return co(function *() {
-      yield BMA.webmin.server.http.start();
-      yield BMA.webmin.server.services.startAll();
-      yield BMA.webmin.server.http.regularUPnP();
+      yield Webmin.server.http.start();
+      yield Webmin.server.services.startAll();
+      yield Webmin.server.http.regularUPnP();
       $scope.server_started = true;
     });
   };
@@ -131,8 +131,8 @@ module.exports = ($scope, $state, $http, $timeout, $interval, BMA, summary, UIUt
   $scope.stopServer = () => {
     $scope.server_started = false;
     return co(function *() {
-      yield BMA.webmin.server.http.stop();
-      yield BMA.webmin.server.services.stopAll();
+      yield Webmin.server.http.stop();
+      yield Webmin.server.services.stopAll();
       $scope.server_stopped = true;
     });
   };

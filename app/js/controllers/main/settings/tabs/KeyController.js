@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $state, BMA, summary, PubkeyGenerator) => {
+module.exports = ($scope, $state, Webmin, summary, PubkeyGenerator) => {
 
   $scope.pubkey = summary.pubkey;
 
@@ -11,7 +11,7 @@ module.exports = ($scope, $state, BMA, summary, PubkeyGenerator) => {
   }, 500);
 
   $scope.accept = () => co(function *() {
-    yield BMA.webmin.server.keyConf({
+    yield Webmin.server.keyConf({
       conf: $scope.$parent.conf
     });
     $scope.$parent.conf.idty_entropy = '';

@@ -1,6 +1,6 @@
 module.exports = (app) => {
 
-  app.factory('Importer', function($http, $state, $timeout, UIUtils, Upload, BMA) {
+  app.factory('Importer', function($http, $state, $timeout, UIUtils, Upload, Webmin) {
 
     return ($scope) => {
 
@@ -10,7 +10,7 @@ module.exports = (app) => {
         if (file) {
           UIUtils.toast('settings.data.backup.importing');
           file.upload = Upload.upload({
-            url: BMA.webmin.getImportURL(),
+            url: Webmin.getImportURL(),
             data: { importData: file }
           });
 

@@ -4,7 +4,7 @@ const BLOCKS_COUNT = 40;
 
 var co = require('co');
 
-module.exports = ($scope, $state, $timeout, BMA, UIUtils, Graph) => {
+module.exports = ($scope, $state, $timeout, BMA, Webmin, UIUtils, Graph) => {
 
   let data = {};
 
@@ -31,9 +31,9 @@ module.exports = ($scope, $state, $timeout, BMA, UIUtils, Graph) => {
 
   $scope.updateGraphs = () => {
     return co(function *() {
-      let summary = yield BMA.webmin.summary();
-      let parameters = yield BMA.currency.parameters();
-      let blocks = yield BMA.blockchain.blocks({
+      let summary = yield Webmin.summary();
+      let parameters = yield BMA(summary.host).currency.parameters();
+      let blocks = yield BMA(summary.host).blockchain.blocks({
         count: $scope.blocksCount,
         from: Math.max(0, summary.current.number - $scope.blocksCount)
       });
