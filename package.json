@@ -41,7 +41,6 @@
     "brunch": "2.4.2",
     "core-util-is": "1.0.2",
     "css-brunch": "2.0.0",
-    "duniter": "file:../duniter",
     "fb-flo-brunch": "1.7.22",
     "fs-extra": "^1.0.0",
     "jade-brunch": "2.0.0",
