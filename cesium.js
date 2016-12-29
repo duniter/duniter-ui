@@ -1,6 +1,7 @@
 const
   request = require('request'),
-  fs = require('fs'),
+  fs = require('fs-extra'),
+  rm = require('rimraf'),
   path = require('path'),
   AdmZip = require('adm-zip'),
   tmp = require('tmp');
@@ -17,6 +18,23 @@ outputStream.on('close', () => {
   console.log('Extracting Cesium to path %s...', EXTRACT_PATH);
   const zip = new AdmZip(OUTPUT_ZIP);
   zip.extractAllTo(EXTRACT_PATH, EXTRACT_OVERWRITE);
+
+  const cesiumSourceFolder = EXTRACT_PATH;
+  const cesiumPublicFolder = path.join(__dirname, 'public', 'cesium');
+  if (fs.existsSync(cesiumPublicFolder)) {
+    // Remove existing cesium installation
+    rm.sync(cesiumPublicFolder);
+  }
+
+  // Move extracted Cesium to destination folder
+  fs.renameSync(cesiumSourceFolder, cesiumPublicFolder);
+
+  // Configure Cesium
+  const cesiumOldConfigFile = path.join(__dirname, 'public', 'cesium', 'config.js');
+  const cesiumNewConfigFile = path.join(__dirname, 'misc', 'cesium.js');
+  fs.unlinkSync(cesiumOldConfigFile);
+  fs.copySync(cesiumNewConfigFile, cesiumOldConfigFile);
+  process.exit(0);
 });
 
 console.log('Downloading file %s...', CESIUM_RELEASE);

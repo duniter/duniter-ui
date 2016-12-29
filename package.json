@@ -25,11 +25,9 @@
     "underscore": "1.8.3"
   },
   "scripts": {
-    "postinstall": "npm run webadminInstall && npm run localCesiumInstall",
-    "webadminInstall": "node \"node_modules/bower/bin/bower\" install --allow-root && node \"node_modules/brunch/bin/brunch\" build",
-    "localCesiumInstall": "node cesium.js && mv cesium public/ && cp misc/cesium.js public/cesium/config.js",
+    "postinstall": "bower install && brunch build && node cesium.js",
     "publicCesiumInstall": "git clone https://github.com/duniter/cesium.git && node misc/duniterConfigToCesium.js && cd cesium && npm install",
-    "start":"cd cesium && npm start",
+    "start": "cd cesium && npm start",
     "test": "mocha --growl tests/"
   },
   "repository": {
@@ -51,9 +49,11 @@
   "devDependencies": {
     "adm-zip": "0.4.7",
     "core-util-is": "1.0.2",
+    "fs-extra": "^1.0.0",
     "mocha": "2.2.5",
     "process-nextick-args": "1.0.7",
     "request": "2.31.0",
+    "rimraf": "^2.5.4",
     "should": "11.1.0",
     "tmp": "0.0.29",
     "util-deprecate": "1.0.2"
