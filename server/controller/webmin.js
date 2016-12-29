@@ -8,18 +8,6 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
-const keyring = require('duniter/app/lib/crypto/keyring');
-const Identity = require('duniter/app/lib/entity/identity');
-const rawer = require('duniter/app/lib/ucp/rawer');
-const logger = require('duniter/app/lib/logger')('webmin');
-const http2raw = require('duniter/app/lib/helpers/http2raw');
-const dos2unix = require('duniter/app/lib/system/dos2unix');
-const duniter = require('duniter');
-const contacter = require('duniter/app/lib/contacter');
-const bma = require('duniter/app/lib/streams/bma');
-const network = require('duniter/app/lib/system/network');
-const constants = require('duniter/app/lib/constants');
-const ucp = require('duniter/app/lib/ucp/buid');
 
 module.exports = (duniterServer) => {
   return new WebAdmin(duniterServer);
@@ -27,8 +15,20 @@ module.exports = (duniterServer) => {
 
 function WebAdmin (duniterServer) {
 
+  const logger = duniterServer.logger;
+  const keyring = duniterServer.lib.keyring;
+  const Identity = duniterServer.lib.Identity;
+  const rawer = duniterServer.lib.rawer;
+  const http2raw = duniterServer.lib.http2raw;
+  const dos2unix = duniterServer.lib.dos2unix;
+  const contacter = duniterServer.lib.contacter;
+  const bma = duniterServer.lib.bma;
+  const network = duniterServer.lib.network;
+  const constants = duniterServer.lib.constants;
+  const ucp = duniterServer.lib.ucp;
+
   // Node instance: this is the object to be managed by the web admin
-  const server = duniterServer;
+  const server = this.server = duniterServer;
   let bmapi;
   const that = this;
 
@@ -115,7 +115,14 @@ function WebAdmin (duniterServer) {
   });
 
   this.startHTTP = () => co(function *() {
+    yield pluggedDALP;
+    try {
+      yield bmapi.openConnections();
       return { success: true };
+    } catch (e) {
+      logger.error(e);
+      return { success: false };
+    }
   });
 
   this.openUPnP = () => co(function *() {
@@ -384,7 +391,7 @@ function WebAdmin (duniterServer) {
       };
       yield that.applyNewKeyConf({ body: { conf :conf } });
     }
-    yield startServicesP || (startServicesP = duniter.statics.startServices(server));
+    yield startServicesP || (startServicesP = server.startServices());
     that.push({ started: true });
     return {};
   });
@@ -392,7 +399,7 @@ function WebAdmin (duniterServer) {
   this.stopAllServices = () => co(function *() {
     // Allow services to be started
     startServicesP = null;
-    yield stopServicesP || (stopServicesP = duniter.statics.stopServices(server));
+    yield stopServicesP || (stopServicesP = server.stopServices());
     that.push({ stopped: true });
     return {};
   });

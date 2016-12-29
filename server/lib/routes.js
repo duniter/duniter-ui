@@ -2,9 +2,8 @@
 
 const co = require('co');
 const es = require('event-stream');
-const constants = require('duniter/app/lib/constants');
-const logger = require('duniter/app/lib/logger')('webmin');
 const handleRequest = require('../lib/network').handleRequest;
+const WEBMIN_LOGS_CACHE = 2000;
 
 const WebSocketServer = require('ws').Server;
 
@@ -36,6 +35,7 @@ module.exports = {
         handleRequest(app.post.bind(app), '/webmin/data/duniter_import',       webminCtrl.importData);
     },
     webminWS: function(webminCtrl) {
+        const logger = webminCtrl.server.logger;
         return (httpServer) => {
 
             // Socket for synchronization events
@@ -61,7 +61,7 @@ module.exports = {
 
                 // The callback which write each new log message to websocket
                 logger.addCallbackLogs((level, msg, timestamp) => {
-                    lastLogs.splice(0, Math.max(0, lastLogs.length - constants.WEBMIN_LOGS_CACHE + 1));
+                    lastLogs.splice(0, Math.max(0, lastLogs.length - WEBMIN_LOGS_CACHE + 1));
                     lastLogs.push({
                         timestamp: timestamp,
                         level: level,

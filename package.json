@@ -1,6 +1,7 @@
 {
   "name": "duniter-ui",
   "version": "0.1.25",
+  "main": "index.js",
   "dependencies": {
     "auto-reload-brunch": "2.0.0",
     "babel-brunch": "6.0.1",
@@ -17,6 +18,7 @@
     "json-brunch": "1.5.4",
     "materialize-css": "0.97.5",
     "moment": "2.6.0",
+    "node-pre-gyp": "^0.6.32",
     "sass-brunch": "2.0.0",
     "stylus-brunch": "2.0.0",
     "uglify-js-brunch": "2.0.1",
