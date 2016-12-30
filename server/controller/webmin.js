@@ -399,7 +399,7 @@ function WebAdmin (duniterServer) {
   this.stopAllServices = () => co(function *() {
     // Allow services to be started
     startServicesP = null;
-    yield stopServicesP || (stopServicesP = server.stopServices());
+    yield (stopServicesP || (stopServicesP = server.stopServices()));
     that.push({ stopped: true });
     return {};
   });

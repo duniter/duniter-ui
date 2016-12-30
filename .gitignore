@@ -1,6 +1,5 @@
 node_modules/
 bower_components/
-public/
 .idea/
 cesium/
 npm-debug.log
