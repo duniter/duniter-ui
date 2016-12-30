@@ -26,18 +26,22 @@
     "url": "https://github.com/duniter/duniter-ui/issues"
   },
   "dependencies": {
+    "adm-zip": "0.4.7",
+    "request": "2.31.0",
     "body-parser": "1.15.2",
     "bower": "1.8.0",
     "brunch": "2.4.2",
     "co": "4.6.0",
     "express": "4.14.0",
+    "fs-extra": "1.0.0",
     "materialize-css": "0.97.5",
     "moment": "2.6.0",
     "node-pre-gyp": "0.6.32",
+    "rimraf": "2.5.4",
+    "tmp": "0.0.29",
     "underscore": "1.8.3"
   },
   "devDependencies": {
-    "adm-zip": "0.4.7",
     "auto-reload-brunch": "2.0.0",
     "babel-brunch": "6.0.1",
     "babel-polyfill": "6.3.14",
@@ -47,18 +51,14 @@
     "css-brunch": "2.0.0",
     "duniter": "file:../duniter",
     "fb-flo-brunch": "1.7.22",
-    "fs-extra": "1.0.0",
     "jade-brunch": "2.0.0",
     "javascript-brunch": "2.0.0",
     "json-brunch": "1.5.4",
     "mocha": "2.2.5",
     "process-nextick-args": "1.0.7",
-    "request": "2.31.0",
-    "rimraf": "2.5.4",
     "sass-brunch": "2.0.0",
     "should": "11.1.0",
     "stylus-brunch": "2.0.0",
-    "tmp": "0.0.29",
     "uglify-js-brunch": "2.0.1",
     "util-deprecate": "1.0.2"
   }
