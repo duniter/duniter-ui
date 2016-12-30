@@ -49,7 +49,6 @@
     "babel-preset-stage-0": "6.0.15",
     "core-util-is": "1.0.2",
     "css-brunch": "2.0.0",
-    "duniter": "file:../duniter",
     "fb-flo-brunch": "1.7.22",
     "jade-brunch": "2.0.0",
     "javascript-brunch": "2.0.0",
