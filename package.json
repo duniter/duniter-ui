@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node cesium.js",
     "build": "bower install && brunch build && node cesium.js",
     "publicCesiumInstall": "git clone https://github.com/duniter/cesium.git && node misc/duniterConfigToCesium.js && cd cesium && npm install",
     "start": "cd cesium && npm start",
