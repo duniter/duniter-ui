@@ -57,6 +57,7 @@ module.exports = {
           require('./server/lib/routes').webminWS(wbmin)(httpServer);
 
           yield wbmin.startHTTP();
+          yield wbmin.startAllServices();
 
           // Never ending promise
           return new Promise((resolve) => {});
