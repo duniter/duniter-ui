@@ -24,7 +24,7 @@ module.exports = {
 
           const app = express();
           const HOTE = 'localhost';
-          const PORT = 10500;
+          const PORT = 9220;
 
           /**
            * Sur appel de l'URL /abc
