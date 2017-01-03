@@ -20,7 +20,7 @@
   .row
     .col.s12
       .card-panel.currency
-        h1 {{ current.currency }}
+        h1 {{ current_currency }}
   .row.home
     .col.s6.m3
       .card.sync
@@ -60,37 +60,37 @@
         .card-content
           i.fa.fa-chain.fa-5x
           .card-title
-            span {{ current.number }}
+            span {{ current_number }}
         .card-action
-          p {{ 'home.current.number' | translate }}
+          p {{ 'home.current_number' | translate }}
 
     .col.s6.m3
       .card
         .card-content
           i.fa.fa-users.fa-5x
           .card-title
-            span {{ current.membersCount }}
+            span {{ current_membersCount }}
         .card-action
-          p {{ 'home.current.membersCount' | translate }}
+          p {{ 'home.current_membersCount' | translate }}
 
     .col.s6.m3
       .card.card-time
         .card-content
           i.fa.fa-hourglass-half.fa-5x
           .card-title
-            p {{ current.medianTime | mt_date }}
-            p {{ current.medianTime | mt_time }}
+            p {{ current_medianTime | mt_date }}
+            p {{ current_medianTime | mt_time }}
         .card-action
-          p {{ 'home.current.medianTime' | translate }}
+          p {{ 'home.current_medianTime' | translate }}
 
     .col.s6.m3
       .card
         .card-content
           i.fa.fa-graduation-cap.fa-5x
           .card-title
-            span {{ current.powMin }}
+            span {{ current_powMin }}
         .card-action
-          p {{ 'home.current.powMin' | translate }}
+          p {{ 'home.current_powMin' | translate }}
 
     .col.s6.m3
       .card

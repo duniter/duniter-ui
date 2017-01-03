@@ -107,7 +107,11 @@ module.exports = ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) => {
 
   function bindBlockWS(cb) {
     BMA(summary.host).websocket.block().on(undefined, (block) => {
-      $scope.current = block;
+      $scope.current_currency = block.currency;
+      $scope.current_number = block.number;
+      $scope.current_membersCount = block.membersCount;
+      $scope.current_medianTime = block.medianTime;
+      $scope.current_powMin = block.powMin;
       let M = summary.current.monetaryMass || 0;
       let UD = summary.parameters.ud0;
       if (summary.lastUDBlock) {
