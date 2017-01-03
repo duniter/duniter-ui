@@ -13,19 +13,6 @@ for (const module of modules) {
   stack.registerDependency(module);
 }
 
-stack.registerDependency({
-  duniter: {
-    cli: [{
-      name: 'hello',
-      desc: 'Says hello to the world.',
-      requires: ['service'],
-      promiseCallback: (duniterServer) => co(function*(){
-        console.log('Hello, world.');
-      })
-    }]
-  }
-});
-
 return co(function*(){
   yield stack.executeStack();
   console.log('Done');
