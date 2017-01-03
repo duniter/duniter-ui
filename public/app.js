@@ -1924,7 +1924,7 @@ require.register("js/lib/conf/conf", function(exports, require, module) {
 module.exports = {
   server: "", // Empty server will use the browser current host
   port: "", // Empty port will use the browser current port
-  default_port: 10500,
+  default_port: 9220,
   dev_autoconf: false,
   api_timeout: 10000 // 10 sec timeout
 };
@@ -3566,14 +3566,14 @@ module.exports = function (angular) {
 
       return {
         getExportURL: function getExportURL() {
-          return httpProtocol() + "localhost:10500" + '/webmin/data/duniter_export';
+          return httpProtocol() + "localhost:9220" + '/webmin/data/duniter_export';
         },
         getImportURL: function getImportURL() {
-          return httpProtocol() + "localhost:10500" + '/webmin/data/duniter_import';
+          return httpProtocol() + "localhost:9220" + '/webmin/data/duniter_import';
         },
         isNodePubliclyReachable: getResource('/webmin/server/reachable'),
         ws: function ws() {
-          return _ws(wsProtocol() + "localhost:10500" + '/webmin/ws');
+          return _ws(wsProtocol() + "localhost:9220" + '/webmin/ws');
         },
         summary: getResource('/webmin/summary'),
         powSummary: getResource('/webmin/summary/pow'),
