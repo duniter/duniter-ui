@@ -17,7 +17,6 @@ module.exports = ($scope, $state, PubkeyGenerator) => {
 
   PubkeyGenerator($scope);
 
-  conf.dev_autoconf = true;
   if (conf.dev_autoconf) {
     $scope.$parent.conf.idty_uid = 'dev_' + ~~(Math.random() * 2147483647);
     $scope.$parent.conf.idty_entropy = ~~(Math.random() * 2147483647) + "";
