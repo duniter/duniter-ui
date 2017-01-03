@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const http    = require('http');
 const express = require('express');
 const path    = require('path');
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const webminController = require('./server/controller/webmin.js');
 
 // Inject 'webstart' command if no argument was given
@@ -35,6 +37,11 @@ module.exports = {
            * Sur appel de l'URL /abc
            */
           app.use(express.static(path.join(__dirname, '..', 'duniter-ui', 'public')));
+
+          app.use(cors());
+
+          // File upload for backup API
+          app.use(fileUpload());
 
           app.use(bodyParser.urlencoded({
             extended: true

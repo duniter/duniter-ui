@@ -18,7 +18,22 @@ const handleRequest = (method, uri, promiseFunc) => {
     });
 };
 
+const handleFileRequest = (method, uri, promiseFunc) => {
+  method(uri, function(req, res) {
+    res.set('Access-Control-Allow-Origin', '*');
+    co(function *() {
+      try {
+        let fileStream = yield promiseFunc(req);
+        // HTTP answer
+        fileStream.pipe(res);
+      } catch (e) {
+        // HTTP error
+        res.status(400).send(e);
+      }
+    });
+  });
+};
 
 module.exports = {
-    handleRequest
+    handleRequest, handleFileRequest
 };

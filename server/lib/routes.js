@@ -3,6 +3,7 @@
 const co = require('co');
 const es = require('event-stream');
 const handleRequest = require('../lib/network').handleRequest;
+const handleFileRequest = require('../lib/network').handleFileRequest;
 const WEBMIN_LOGS_CACHE = 2000;
 
 const WebSocketServer = require('ws').Server;
@@ -31,7 +32,7 @@ module.exports = {
         handleRequest(app.get.bind(app),  '/webmin/server/services/stop_all',  webminCtrl.stopAllServices);
         handleRequest(app.get.bind(app),  '/webmin/server/reset/data',         webminCtrl.resetData);
         handleRequest(app.get.bind(app),  '/webmin/network/interfaces',        webminCtrl.listInterfaces);
-        //app.httpGETFile('/webmin/data/duniter_export',     webminCtrl.exportData);
+        handleFileRequest(app.get.bind(app),'/webmin/data/duniter_export',     webminCtrl.exportData);
         handleRequest(app.post.bind(app), '/webmin/data/duniter_import',       webminCtrl.importData);
     },
     webminWS: function(webminCtrl) {
