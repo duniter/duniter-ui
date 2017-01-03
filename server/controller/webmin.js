@@ -512,8 +512,8 @@ function WebAdmin (duniterServer) {
     yield pluggedDALP;
     const logs = yield server.getLastLogLines(req.params.quantity || 1500);
     const body = yield rp.post({
-      url: 'http://hastebin.com/documents',
-      body: logs
+      url: 'https://hastebin.com/documents',
+      body: typeof logs == 'object' ? logs.join('') : logs
     });
     const res = JSON.parse(body);
     return {
