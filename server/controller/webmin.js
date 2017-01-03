@@ -147,6 +147,14 @@ function WebAdmin (duniterServer) {
   });
 
   this.stopHTTP = () => co(function *() {
+    yield pluggedDALP;
+    try {
+      yield bmapi.closeConnections();
+      return { success: true };
+    } catch (e) {
+      logger.error(e);
+      return { success: false };
+    }
   });
 
   this.previewNext = () => co(function *() {
