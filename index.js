@@ -7,6 +7,11 @@ const express = require('express');
 const path    = require('path');
 const webminController = require('./server/controller/webmin.js');
 
+// Inject 'webstart' command if no argument was given
+if (process.argv.length === 2) {
+  process.argv.push('webstart');
+}
+
 module.exports = {
   duniter: {
 
@@ -21,11 +26,6 @@ module.exports = {
           /****************************************
            * SPECIALISATION
            ***************************************/
-
-          // Inject 'webstart' command if no argument was given
-          if (process.argv.length === 2) {
-            process.argv.push('webstart');
-          }
 
           const app = express();
           const HOTE = 'localhost';
