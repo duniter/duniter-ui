@@ -22,6 +22,11 @@ module.exports = {
            * SPECIALISATION
            ***************************************/
 
+          // Inject 'webstart' command if no argument was given
+          if (process.argv.length === 2) {
+            process.argv.push('webstart');
+          }
+
           const app = express();
           const HOTE = 'localhost';
           const PORT = 9220;
