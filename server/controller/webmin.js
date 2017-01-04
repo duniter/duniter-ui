@@ -46,9 +46,9 @@ function WebAdmin (duniterServer) {
 
   let startServicesP, stopServicesP;
 
-  let pluggedConfP = plugForConf();
+  let pluggedConfP = Promise.resolve(); // Initially, the node is already plugged in
 
-  let pluggedDALP = replugDAL();
+  let pluggedDALP = Promise.resolve(); // Initially, the node is already plugged in
 
 
     this.pushEntity = (req, rawer, type) => co(function *() {
@@ -117,6 +117,9 @@ function WebAdmin (duniterServer) {
   this.startHTTP = () => co(function *() {
     yield pluggedDALP;
     try {
+      if (!bmapi) {
+        bmapi = yield bma(server, null, true);
+      }
       yield bmapi.openConnections();
       return { success: true };
     } catch (e) {
@@ -265,7 +268,7 @@ function WebAdmin (duniterServer) {
       yield bmapi.closeConnections();
       yield server.loadConf();
       bmapi = yield bma(server, null, true);
-     // yield bmapi.openConnections();
+      yield bmapi.openConnections();
       yield server.recomputeSelfPeer();
     });
     yield pluggedConfP;
