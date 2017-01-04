@@ -32,6 +32,9 @@ function WebAdmin (duniterServer) {
   let bmapi;
   const that = this;
 
+  // Routing documents
+  server.routing();
+
   server.pipe(es.mapSync(function(data) {
     if (data.pulling !== undefined || data.pow !== undefined) {
       that.push(data);
