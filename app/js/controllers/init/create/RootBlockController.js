@@ -25,6 +25,7 @@ module.exports = ($scope, $http, $state, BMA, Webmin) => {
       });
       yield Webmin.server.http.start();
       yield Webmin.server.http.openUPnP();
+      yield Webmin.server.http.regularUPnP();
       yield $scope.try();
     } catch (e) {
       $scope.message = e.message;

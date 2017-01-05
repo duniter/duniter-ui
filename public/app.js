@@ -265,24 +265,28 @@ module.exports = function ($scope, $http, $state, BMA, Webmin) {
 
             case 12:
               _context.next = 14;
-              return $scope.try();
+              return Webmin.server.http.regularUPnP();
 
             case 14:
-              _context.next = 19;
-              break;
+              _context.next = 16;
+              return $scope.try();
 
             case 16:
-              _context.prev = 16;
+              _context.next = 21;
+              break;
+
+            case 18:
+              _context.prev = 18;
               _context.t0 = _context['catch'](0);
 
               $scope.message = _context.t0.message;
 
-            case 19:
+            case 21:
             case 'end':
               return _context.stop();
           }
         }
-      }, _callee, this, [[0, 16]]);
+      }, _callee, this, [[0, 18]]);
     }));
   };
 
