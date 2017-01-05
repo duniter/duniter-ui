@@ -1,5 +1,6 @@
-const co = require('co');
+"use strict";
 
+const co = require('co');
 
 const handleRequest = (method, uri, promiseFunc) => {
     method(uri, function(req, res) {
