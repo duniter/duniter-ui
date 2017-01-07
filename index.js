@@ -17,11 +17,18 @@ if (process.argv.length === 2) {
 module.exports = {
   duniter: {
 
+    'cliOptions': [
+
+      // Webmin options
+      { value: '--webmhost <host>', desc: 'Local network interface to connect to (IP)' },
+      { value: '--webmport <port>', desc: 'Local network port to connect', parser: parseInt }
+    ],
+
     'cli': [{
       name: 'webstart',
       desc: 'Do a webstart',
       requires: ['service'],
-      promiseCallback: (duniterServer) => co(function*(){
+      promiseCallback: (duniterServer, conf, program) => co(function*(){
 
         try {
 
@@ -30,8 +37,8 @@ module.exports = {
            ***************************************/
 
           const app = express();
-          const HOTE = 'localhost';
-          const PORT = 9220;
+          const HOTE = program.webmhost || 'localhost';
+          const PORT = program.webmport || 9220;
 
           /**
            * Sur appel de l'URL /abc
