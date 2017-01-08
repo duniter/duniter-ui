@@ -2638,7 +2638,14 @@ module.exports = function Peer(json) {
 
   that.getURL = function () {
     var bma = that.getBMA();
-    var base = that.hasValid4(bma) ? bma.ipv4 : bma.dns ? bma.dns : bma.ipv6 ? '[' + bma.ipv6 + ']' : '';
+    var base = '';
+    if (bma.dns) {
+      base = bma.dns;
+    } else if (that.hasValid4(bma)) {
+      base = bma.ipv4;
+    } else if (bma.ipv6) {
+      base = '[' + bma.ipv6 + ']';
+    }
     if (bma.port) base += ':' + bma.port;
     return base;
   };
@@ -3569,14 +3576,14 @@ module.exports = function (angular) {
 
       return {
         getExportURL: function getExportURL() {
-          return httpProtocol() + "localhost:9220" + '/webmin/data/duniter_export';
+          return httpProtocol() + server + '/webmin/data/duniter_export';
         },
         getImportURL: function getImportURL() {
-          return httpProtocol() + "localhost:9220" + '/webmin/data/duniter_import';
+          return httpProtocol() + server + '/webmin/data/duniter_import';
         },
         isNodePubliclyReachable: getResource('/webmin/server/reachable'),
         ws: function ws() {
-          return _ws(wsProtocol() + "localhost:9220" + '/webmin/ws');
+          return _ws(wsProtocol() + server + '/webmin/ws');
         },
         summary: getResource('/webmin/summary'),
         powSummary: getResource('/webmin/summary/pow'),

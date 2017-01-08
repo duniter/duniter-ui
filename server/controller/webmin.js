@@ -8,6 +8,7 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
+const Peer = require('../../app/js/lib/entity/peer');
 
 module.exports = (duniterServer) => {
   return new WebAdmin(duniterServer);
@@ -80,7 +81,12 @@ function WebAdmin (duniterServer) {
 
   this.summary = () => co(function *() {
     yield pluggedDALP;
-    const host = server.conf ? [server.conf.ipv4, server.conf.port].join(':') : '';
+    const peer = new Peer({
+      endpoints: [
+        network.getEndpoint(server.conf)
+      ]
+    });
+    const host = peer.getURL();
     const current = yield server.dal.getCurrentBlockOrNull();
     const rootBlock = yield server.dal.getBlock(0);
     const lastUDBlock = yield server.dal.blockDAL.lastBlockWithDividend();

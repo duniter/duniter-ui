@@ -1,3 +1,4 @@
+"use strict";
 
 module.exports = function Peer(json) {
 
@@ -88,10 +89,14 @@ module.exports = function Peer(json) {
 
   that.getURL = function() {
     var bma = that.getBMA();
-    var base =
-      (that.hasValid4(bma) ? bma.ipv4 :
-        (bma.dns ? bma.dns :
-          (bma.ipv6 ? '[' + bma.ipv6 + ']' : '')));
+    var base = '';
+    if (bma.dns) {
+      base = bma.dns;
+    } else if (that.hasValid4(bma)) {
+      base = bma.ipv4;
+    } else if (bma.ipv6) {
+      base = '[' + bma.ipv6 + ']';
+    }
     if(bma.port)
       base += ':' + bma.port;
     return base;

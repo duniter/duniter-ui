@@ -130,10 +130,10 @@ module.exports = (angular) => {
         }
 
         return {
-          getExportURL: () => httpProtocol() + "localhost:9220" + '/webmin/data/duniter_export',
-          getImportURL: () => httpProtocol() + "localhost:9220" + '/webmin/data/duniter_import',
+          getExportURL: () => httpProtocol() + server + '/webmin/data/duniter_export',
+          getImportURL: () => httpProtocol() + server + '/webmin/data/duniter_import',
           isNodePubliclyReachable: getResource('/webmin/server/reachable'),
-          ws: () => ws(wsProtocol() + "localhost:9220" + '/webmin/ws'),
+          ws: () => ws(wsProtocol() + server + '/webmin/ws'),
           summary: getResource('/webmin/summary'),
           powSummary: getResource('/webmin/summary/pow'),
           logsExport: (nbLines) => getResource('/webmin/logs/export/' + nbLines)(),
