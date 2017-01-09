@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $http, $state, $location, BMA, Webmin, UIUtils) => {
+module.exports = ($scope, $http, $state, $location, Webmin, UIUtils) => {
 
   UIUtils.enableTabs();
 

@@ -1,5 +1,4 @@
 module.exports = () => {
-  require('./services/bma')(angular);
   require('./services/webmin')(angular);
 
   const duniterApp = angular.module('duniterUIApp', [
@@ -66,7 +65,7 @@ module.exports = () => {
     }
   };
 
-  let homeControllers = angular.module('homeControllers', ['duniter.services.bma', 'duniter.services.webmin', 'ngFileUpload']);
+  let homeControllers = angular.module('homeControllers', ['duniter.services.webmin', 'ngFileUpload']);
 
   homeControllers.controller('IndexController',            require('./controllers/IndexController'));
   homeControllers.controller('AboutController',            require('./controllers/AboutController'));

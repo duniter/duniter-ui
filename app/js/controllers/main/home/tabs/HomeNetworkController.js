@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = ($scope, BMA, peers, summary) => {
+module.exports = ($scope, Webmin, peers) => {
 
   $scope.peers = peers.peers;
 
@@ -9,7 +9,7 @@ module.exports = ($scope, BMA, peers, summary) => {
   $scope.update = () => co(function *() {
     $scope.searching = true;
     let delayP = Q.delay(500);
-    $scope.peers = (yield BMA(summary.host).network.peers()).peers;
+    $scope.peers = (yield Webmin.network.peers()).peers;
     yield delayP;
     $scope.searching = false;
     $scope.$apply();

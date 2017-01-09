@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $http, $state, BMA, Webmin, summary, UIUtils) => {
+module.exports = ($scope, $http, $state, Webmin, summary, UIUtils) => {
 
   UIUtils.changeTitle(summary.version);
 

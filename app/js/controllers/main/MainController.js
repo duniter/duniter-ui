@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $state, $http, $timeout, $interval, BMA, Webmin, summary, UIUtils, Base58) => {
+module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, summary, UIUtils, Base58) => {
 
   const local_host = summary.host.split(':')[0]; // We suppose IPv4 configuration
   const local_port = summary.host.split(':')[1];

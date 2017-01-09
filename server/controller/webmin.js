@@ -401,6 +401,19 @@ function WebAdmin (duniterServer) {
     };
   });
 
+  this.selfPeer = () => co(function*(){
+    return server.PeeringService.peer();
+  });
+
+  this.peers = () => co(function*(){
+    const peers = yield server.dal.listAllPeers();
+    return { peers };
+  });
+
+  this.currencyParameters = () => co(function*(){
+    return server.dal.getParameters();
+  });
+
   this.startAllServices = () => co(function *() {
     // Allow services to be stopped
     stopServicesP = null;
@@ -531,6 +544,25 @@ function WebAdmin (duniterServer) {
     return {
       link: 'http://hastebin.com/' + res.key
     };
+  });
+
+  this.blockchainBlocks = (req) => co(function *() {
+    const start = parseInt(req.params.from);
+    const end = parseInt(req.params.from) + parseInt(req.params.count) - 1;
+    const blocks = yield server.dal.getBlocksBetween(start, end);
+    return blocks;
+  });
+
+  this.blockchainAdd = (req) => co(function *() {
+    try {
+      let rawBlock = http2raw.block(req);
+      rawBlock = dos2unix(rawBlock);
+      const written = yield server.writeRaw(rawBlock, constants.ENTITY_BLOCK);
+      return written.json();
+    } catch (e) {
+      logger.error(e);
+      throw e;
+    }
   });
 
   function plugForConf() {

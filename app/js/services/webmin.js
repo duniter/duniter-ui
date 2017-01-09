@@ -134,9 +134,15 @@ module.exports = (angular) => {
           getImportURL: () => httpProtocol() + server + '/webmin/data/duniter_import',
           isNodePubliclyReachable: getResource('/webmin/server/reachable'),
           ws: () => ws(wsProtocol() + server + '/webmin/ws'),
+          wsBlock: () => ws(wsProtocol() + server + '/webmin/ws_block'),
+          wsPeer: () => ws(wsProtocol() + server + '/webmin/ws_peer'),
           summary: getResource('/webmin/summary'),
           powSummary: getResource('/webmin/summary/pow'),
           logsExport: (nbLines) => getResource('/webmin/logs/export/' + nbLines)(),
+          blockchain: {
+            blocks: (opts) => getResource('/webmin/blockchain/blocks/' + opts.count + '/' + opts.from)(),
+            block_add: postResource('/webmin/blockchain/add')
+          },
           server: {
             http: {
               start: getResource('/webmin/server/http/start'),
@@ -163,7 +169,12 @@ module.exports = (angular) => {
             preview: postResource('/webmin/key/preview')
           },
           network: {
-            interfaces: getResource('/webmin/network/interfaces')
+            interfaces: getResource('/webmin/network/interfaces'),
+            selfPeer: getResource('/webmin/network/self'),
+            peers: getResource('/webmin/network/peers')
+          },
+          currency: {
+            parameters: getResource('/webmin/currency/parameters')
           }
         }
       }

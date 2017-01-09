@@ -12,7 +12,10 @@ module.exports = {
     webmin: function(webminCtrl, app) {
         handleRequest(app.get.bind(app), '/webmin/summary',                   webminCtrl.summary);
         handleRequest(app.get.bind(app), '/webmin/summary/pow',               webminCtrl.powSummary);
-        handleRequest(app.get.bind(app),   '/webmin/logs/export/:quantity',     webminCtrl.logsExport);
+        handleRequest(app.get.bind(app), '/webmin/currency/parameters',        webminCtrl.currencyParameters);
+        handleRequest(app.get.bind(app),   '/webmin/blockchain/blocks/:count/:from', webminCtrl.blockchainBlocks);
+        handleRequest(app.post.bind(app),  '/webmin/blockchain/add',           webminCtrl.blockchainAdd);
+        handleRequest(app.get.bind(app),   '/webmin/logs/export/:quantity',    webminCtrl.logsExport);
         handleRequest(app.post.bind(app), '/webmin/key/preview',               webminCtrl.previewPubkey);
         handleRequest(app.get.bind(app),  '/webmin/server/reachable',          webminCtrl.isNodePubliclyReachable);
         handleRequest(app.get.bind(app),  '/webmin/server/http/start',         webminCtrl.startHTTP);
@@ -32,6 +35,8 @@ module.exports = {
         handleRequest(app.get.bind(app),  '/webmin/server/services/stop_all',  webminCtrl.stopAllServices);
         handleRequest(app.get.bind(app),  '/webmin/server/reset/data',         webminCtrl.resetData);
         handleRequest(app.get.bind(app),  '/webmin/network/interfaces',        webminCtrl.listInterfaces);
+        handleRequest(app.get.bind(app),  '/webmin/network/self',              webminCtrl.selfPeer);
+        handleRequest(app.get.bind(app),  '/webmin/network/peers',             webminCtrl.peers);
         handleFileRequest(app.get.bind(app),'/webmin/data/duniter_export',     webminCtrl.exportData);
         handleRequest(app.post.bind(app), '/webmin/data/duniter_import',       webminCtrl.importData);
     },
@@ -135,6 +140,54 @@ module.exports = {
                         }));
                     }
                 }));
+
+          /******
+           * BLOCKS
+           */
+
+          // Socket for synchronization events
+          const server = webminCtrl.server;
+          let currentBlock;
+          const wssBlock = new WebSocketServer({
+            server: httpServer,
+            path: '/webmin/ws_block'
+          });
+
+          wssBlock.on('error', function (error) {
+            logger.error('Error on WS Server');
+            logger.error(error);
+          });
+
+          wssBlock.on('connection', function connection(ws) {
+            co(function *() {
+              currentBlock = yield server.dal.getCurrentBlockOrNull();
+              if (currentBlock) {
+                ws.send(JSON.stringify(currentBlock));
+              }
+            });
+          });
+
+          wssBlock.broadcast = (data) => wssBlock.clients.forEach((client) => {
+            try {
+              client.send(data);
+            } catch (e) {
+              logger.error('error on ws: %s', e);
+            }
+          });
+
+          // Forward blocks & peers
+          server
+            .pipe(es.mapSync(function(data) {
+              try {
+                // Broadcast block
+                if (data.joiners) {
+                  currentBlock = data;
+                  wssBlock.broadcast(JSON.stringify(currentBlock));
+                }
+              } catch (e) {
+                logger.error('error on ws mapSync:', e);
+              }
+            }));
         };
     }
 };

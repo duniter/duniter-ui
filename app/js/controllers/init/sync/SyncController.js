@@ -2,7 +2,7 @@
 
 var co = require('co');
 
-module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, BMA, UIUtils, Webmin) => {
+module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, UIUtils, Webmin) => {
 
   let syncWS = Webmin.ws();
 

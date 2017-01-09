@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) => {
+module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
 
   let co = require('co');
   let moment = require('moment');
@@ -17,6 +17,11 @@ module.exports = ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) => {
     UD = parseInt((summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / N).toFixed(0));
   }
   $scope.current = summary.current;
+  $scope.current_currency = summary.current.currency;
+  $scope.current_number = summary.current.number;
+  $scope.current_membersCount = summary.current.membersCount;
+  $scope.current_medianTime = summary.current.medianTime;
+  $scope.current_powMin = summary.current.powMin;
   $scope.monetaryMass = parseInt(M / UD) || 0;
   $scope.server_started = true;
   $scope.server_stopped = false;
@@ -106,7 +111,7 @@ module.exports = ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) => {
   });
 
   function bindBlockWS(cb) {
-    BMA(summary.host).websocket.block().on(undefined, (block) => {
+    Webmin.wsBlock().on(undefined, (block) => {
       $scope.current_currency = block.currency;
       $scope.current_number = block.number;
       $scope.current_membersCount = block.membersCount;

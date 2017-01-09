@@ -3,7 +3,7 @@
 var co = require('co');
 var conf = require('js/lib/conf/conf');
 
-module.exports = ($scope, $http, $state, BMA, Webmin) => {
+module.exports = ($scope, $http, $state, Webmin) => {
 
   $scope.generated = '';
   $scope.started = false;
@@ -48,8 +48,7 @@ module.exports = ($scope, $http, $state, BMA, Webmin) => {
   });
 
   $scope.accept = () => co(function *() {
-    const node_address = $scope.$parent.conf.local_ipv4 || $scope.$parent.conf.local_ipv6;
-    let res = yield BMA(node_address + ":" + $scope.$parent.conf.lport).blockchain.block_add({
+    let res = yield Webmin.blockchain.block_add({
       block: $scope.generated
     });
     if (res.number == 0) {
