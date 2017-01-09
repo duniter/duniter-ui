@@ -126,7 +126,7 @@ require.register("js/controllers/IndexController", function(exports, require, mo
 
 var co = require('co');
 
-module.exports = function ($scope, $http, $state, BMA, Webmin, summary, UIUtils) {
+module.exports = function ($scope, $http, $state, Webmin, summary, UIUtils) {
 
   UIUtils.changeTitle(summary.version);
 
@@ -226,7 +226,7 @@ require.register("js/controllers/init/create/RootBlockController", function(expo
 var co = require('co');
 var conf = require('js/lib/conf/conf');
 
-module.exports = function ($scope, $http, $state, BMA, Webmin) {
+module.exports = function ($scope, $http, $state, Webmin) {
 
   $scope.generated = '';
   $scope.started = false;
@@ -346,29 +346,28 @@ module.exports = function ($scope, $http, $state, BMA, Webmin) {
 
   $scope.accept = function () {
     return co(regeneratorRuntime.mark(function _callee4() {
-      var node_address, res;
+      var res;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              node_address = $scope.$parent.conf.local_ipv4 || $scope.$parent.conf.local_ipv6;
-              _context4.next = 3;
-              return BMA(node_address + ":" + $scope.$parent.conf.lport).blockchain.block_add({
+              _context4.next = 2;
+              return Webmin.blockchain.block_add({
                 block: $scope.generated
               });
 
-            case 3:
+            case 2:
               res = _context4.sent;
 
               if (!(res.number == 0)) {
-                _context4.next = 7;
+                _context4.next = 6;
                 break;
               }
 
-              _context4.next = 7;
+              _context4.next = 6;
               return $scope.startServices();
 
-            case 7:
+            case 6:
             case 'end':
               return _context4.stop();
           }
@@ -466,7 +465,7 @@ require.register("js/controllers/init/sync/SyncController", function(exports, re
 
 var co = require('co');
 
-module.exports = function ($scope, $http, $state, $timeout, $stateParams, $translate, BMA, UIUtils, Webmin) {
+module.exports = function ($scope, $http, $state, $timeout, $stateParams, $translate, UIUtils, Webmin) {
 
   var syncWS = Webmin.ws();
 
@@ -654,7 +653,7 @@ require.register("js/controllers/main/MainController", function(exports, require
 
 var co = require('co');
 
-module.exports = function ($scope, $state, $http, $timeout, $interval, BMA, Webmin, summary, UIUtils, Base58) {
+module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, summary, UIUtils, Base58) {
 
   var local_host = summary.host.split(':')[0]; // We suppose IPv4 configuration
   var local_port = summary.host.split(':')[1];
@@ -909,7 +908,7 @@ var BLOCKS_COUNT = 40;
 
 var co = require('co');
 
-module.exports = function ($scope, $state, $timeout, BMA, Webmin, UIUtils, Graph) {
+module.exports = function ($scope, $state, $timeout, Webmin, UIUtils, Graph) {
 
   var data = {};
 
@@ -948,12 +947,12 @@ module.exports = function ($scope, $state, $timeout, BMA, Webmin, UIUtils, Graph
             case 2:
               summary = _context.sent;
               _context.next = 5;
-              return BMA(summary.host).currency.parameters();
+              return Webmin.currency.parameters();
 
             case 5:
               parameters = _context.sent;
               _context.next = 8;
-              return BMA(summary.host).blockchain.blocks({
+              return Webmin.blockchain.blocks({
                 count: $scope.blocksCount,
                 from: Math.max(0, summary.current.number - $scope.blocksCount)
               });
@@ -1088,7 +1087,7 @@ module.exports = function ($scope, UIUtils) {
 require.register("js/controllers/main/home/tabs/HomeNetworkController", function(exports, require, module) {
 "use strict";
 
-module.exports = function ($scope, BMA, peers, summary) {
+module.exports = function ($scope, Webmin, peers) {
 
   $scope.peers = peers.peers;
 
@@ -1104,7 +1103,7 @@ module.exports = function ($scope, BMA, peers, summary) {
               $scope.searching = true;
               delayP = Q.delay(500);
               _context.next = 4;
-              return BMA(summary.host).network.peers();
+              return Webmin.network.peers();
 
             case 4:
               $scope.peers = _context.sent.peers;
@@ -1129,7 +1128,7 @@ module.exports = function ($scope, BMA, peers, summary) {
 require.register("js/controllers/main/home/tabs/OverviewController", function(exports, require, module) {
 "use strict";
 
-module.exports = function ($scope, $interval, BMA, Webmin, UIUtils, summary, ws) {
+module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
 
   var co = require('co');
   var moment = require('moment');
@@ -1146,6 +1145,11 @@ module.exports = function ($scope, $interval, BMA, Webmin, UIUtils, summary, ws)
     UD = parseInt((summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / N).toFixed(0));
   }
   $scope.current = summary.current;
+  $scope.current_currency = summary.current.currency;
+  $scope.current_number = summary.current.number;
+  $scope.current_membersCount = summary.current.membersCount;
+  $scope.current_medianTime = summary.current.medianTime;
+  $scope.current_powMin = summary.current.powMin;
   $scope.monetaryMass = parseInt(M / UD) || 0;
   $scope.server_started = true;
   $scope.server_stopped = false;
@@ -1254,7 +1258,7 @@ module.exports = function ($scope, $interval, BMA, Webmin, UIUtils, summary, ws)
   });
 
   function bindBlockWS(cb) {
-    BMA(summary.host).websocket.block().on(undefined, function (block) {
+    Webmin.wsBlock().on(undefined, function (block) {
       $scope.current_currency = block.currency;
       $scope.current_number = block.number;
       $scope.current_membersCount = block.membersCount;
@@ -1380,7 +1384,7 @@ require.register("js/controllers/main/settings/SettingsController", function(exp
 
 var co = require('co');
 
-module.exports = function ($scope, $http, $state, $location, BMA, Webmin, UIUtils) {
+module.exports = function ($scope, $http, $state, $location, Webmin, UIUtils) {
 
   UIUtils.enableTabs();
 
@@ -1818,7 +1822,6 @@ function toArrayOfAddresses(netiScope) {
 'use strict';
 
 module.exports = function () {
-  require('./services/bma')(angular);
   require('./services/webmin')(angular);
 
   var duniterApp = angular.module('duniterUIApp', ['ui.router', 'homeControllers', 'pascalprecht.translate']);
@@ -1874,7 +1877,7 @@ module.exports = function () {
     }
   };
 
-  var homeControllers = angular.module('homeControllers', ['duniter.services.bma', 'duniter.services.webmin', 'ngFileUpload']);
+  var homeControllers = angular.module('homeControllers', ['duniter.services.webmin', 'ngFileUpload']);
 
   homeControllers.controller('IndexController', require('./controllers/IndexController'));
   homeControllers.controller('AboutController', require('./controllers/AboutController'));
@@ -2270,21 +2273,15 @@ module.exports = function (app) {
       url: '/network',
       template: require('views/main/home/tabs/network'),
       resolve: {
-        peers: function peers(Webmin, BMA) {
+        peers: function peers(Webmin) {
           return co(regeneratorRuntime.mark(function _callee() {
-            var summary;
             return regeneratorRuntime.wrap(function _callee$(_context) {
               while (1) {
                 switch (_context.prev = _context.next) {
                   case 0:
-                    _context.next = 2;
-                    return Webmin.summary();
+                    return _context.abrupt('return', Webmin.network.peers());
 
-                  case 2:
-                    summary = _context.sent;
-                    return _context.abrupt('return', BMA(summary.host).network.peers());
-
-                  case 4:
+                  case 1:
                   case 'end':
                     return _context.stop();
                 }
@@ -2308,7 +2305,7 @@ module.exports = function (app) {
       url: '/data',
       template: require('views/main/settings/tabs/data'),
       resolve: {
-        peers: function peers(Webmin, BMA) {
+        peers: function peers(Webmin) {
           return co(regeneratorRuntime.mark(function _callee3() {
             var _this = this;
 
@@ -2320,25 +2317,20 @@ module.exports = function (app) {
                   case 0:
                     _context3.prev = 0;
                     return _context3.delegateYield(regeneratorRuntime.mark(function _callee2() {
-                      var summary, self, res;
+                      var self, res;
                       return regeneratorRuntime.wrap(function _callee2$(_context2) {
                         while (1) {
                           switch (_context2.prev = _context2.next) {
                             case 0:
                               _context2.next = 2;
-                              return Webmin.summary();
+                              return Webmin.network.selfPeer();
 
                             case 2:
-                              summary = _context2.sent;
+                              self = _context2.sent;
                               _context2.next = 5;
-                              return BMA(summary.host).network.peering.self();
+                              return Webmin.network.peers();
 
                             case 5:
-                              self = _context2.sent;
-                              _context2.next = 8;
-                              return BMA(summary.host).network.peers();
-
-                            case 8:
                               res = _context2.sent;
                               return _context2.abrupt('return', {
                                 v: _.filter(res.peers, function (p) {
@@ -2346,7 +2338,7 @@ module.exports = function (app) {
                                 })
                               });
 
-                            case 10:
+                            case 7:
                             case 'end':
                               return _context2.stop();
                           }
@@ -2767,228 +2759,6 @@ module.exports = function (app) {
       decode: Base58.decode
     };
   });
-};
-});
-
-require.register("js/services/bma", function(exports, require, module) {
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var co = require('co');
-var _ = require('underscore');
-var conf = require('../lib/conf/conf');
-
-module.exports = function (angular) {
-
-    angular.module('duniter.services.bma', ['ngResource']).factory('BMA', function ($http, $q) {
-        function httpProtocol() {
-            return window.location.protocol + '//';
-        }
-
-        function wsProtocol() {
-            return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-        }
-
-        function BMA(host) {
-            function getResource(uri, protocol) {
-                return function (params) {
-                    return $q.when(httpGet(uri, params, protocol));
-                };
-            }
-
-            function httpGet(uri, params, protocol) {
-                return Q.Promise(function (resolve, reject) {
-                    var config = {
-                        timeout: conf.api_timeout
-                    },
-                        suffix = '',
-                        pkeys = [],
-                        queryParams = null;
-                    if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) == 'object') {
-                        pkeys = _.keys(params);
-                        queryParams = {};
-                    }
-                    pkeys.forEach(function (pkey) {
-                        var prevURI = uri;
-                        uri = uri.replace(new RegExp(':' + pkey), params[pkey]);
-                        if (prevURI == uri) {
-                            queryParams[pkey] = params[pkey];
-                        }
-                    });
-                    config.params = queryParams;
-                    var url = (protocol || httpProtocol()) + host + uri + suffix;
-                    $http.get(url, config).success(function (data, status, headers, config) {
-                        resolve(data);
-                    }).error(function (data, status, headers, config) {
-                        console.log(data);
-                        reject(data);
-                    });
-                });
-            }
-
-            function postResource(uri) {
-                return function (data, params) {
-                    return $q.when(Q.Promise(function (resolve, reject) {
-                        var config = {
-                            timeout: 4000
-                        },
-                            suffix = '',
-                            pkeys = [],
-                            queryParams = null;
-                        if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) == 'object') {
-                            pkeys = _.keys(params);
-                            queryParams = {};
-                        }
-                        pkeys.forEach(function (pkey) {
-                            var prevURI = uri;
-                            uri = uri.replace(new RegExp(':' + pkey), params[pkey]);
-                            if (prevURI == uri) {
-                                queryParams[pkey] = params[pkey];
-                            }
-                        });
-                        config.params = queryParams;
-                        var url = httpProtocol() + host + uri + suffix;
-                        $http.post(url, data, config).success(function (data, status, headers, config) {
-                            resolve(data);
-                        }).error(function (data, status, headers, config) {
-                            reject(data);
-                        });
-                    }));
-                };
-            }
-
-            function bmaGET(uri) {
-                return getResource('' + uri);
-            }
-
-            function bmaPOST(uri) {
-                return postResource('' + uri);
-            }
-
-            function bmaWS(uri) {
-                return ws(wsProtocol() + host + '' + uri);
-            }
-
-            var wsMap = {};
-
-            function ws(uri) {
-                var sock = wsMap[uri] || new WebSocket(uri);
-                wsMap[uri] = sock;
-                sock.onclose = function (e) {
-                    console.log('close');
-                    console.log(e);
-                };
-                sock.onerror = function (e) {
-                    console.log('onerror');
-                    console.log(e);
-                };
-                var opened = false,
-                    openedCallback = void 0;
-                sock.onopen = function () {
-                    opened = true;
-                    openedCallback && openedCallback();
-                };
-                var listener = void 0,
-                    messageType = void 0;
-                sock.onmessage = function (e) {
-                    var res = JSON.parse(e.data);
-                    if (res.type == 'log') {
-                        for (var i = 0, len = res.value.length; i < len; i++) {
-                            var log = res.value[i];
-                            // console[log.level](log.msg);
-                        }
-                    }
-                    if (listener && (messageType === undefined || res.type === messageType)) {
-                        listener(res);
-                    }
-                };
-                return {
-                    on: function on(type, callback) {
-                        messageType = type;
-                        listener = callback;
-                    },
-                    whenOpened: function whenOpened() {
-                        return co(regeneratorRuntime.mark(function _callee() {
-                            return regeneratorRuntime.wrap(function _callee$(_context) {
-                                while (1) {
-                                    switch (_context.prev = _context.next) {
-                                        case 0:
-                                            if (!opened) {
-                                                _context.next = 4;
-                                                break;
-                                            }
-
-                                            return _context.abrupt('return', true);
-
-                                        case 4:
-                                            _context.next = 6;
-                                            return Q.Promise(function (resolve) {
-                                                openedCallback = resolve;
-                                            });
-
-                                        case 6:
-                                        case 'end':
-                                            return _context.stop();
-                                    }
-                                }
-                            }, _callee, this);
-                        }));
-                    },
-                    send: function send(msg) {
-                        return sock.send(msg);
-                    }
-                };
-            }
-
-            return {
-                node: {
-                    summary: bmaGET('/node/summary')
-                },
-                wot: {
-                    lookup: bmaGET('/wot/lookup/:search'),
-                    members: bmaGET('/wot/members')
-                },
-                network: {
-                    peering: {
-                        self: bmaGET('/network/peering'),
-                        peers: bmaGET('/network/peering/peers')
-                    },
-                    peers: bmaGET('/network/peers')
-                },
-                currency: {
-                    parameters: bmaGET('/blockchain/parameters')
-                },
-                blockchain: {
-                    current: bmaGET('/blockchain/current'),
-                    block: bmaGET('/blockchain/block/:block'),
-                    blocks: bmaGET('/blockchain/blocks/:count/:from'),
-                    block_add: bmaPOST('/blockchain/block'),
-                    stats: {
-                        ud: bmaGET('/blockchain/with/ud'),
-                        tx: bmaGET('/blockchain/with/tx')
-                    }
-                },
-                websocket: {
-                    block: function block() {
-                        return bmaWS('/ws/block');
-                    },
-                    peer: function peer() {
-                        return bmaWS('/ws/peer');
-                    }
-                },
-                origin: {
-                    network: {
-                        peering: {
-                            self: getResource('/network/peering', 'http://')
-                        }
-                    }
-                }
-            };
-        }
-
-        return BMA;
-    });
 };
 });
 
@@ -3585,10 +3355,22 @@ module.exports = function (angular) {
         ws: function ws() {
           return _ws(wsProtocol() + server + '/webmin/ws');
         },
+        wsBlock: function wsBlock() {
+          return _ws(wsProtocol() + server + '/webmin/ws_block');
+        },
+        wsPeer: function wsPeer() {
+          return _ws(wsProtocol() + server + '/webmin/ws_peer');
+        },
         summary: getResource('/webmin/summary'),
         powSummary: getResource('/webmin/summary/pow'),
         logsExport: function logsExport(nbLines) {
           return getResource('/webmin/logs/export/' + nbLines)();
+        },
+        blockchain: {
+          blocks: function blocks(opts) {
+            return getResource('/webmin/blockchain/blocks/' + opts.count + '/' + opts.from)();
+          },
+          block_add: postResource('/webmin/blockchain/add')
         },
         server: {
           http: {
@@ -3616,7 +3398,12 @@ module.exports = function (angular) {
           preview: postResource('/webmin/key/preview')
         },
         network: {
-          interfaces: getResource('/webmin/network/interfaces')
+          interfaces: getResource('/webmin/network/interfaces'),
+          selfPeer: getResource('/webmin/network/self'),
+          peers: getResource('/webmin/network/peers')
+        },
+        currency: {
+          parameters: getResource('/webmin/currency/parameters')
         }
       };
     }
