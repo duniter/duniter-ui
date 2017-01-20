@@ -2223,6 +2223,11 @@ module.exports = function (app) {
     }).state('main.home.overview', {
       url: '/overview',
       template: require('views/main/home/tabs/overview'),
+      resolve: {
+        summary: function summary(Webmin) {
+          return Webmin.summary();
+        }
+      },
       controller: 'OverviewController'
     }).state('main.home.network', {
       url: '/network',
