@@ -18,7 +18,6 @@ module.exports = ($scope, $http, $state, Webmin, peers) => {
   };
 
   $scope.resetNodeAndSync = () => co(function *() {
-    yield Webmin.server.http.stop();
     yield Webmin.server.services.stopAll();
     yield Webmin.server.resetData();
     let sp = $scope.remote_host.split('|');

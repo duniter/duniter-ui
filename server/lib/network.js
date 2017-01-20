@@ -14,6 +14,7 @@ const handleRequest = (method, uri, promiseFunc) => {
             } catch (e) {
                 // HTTP error
                 res.status(400).send(e);
+                console.error(e);
             }
         });
     });

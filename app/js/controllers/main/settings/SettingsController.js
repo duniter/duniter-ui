@@ -12,7 +12,6 @@ module.exports = ($scope, $http, $state, $location, Webmin, UIUtils) => {
   $(".dropdown-button").dropdown({ constrainwidth: false });
 
   $scope.fullReset = () => co(function *() {
-    yield Webmin.server.http.stop();
     yield Webmin.server.services.stopAll();
     yield Webmin.server.resetData();
     $state.go('index');

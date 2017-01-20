@@ -23,9 +23,6 @@ module.exports = ($scope, $http, $state, Webmin) => {
       yield Webmin.server.sendConf({
         conf: $scope.$parent.conf
       });
-      yield Webmin.server.http.start();
-      yield Webmin.server.http.openUPnP();
-      yield Webmin.server.http.regularUPnP();
       yield $scope.try();
     } catch (e) {
       $scope.message = e.message;
@@ -33,7 +30,6 @@ module.exports = ($scope, $http, $state, Webmin) => {
   });
 
   $scope.stop = () => co(function *() {
-    yield Webmin.server.http.stop();
     $scope.started = false;
   });
 
@@ -63,7 +59,6 @@ module.exports = ($scope, $http, $state, Webmin) => {
   });
 
   $scope.cancelAndReset = () => co(function *() {
-    yield Webmin.server.http.stop();
     yield Webmin.server.services.stopAll();
     yield Webmin.server.resetData();
     $state.go('index');

@@ -257,36 +257,24 @@ module.exports = function ($scope, $http, $state, Webmin) {
 
             case 8:
               _context.next = 10;
-              return Webmin.server.http.start();
-
-            case 10:
-              _context.next = 12;
-              return Webmin.server.http.openUPnP();
-
-            case 12:
-              _context.next = 14;
-              return Webmin.server.http.regularUPnP();
-
-            case 14:
-              _context.next = 16;
               return $scope.try();
 
-            case 16:
-              _context.next = 21;
+            case 10:
+              _context.next = 15;
               break;
 
-            case 18:
-              _context.prev = 18;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context['catch'](0);
 
               $scope.message = _context.t0.message;
 
-            case 21:
+            case 15:
             case 'end':
               return _context.stop();
           }
         }
-      }, _callee, this, [[0, 18]]);
+      }, _callee, this, [[0, 12]]);
     }));
   };
 
@@ -296,13 +284,9 @@ module.exports = function ($scope, $http, $state, Webmin) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
-              return Webmin.server.http.stop();
-
-            case 2:
               $scope.started = false;
 
-            case 3:
+            case 1:
             case 'end':
               return _context2.stop();
           }
@@ -404,20 +388,16 @@ module.exports = function ($scope, $http, $state, Webmin) {
           switch (_context6.prev = _context6.next) {
             case 0:
               _context6.next = 2;
-              return Webmin.server.http.stop();
+              return Webmin.server.services.stopAll();
 
             case 2:
               _context6.next = 4;
-              return Webmin.server.services.stopAll();
-
-            case 4:
-              _context6.next = 6;
               return Webmin.server.resetData();
 
-            case 6:
+            case 4:
               $state.go('index');
 
-            case 7:
+            case 5:
             case 'end':
               return _context6.stop();
           }
@@ -774,20 +754,12 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, s
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return Webmin.server.http.start();
-
-            case 2:
-              _context.next = 4;
               return Webmin.server.services.startAll();
 
-            case 4:
-              _context.next = 6;
-              return Webmin.server.http.regularUPnP();
-
-            case 6:
+            case 2:
               $scope.server_started = true;
 
-            case 7:
+            case 3:
             case 'end':
               return _context.stop();
           }
@@ -804,16 +776,12 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, s
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return Webmin.server.http.stop();
-
-            case 2:
-              _context2.next = 4;
               return Webmin.server.services.stopAll();
 
-            case 4:
+            case 2:
               $scope.server_stopped = true;
 
-            case 5:
+            case 3:
             case 'end':
               return _context2.stop();
           }
@@ -1400,20 +1368,16 @@ module.exports = function ($scope, $http, $state, $location, Webmin, UIUtils) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return Webmin.server.http.stop();
+              return Webmin.server.services.stopAll();
 
             case 2:
               _context.next = 4;
-              return Webmin.server.services.stopAll();
-
-            case 4:
-              _context.next = 6;
               return Webmin.server.resetData();
 
-            case 6:
+            case 4:
               $state.go('index');
 
-            case 7:
+            case 5:
             case 'end':
               return _context.stop();
           }
@@ -1511,17 +1475,13 @@ module.exports = function ($scope, $http, $state, Webmin, peers) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return Webmin.server.http.stop();
+              return Webmin.server.services.stopAll();
 
             case 2:
               _context.next = 4;
-              return Webmin.server.services.stopAll();
-
-            case 4:
-              _context.next = 6;
               return Webmin.server.resetData();
 
-            case 6:
+            case 4:
               sp = $scope.remote_host.split('|');
 
               $state.go('sync', {
@@ -1530,7 +1490,7 @@ module.exports = function ($scope, $http, $state, Webmin, peers) {
                 sync: true
               });
 
-            case 8:
+            case 6:
             case 'end':
               return _context.stop();
           }
@@ -2263,11 +2223,6 @@ module.exports = function (app) {
     }).state('main.home.overview', {
       url: '/overview',
       template: require('views/main/home/tabs/overview'),
-      resolve: {
-        startHttp: function startHttp(Webmin) {
-          return Webmin.server.http.start();
-        }
-      },
       controller: 'OverviewController'
     }).state('main.home.network', {
       url: '/network',

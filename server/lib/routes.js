@@ -18,8 +18,6 @@ module.exports = {
         handleRequest(app.get.bind(app),   '/webmin/logs/export/:quantity',    webminCtrl.logsExport);
         handleRequest(app.post.bind(app), '/webmin/key/preview',               webminCtrl.previewPubkey);
         handleRequest(app.get.bind(app),  '/webmin/server/reachable',          webminCtrl.isNodePubliclyReachable);
-        handleRequest(app.get.bind(app),  '/webmin/server/http/start',         webminCtrl.startHTTP);
-        handleRequest(app.get.bind(app),  '/webmin/server/http/stop',          webminCtrl.stopHTTP);
         handleRequest(app.get.bind(app),  '/webmin/server/http/upnp/open',     webminCtrl.openUPnP);
         handleRequest(app.get.bind(app),  '/webmin/server/http/upnp/regular',  webminCtrl.regularUPnP);
         handleRequest(app.get.bind(app),  '/webmin/server/preview_next',       webminCtrl.previewNext);

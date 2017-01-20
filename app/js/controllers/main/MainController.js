@@ -121,9 +121,7 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, summary, U
   $scope.startServer = () => {
     $scope.server_stopped = false;
     return co(function *() {
-      yield Webmin.server.http.start();
       yield Webmin.server.services.startAll();
-      yield Webmin.server.http.regularUPnP();
       $scope.server_started = true;
     });
   };
@@ -131,7 +129,6 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, summary, U
   $scope.stopServer = () => {
     $scope.server_started = false;
     return co(function *() {
-      yield Webmin.server.http.stop();
       yield Webmin.server.services.stopAll();
       $scope.server_stopped = true;
     });

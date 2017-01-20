@@ -14,7 +14,7 @@ for (const module of modules) {
 }
 
 return co(function*(){
-  yield stack.executeStack();
+  yield stack.executeStack(process.argv);
   console.log('Done');
 });
 

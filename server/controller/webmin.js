@@ -1,5 +1,6 @@
 "use strict";
 
+const os = require('os');
 const path = require('path');
 const util = require('util');
 const es = require('event-stream');
@@ -8,33 +9,29 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
-const Peer = require('../../app/js/lib/entity/peer');
+const duniterKeypair = require('duniter-keypair');
 
-module.exports = (duniterServer) => {
-  return new WebAdmin(duniterServer);
+module.exports = (duniterServer, startServices, stopServices) => {
+  return new WebAdmin(duniterServer, startServices, stopServices);
 };
 
-function WebAdmin (duniterServer) {
+function WebAdmin (duniterServer, startServices, stopServices) {
 
   const logger = duniterServer.logger;
   const keyring = duniterServer.lib.keyring;
   const Identity = duniterServer.lib.Identity;
+  const Peer = duniterServer.lib.Peer;
   const rawer = duniterServer.lib.rawer;
   const http2raw = duniterServer.lib.http2raw;
   const dos2unix = duniterServer.lib.dos2unix;
   const contacter = duniterServer.lib.contacter;
-  const bma = duniterServer.lib.bma;
   const network = duniterServer.lib.network;
   const constants = duniterServer.lib.constants;
   const ucp = duniterServer.lib.ucp;
 
   // Node instance: this is the object to be managed by the web admin
   const server = this.server = duniterServer;
-  let bmapi;
   const that = this;
-
-  // Routing documents
-  server.routing();
 
   server.pipe(es.mapSync(function(data) {
     if (data.pulling !== undefined || data.pow !== undefined) {
@@ -71,10 +68,6 @@ function WebAdmin (duniterServer) {
   function replugDAL() {
     return co(function *() {
       yield pluggedConfP;
-
-      // Routing documents
-      server.routing();
-
       return plugForDAL();
     });
   }
@@ -111,30 +104,16 @@ function WebAdmin (duniterServer) {
     return {
       "total": yield server.getCountOfSelfMadePoW(),
       "mirror": !(yield server.isServerMember()),
-      "waiting": server.isPoWWaiting()
+      "waiting": true
     };
   });
 
   this.previewPubkey = (req) => co(function *() {
     const conf = http2raw.conf(req);
-    const pair = yield keyring.scryptKeyPair(conf.idty_entropy, conf.idty_password);
+    const pair = yield duniterKeypair.duniter.methods.scrypt(conf.idty_entropy, conf.idty_password);
     return {
-      "pubkey": pair.publicKey
+      "pubkey": pair.pub
     };
-  });
-
-  this.startHTTP = () => co(function *() {
-    yield pluggedDALP;
-    try {
-      if (!bmapi) {
-        bmapi = yield bma(server, null, true);
-      }
-      yield bmapi.openConnections();
-      return { success: true };
-    } catch (e) {
-      logger.error(e);
-      return { success: false };
-    }
   });
 
   this.openUPnP = () => co(function *() {
@@ -158,17 +137,6 @@ function WebAdmin (duniterServer) {
     return {};
   });
 
-  this.stopHTTP = () => co(function *() {
-    yield pluggedDALP;
-    try {
-      yield bmapi.closeConnections();
-      return { success: true };
-    } catch (e) {
-      logger.error(e);
-      return { success: false };
-    }
-  });
-
   this.previewNext = () => co(function *() {
     yield pluggedDALP;
     const block = yield server.doMakeNextBlock();
@@ -179,8 +147,8 @@ function WebAdmin (duniterServer) {
   this.sendConf = (req) => co(function *() {
     yield pluggedConfP;
     const conf = http2raw.conf(req);
-    const pair = yield keyring.scryptKeyPair(conf.idty_entropy, conf.idty_password);
-    yield server.dal.saveConf({
+    const pair = yield duniterKeypair.duniter.methods.scrypt(conf.idty_entropy, conf.idty_password);
+    yield server.dal.saveConf(_.extend(server.conf, {
       routing: true,
       createNext: true,
       cpu: constants.DEFAULT_CPU,
@@ -214,11 +182,11 @@ function WebAdmin (duniterServer) {
       xpercent: conf.xpercent,
       idtyWindow: conf.idtyWindow,
       msWindow: conf.msWindow
-    });
+    }));
     pluggedConfP = co(function *() {
-      yield bmapi.closeConnections();
-      yield server.loadConf();
-      bmapi = yield bma(server, null, true);
+      // yield bmapi.closeConnections();
+      // yield server.loadConf();
+      // bmapi = yield bma(server, null, true);
     });
     yield pluggedConfP;
     const buid = '0-E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855';
@@ -274,10 +242,12 @@ function WebAdmin (duniterServer) {
       upnp: conf.upnp
     }));
     pluggedConfP = co(function *() {
-      yield bmapi.closeConnections();
+      // yield bmapi.closeConnections();
       yield server.loadConf();
-      bmapi = yield bma(server, null, true);
-      yield bmapi.openConnections();
+      yield stopServices();
+      yield startServices();
+      // bmapi = yield bma(server, null, true);
+      // yield bmapi.openConnections();
       yield server.recomputeSelfPeer();
     });
     yield pluggedConfP;
@@ -287,9 +257,9 @@ function WebAdmin (duniterServer) {
   this.applyNewKeyConf = (req) => co(function *() {
     yield pluggedConfP;
     const conf = http2raw.conf(req);
-    const keyPair = yield keyring.scryptKeyPair(conf.idty_entropy, conf.idty_password);
-    const publicKey = keyPair.publicKey;
-    const secretKey = keyPair.secretKey;
+    const keyPair = yield duniterKeypair.duniter.methods.scrypt(conf.idty_entropy, conf.idty_password);
+    const publicKey = keyPair.pub;
+    const secretKey = keyPair.sec;
     yield server.dal.saveConf(_.extend(server.conf, {
       salt: conf.idty_entropy,
       passwd: conf.idty_password,
@@ -307,7 +277,7 @@ function WebAdmin (duniterServer) {
     yield pluggedConfP;
     server.conf.cpu = http2raw.cpu(req);
     yield server.dal.saveConf(server.conf);
-    yield server.applyCPU(server.conf.cpu);
+    server.push({ cpu: server.conf.cpu });
     pluggedConfP = yield server.loadConf();
     yield pluggedConfP;
     return {};
@@ -336,7 +306,7 @@ function WebAdmin (duniterServer) {
     }
     let upnpConf;
     try {
-      upnpConf = yield network.upnpConf();
+      upnpConf = yield network.upnpConf(null, logger);
       if (upnpConf.remoteipv4) {
         upnp.addresses.push({
           family: 'IPv4',
@@ -352,14 +322,14 @@ function WebAdmin (duniterServer) {
     } catch (e) {
       logger.error(e.stack || e);
     }
-    const lanIPv4 = network.getLANIPv4();
+    const lanIPv4 = getLANIPv4();
     lanIPv4.forEach(function(addr) {
       lan.addresses.push({
         family: 'IPv4',
         address: addr.value
       });
     });
-    const lanIPv6 = network.getLANIPv6();
+    const lanIPv6 = getLANIPv6();
     lanIPv6.forEach(function(addr) {
       lan.addresses.push({
         family: 'IPv6',
@@ -417,14 +387,7 @@ function WebAdmin (duniterServer) {
   this.startAllServices = () => co(function *() {
     // Allow services to be stopped
     stopServicesP = null;
-    if (!server.conf.salt && !server.conf.passwd) {
-      const conf = {
-        idty_entropy: ~~(Math.random() * 2147483647) + "",
-        idty_password: ~~(Math.random() * 2147483647) + ""
-      };
-      yield that.applyNewKeyConf({ body: { conf :conf } });
-    }
-    yield startServicesP || (startServicesP = server.startServices());
+    yield startServicesP || (startServicesP = startServices());
     that.push({ started: true });
     return {};
   });
@@ -432,7 +395,7 @@ function WebAdmin (duniterServer) {
   this.stopAllServices = () => co(function *() {
     // Allow services to be started
     startServicesP = null;
-    yield (stopServicesP || (stopServicesP = server.stopServices()));
+    yield (stopServicesP || (stopServicesP = stopServices()));
     that.push({ stopped: true });
     return {};
   });
@@ -465,16 +428,16 @@ function WebAdmin (duniterServer) {
       });
       yield server.dal.saveConf(server.conf);
       pluggedConfP = co(function *() {
-        yield bmapi.closeConnections();
+        // yield bmapi.closeConnections();
         yield server.loadConf();
-        bmapi = yield bma(server, null, true);
+        // bmapi = yield bma(server, null, true);
       });
     }
     return {};
   });
 
   this.startSync = (req) => co(function *() {
-    const sync = server.synchronize(req.body.host, parseInt(req.body.port), parseInt(req.body.to), parseInt(req.body.chunkLen));
+    const sync = require('duniter-crawler').duniter.methods.synchronize(server, req.body.host, parseInt(req.body.port), parseInt(req.body.to), parseInt(req.body.chunkLen));
     sync.flow.pipe(es.mapSync(function(data) {
       // Broadcast block
       that.push(data);
@@ -487,7 +450,6 @@ function WebAdmin (duniterServer) {
     yield pluggedDALP;
     // We have to wait for a non-breaking window to process reset
     yield server.BlockchainService.pushFIFO(() => co(function *() {
-      yield that.stopHTTP();
       yield that.stopAllServices();
       yield server.unplugFileSystem();
       yield server.cleanDBData();
@@ -525,12 +487,20 @@ function WebAdmin (duniterServer) {
 
   this.isNodePubliclyReachable = (req) => co(function *() {
     const peer = yield server.PeeringService.peer();
-    const reachable = yield contacter.statics.isReachableFromTheInternet(peer, { timeout: 5000 });
+    const p = Peer.statics.fromJSON(peer);
+    let reachable;
+    const node = contacter(p.getHostPreferDNS(), p.getPort());
+    try {
+      yield node.getPeer();
+      reachable = true;
+    } catch (e) {
+      reachable = false;
+    }
     return { success: reachable };
   });
 
   this.testPeer = (req) => co(function *() {
-    return server.testForSync(req.body.host, parseInt(req.body.port));
+    return require('duniter-crawler').duniter.methods.testForSync(server, req.body.host, parseInt(req.body.port));
   });
 
   this.logsExport = (req) => co(function *() {
@@ -569,7 +539,7 @@ function WebAdmin (duniterServer) {
       return co(function *() {
           yield server.plugFileSystem();
           yield server.loadConf();
-          bmapi = yield bma(server, null, true);
+          // bmapi = yield bma(server, null, true);
       });
   }
 
@@ -580,6 +550,36 @@ function WebAdmin (duniterServer) {
       });
   }
 
+}
+
+function getLANIPv4 () {
+  return getLAN('IPv4');
+}
+
+function getLANIPv6 () {
+  return getLAN('IPv6');
+}
+
+function getLAN(family) {
+  let netInterfaces = os.networkInterfaces();
+  let keys = _.keys(netInterfaces);
+  let res = [];
+  for (const name of keys) {
+    let addresses = netInterfaces[name];
+    for (const addr of addresses) {
+      if ((addr.family == "IPv4" && family == "IPv4"
+        && addr.address != "127.0.0.1" && addr.address != "lo" && addr.address != "localhost")
+        || (addr.family == "IPv6" && family == "IPv6"
+        && addr.address != "::1" && addr.address != "lo" && addr.address != "localhost"))
+      {
+        res.push({
+          name: name,
+          value: addr.address
+        });
+      }
+    }
+  }
+  return res;
 }
 
 util.inherits(WebAdmin, stream.Duplex);

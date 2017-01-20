@@ -17,18 +17,17 @@ if (process.argv.length === 2) {
 module.exports = {
   duniter: {
 
-    'cliOptions': [
+    cliOptions: [
 
       // Webmin options
       { value: '--webmhost <host>', desc: 'Local network interface to connect to (IP)' },
       { value: '--webmport <port>', desc: 'Local network port to connect', parser: parseInt }
     ],
 
-    'cli': [{
+    cli: [{
       name: 'webstart',
       desc: 'Do a webstart',
-      requires: ['service'],
-      promiseCallback: (duniterServer, conf, program) => co(function*(){
+      onDatabaseExecute: (server, conf, program, params, startServices, stopServices) => co(function*(){
 
         try {
 
@@ -55,7 +54,7 @@ module.exports = {
           }));
           app.use(bodyParser.json());
 
-          const wbmin = webminController(duniterServer);
+          const wbmin = webminController(server, startServices, stopServices);
           const httpServer = http.createServer(app);
           httpServer.listen(PORT, HOTE);
           console.log("Serveur web disponible a l'adresse http://%s:%s", HOTE, PORT);
@@ -63,7 +62,6 @@ module.exports = {
           require('./server/lib/routes').webmin(wbmin, app);
           require('./server/lib/routes').webminWS(wbmin)(httpServer);
 
-          yield wbmin.startHTTP();
           yield wbmin.startAllServices();
 
           // Never ending promise
