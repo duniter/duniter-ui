@@ -466,7 +466,6 @@ function WebAdmin (duniterServer, startServices, stopServices) {
   });
 
   this.importData = (req) => co(function *() {
-    yield that.stopHTTP();
     yield that.stopAllServices();
     yield server.unplugFileSystem();
     yield pluggedDALP;

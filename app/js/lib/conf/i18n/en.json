@@ -17,7 +17,7 @@
   "crypto.secret_key": "Secret key",
   "index.message.current_block": "Current block {{ number }}",
   "configuration.init.choose.title": "Initialization",
-  "configuration.init.choose.message": "Your software has to be initialized. You may either create a new currency or connect to an existing one.",
+  "configuration.init.choose.message": "Your software has to be initialized. You may either connect to an existing one or restore a backup file.",
   "configuration.init.choose.create": "Create a new currency",
   "configuration.init.choose.connect": "Connect to an existing currency",
   "configuration.init.choose.import": "Import from a backup file",
