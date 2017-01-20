@@ -8,7 +8,7 @@ const
   AdmZip = require('adm-zip'),
   tmp = require('tmp');
 
-const CESIUM_VERSION = '0.5.2';
+const CESIUM_VERSION = '0.9.7';
 const CESIUM_RELEASE = 'https://github.com/duniter/cesium/releases/download/v' + CESIUM_VERSION + '/cesium-v' + CESIUM_VERSION + '-web.zip';
 const OUTPUT_ZIP = tmp.fileSync().name;
 const EXTRACT_PATH = path.join(__dirname, './cesium');
