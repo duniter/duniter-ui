@@ -122,7 +122,7 @@ module.exports = (app) => {
 
     state('main.home.overview', {
       url: '/overview',
-      template: require('views/maingk/home/tabs/overview'),
+      template: require('views/main/home/tabs/overview'),
       resolve: {
         summary: (Webmin) => Webmin.summary()
       },
