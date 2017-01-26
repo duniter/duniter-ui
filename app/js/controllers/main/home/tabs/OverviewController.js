@@ -121,7 +121,7 @@ module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
       let UD = summary.parameters.ud0;
       if (summary.lastUDBlock) {
         const N = summary.current.membersCount;
-        UD = parseInt((summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / N).toFixed(0));
+        UD = parseInt(Math.round(summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / N).toFixed(0));
       }
       $scope.monetaryMass = parseInt(M / UD) || 0;
       $scope.$apply();
