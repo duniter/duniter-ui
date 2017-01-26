@@ -59,7 +59,9 @@ module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
     if (data.type === 'started') {
       $scope.server_started = true;
       $scope.server_stopped = false;
-      bindBlockWS();
+      bindBlockWS(() => {
+        $scope.loadPowData();
+      });
       UIUtils.toast('general.server.started');
       $scope.$apply();
     }

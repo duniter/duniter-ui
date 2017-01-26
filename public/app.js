@@ -1174,7 +1174,9 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
     if (data.type === 'started') {
       $scope.server_started = true;
       $scope.server_stopped = false;
-      bindBlockWS();
+      bindBlockWS(function () {
+        $scope.loadPowData();
+      });
       UIUtils.toast('general.server.started');
       $scope.$apply();
     }
@@ -1236,7 +1238,7 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
       var UD = summary.parameters.ud0;
       if (summary.lastUDBlock) {
         var _N = summary.current.membersCount;
-        UD = parseInt((summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / _N).toFixed(0));
+        UD = parseInt(Math.round(summary.lastUDBlock.dividend * Math.pow(10, summary.lastUDBlock.unitbase) + Math.pow(summary.parameters.c, 2) * M / _N).toFixed(0));
       }
       $scope.monetaryMass = parseInt(M / UD) || 0;
       $scope.$apply();
