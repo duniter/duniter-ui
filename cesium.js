@@ -35,6 +35,7 @@ outputStream.on('close', () => {
   const cesiumConfigFile = path.join(__dirname, 'public', 'cesium', 'config.js');
   let config = fs.readFileSync(cesiumConfigFile, 'utf8');
   config = config.replace(/"plugins"(\n|.)*"version"/, '"plugins\": {},\n\t"version"');
+  config = config.replace(/"compatProtocol_0_80": true,/, '"compatProtocol_0_80": false,');
   fs.writeFileSync(cesiumConfigFile, config);
 
   process.exit(0);
