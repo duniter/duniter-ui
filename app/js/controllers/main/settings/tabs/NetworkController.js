@@ -45,7 +45,6 @@ module.exports = ($scope, $http, $state, Webmin, UIUtils, netinterfaces, firstCo
   }
 
   $scope.saveConf = () => co(function *() {
-    $scope.$parent.conf.lport = $scope.$parent.conf.rport;
     $scope.$parent.conf.remote_ipv6 = $scope.$parent.conf.local_ipv6;
     yield Webmin.server.netConf({
       conf: $scope.$parent.conf

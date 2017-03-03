@@ -51,8 +51,12 @@
               p(translate="configuration.create_network.port.message")
               .input-field.col.s6
                 i.prefix.fa.fa-plug
+                input#lport(type="number" ng-model="$parent.conf.lport")
+                label(for="lport") {{ 'configuration.create_network.lport' | translate }}
+              .input-field.col.s6
+                i.prefix.fa.fa-plug
                 input#rport(type="number" ng-model="$parent.conf.rport")
-                label(for="rport") {{ 'configuration.create_network.port' | translate }}
+                label(for="rport") {{ 'configuration.create_network.rport' | translate }}
 
             .col.s12.m6.common-network
               h1.card-title(translate="configuration.create_network.dns.title")
