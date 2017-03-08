@@ -22,8 +22,7 @@ main
                   select.browser-default(ng-model="simplified_host", ng-change="checkNode()", ng-disabled="synchronizing")
                     option(value="", disabled, selected) {{ 'sync.simplified.default_option' | translate }}
                     optgroup(label="{{ 'sync.simplified.currency' | translate }} « TestNet »")
-                      option(value="gtest.duniter.org:8999") gtest.duniter.org:8999 {{ 'sync.simplified.main_mirror' | translate }}
-                      option(value="api.gtest.duniter.org") api.gtest.duniter.org:80
+                      option(value="g1.duniter.org:10901") g1.duniter.org:10901 {{ 'sync.simplified.main_mirror' | translate }}
                   label {{ 'sync.simplified.choose' | translate }}
 
                 .input-field.col.s8(ng-show="sync_mode != 'simplified'")
