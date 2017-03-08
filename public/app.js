@@ -2107,6 +2107,8 @@ module.exports = {
 require.register("js/lib/conf/routes", function(exports, require, module) {
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var co = require('co');
 var _ = require('underscore');
 
@@ -2266,40 +2268,73 @@ module.exports = function (app) {
       template: require('views/main/settings/tabs/data'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee2() {
-            var self, res;
-            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          return co(regeneratorRuntime.mark(function _callee3() {
+            var _this = this;
+
+            var _ret;
+
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
               while (1) {
-                switch (_context2.prev = _context2.next) {
+                switch (_context3.prev = _context3.next) {
                   case 0:
-                    _context2.prev = 0;
-                    _context2.next = 3;
-                    return Webmin.network.selfPeer();
+                    _context3.prev = 0;
+                    return _context3.delegateYield(regeneratorRuntime.mark(function _callee2() {
+                      var self, res;
+                      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                        while (1) {
+                          switch (_context2.prev = _context2.next) {
+                            case 0:
+                              _context2.next = 2;
+                              return Webmin.network.selfPeer();
 
-                  case 3:
-                    self = _context2.sent;
-                    _context2.next = 6;
-                    return Webmin.network.peers();
+                            case 2:
+                              self = _context2.sent;
+                              _context2.next = 5;
+                              return Webmin.network.peers();
 
-                  case 6:
-                    res = _context2.sent;
-                    return _context2.abrupt('return', _.filter(res.peers, function (p) {
-                      return p.pubkey != self.pubkey && p.status == 'UP';
-                    }));
+                            case 5:
+                              res = _context2.sent;
+                              return _context2.abrupt('return', {
+                                v: _.filter(res.peers, function (p) {
+                                  return p.pubkey != self.pubkey && p.status == 'UP';
+                                })
+                              });
 
-                  case 10:
-                    _context2.prev = 10;
-                    _context2.t0 = _context2['catch'](0);
+                            case 7:
+                            case 'end':
+                              return _context2.stop();
+                          }
+                        }
+                      }, _callee2, _this);
+                    })(), 't0', 2);
 
-                    console.error(_context2.t0);
-                    return _context2.abrupt('return', []);
+                  case 2:
+                    _ret = _context3.t0;
 
-                  case 14:
+                    if (!((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object")) {
+                      _context3.next = 5;
+                      break;
+                    }
+
+                    return _context3.abrupt('return', _ret.v);
+
+                  case 5:
+                    _context3.next = 11;
+                    break;
+
+                  case 7:
+                    _context3.prev = 7;
+                    _context3.t1 = _context3['catch'](0);
+
+                    console.error(_context3.t1);
+                    return _context3.abrupt('return', []);
+
+                  case 11:
                   case 'end':
-                    return _context2.stop();
+                    return _context3.stop();
                 }
               }
-            }, _callee2, this, [[0, 10]]);
+            }, _callee3, this, [[0, 7]]);
           }));
         }
       },
@@ -2341,19 +2376,19 @@ module.exports = function (app) {
       url: '/currency',
       resolve: {
         conf: function conf(summary) {
-          return co(regeneratorRuntime.mark(function _callee3() {
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          return co(regeneratorRuntime.mark(function _callee4() {
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
               while (1) {
-                switch (_context3.prev = _context3.next) {
+                switch (_context4.prev = _context4.next) {
                   case 0:
-                    return _context3.abrupt('return', summary.parameters);
+                    return _context4.abrupt('return', summary.parameters);
 
                   case 1:
                   case 'end':
-                    return _context3.stop();
+                    return _context4.stop();
                 }
               }
-            }, _callee3, this);
+            }, _callee4, this);
           }));
         }
       },
@@ -2426,25 +2461,25 @@ module.exports = function (app) {
   });
 
   function resolveNetworkAutoConf(Webmin) {
-    return co(regeneratorRuntime.mark(function _callee4() {
+    return co(regeneratorRuntime.mark(function _callee5() {
       var netinterfaces;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.next = 2;
+              _context5.next = 2;
               return Webmin.network.interfaces();
 
             case 2:
-              netinterfaces = _context4.sent;
-              return _context4.abrupt('return', netinterfaces || { local: {}, remote: {} });
+              netinterfaces = _context5.sent;
+              return _context5.abrupt('return', netinterfaces || { local: {}, remote: {} });
 
             case 4:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4, this);
+      }, _callee5, this);
     }));
   }
 };
