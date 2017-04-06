@@ -11,7 +11,7 @@ const webminController = require('./server/controller/webmin.js');
 
 // Inject 'webstart' command if no argument was given
 if (process.argv.length === 2) {
-  process.argv.push('webstart');
+  process.argv.push('direct_webstart');
 }
 
 module.exports = {
