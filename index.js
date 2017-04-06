@@ -32,7 +32,7 @@ module.exports = {
       onConfiguredExecute: (server, conf, program, params) => co(function*() {
         yield server.checkConfig()
         const daemon = server.getDaemon('direct_webstart', 'webstart')
-        yield startDaemon(daemon)
+        yield startDaemon(program, daemon)
       })
     }, {
 
@@ -43,7 +43,7 @@ module.exports = {
         yield server.checkConfig()
         const daemon = server.getDaemon('direct_webstart', 'webrestart')
         yield stopDaemon(daemon)
-        yield startDaemon(daemon)
+        yield startDaemon(program, daemon)
       })
     }, {
       name: 'direct_webstart',
@@ -99,11 +99,46 @@ module.exports = {
   }
 };
 
-function startDaemon(daemon) {
-  return new Promise((resolve, reject) => daemon.start((err) => {
-    if (err) return reject(err)
-    resolve()
-  }))
+function startDaemon(program, daemon) {
+  return co(function*() {
+
+    const PORT = program.webmport || 9220
+
+    const isPortAlreadyTaken = yield new Promise((resolve) => {
+      isPortTaken(PORT, (err, taken) => err ? reject(err) : resolve(taken))
+    })
+
+    if (isPortAlreadyTaken) {
+      console.error('Port ' + PORT + ' already used.')
+      process.exit(3)
+    }
+
+    return new Promise((resolve, reject) => daemon.start((err) => {
+      if (err) return reject(err)
+      resolve()
+    }))
+  })
+}
+
+/**
+ * Checks if a port is already taken by another app.
+ *
+ * Source: https://gist.github.com/timoxley/1689041
+ * @param port
+ * @param fn
+ */
+function isPortTaken(port, fn) {
+  const net = require('net')
+  const tester = net.createServer()
+    .once('error', function (err) {
+      if (err.code != 'EADDRINUSE') return fn(err)
+      fn(null, true)
+    })
+    .once('listening', function() {
+      tester.once('close', function() { fn(null, false) })
+        .close()
+    })
+    .listen(port)
 }
 
 function stopDaemon(daemon) {
