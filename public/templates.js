@@ -1,23 +1,18 @@
 (function() {
   'use strict';
 
-  var globals = typeof window === 'undefined' ? global : window;
+  var globals = typeof global === 'undefined' ? self : global;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
   var aliases = {};
-  var has = ({}).hasOwnProperty;
+  var has = {}.hasOwnProperty;
 
-  var unalias = function(alias, loaderPath) {
-    var result = aliases[alias] || aliases[alias + '/index.js'];
-    return result || alias;
-  };
-
-  var _reg = /^\.\.?(\/|$)/;
+  var expRe = /^\.\.?(\/|$)/;
   var expand = function(root, name) {
     var results = [], part;
-    var parts = (_reg.test(name) ? root + '/' + name : name).split('/');
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
     for (var i = 0, length = parts.length; i < length; i++) {
       part = parts[i];
       if (part === '..') {
@@ -41,32 +36,55 @@
   };
 
   var initModule = function(name, definition) {
-    var module = {id: name, exports: {}};
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
     cache[name] = module;
     definition(module.exports, localRequire(name), module);
     return module.exports;
   };
 
+  var expandAlias = function(name) {
+    return aliases[name] ? expandAlias(aliases[name]) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
   var require = function(name, loaderPath) {
     if (loaderPath == null) loaderPath = '/';
-    var path = unalias(name, loaderPath);
+    var path = expandAlias(name);
 
     if (has.call(cache, path)) return cache[path].exports;
     if (has.call(modules, path)) return initModule(path, modules[path]);
 
-    var dirIndex = expand(path, './index');
-    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
-
-    throw new Error('Cannot find module "' + name + '" from ' + '"' + loaderPath + '"');
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
   };
 
   require.alias = function(from, to) {
     aliases[to] = from;
   };
 
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
   require.register = require.define = function(bundle, fn) {
-    if (typeof bundle === 'object') {
+    if (bundle && typeof bundle === 'object') {
       for (var key in bundle) {
         if (has.call(bundle, key)) {
           require.register(key, bundle[key]);
@@ -74,30 +92,68 @@
       }
     } else {
       modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
     }
   };
 
   require.list = function() {
-    var result = [];
+    var list = [];
     for (var item in modules) {
       if (has.call(modules, item)) {
-        result.push(item);
+        list.push(item);
       }
     }
-    return result;
+    return list;
   };
 
-  require.brunch = true;
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
   require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
   globals.require = require;
 })();
-require.register("views/about", function(exports, require, module) {
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+require.register("views/about.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
 
-buf.push("<div id=\"about_card\" class=\"card\"><div class=\"card-image\"><img src=\"images/duniter_250x250.png\"/></div><div class=\"card-content\"><span class=\"card-title grey-text text-darken-4\">{{ 'help.about_duniter.subtitle' | translate }}</span><p>{{ 'help.about_duniter.version' | translate }}<i>{{ version }}</i></p></div><div class=\"card-action\"><a href=\"https://duniter.org\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-globe\"></i><span>duniter.org</span></a><a href=\"https://github.com/duniter\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-github\"></i><span>github/duniter</span></a><a href=\"https://forum.duniter.org\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-comment-o\"></i><span>{{ 'help.about_duniter.forum' | translate }}</span></a><a href=\"https://jappix.com?r=duniter@muc.duniter.org\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-comments-o\"></i><span>{{ 'help.about_duniter.chat' | translate }}</span></a></div></div>");;return buf.join("");
+buf.push("<div id=\"about_card\" class=\"card\"><div class=\"card-image\"><img src=\"images/duniter_250x250.png\"/></div><div class=\"card-content\"><span class=\"card-title grey-text text-darken-4\">{{ 'help.about_duniter.subtitle' | translate }}</span><p>{{ 'help.about_duniter.version' | translate }}<i>{{ version }}</i></p></div><div class=\"card-action\"><a href=\"https://duniter.org\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-globe\"></i><span>duniter.org</span></a><a href=\"https://github.com/duniter\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-github\"></i><span>github/duniter</span></a><a href=\"https://forum.duniter.org\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-comment-o\"></i><span>{{ 'help.about_duniter.forum' | translate }}</span></a><a href=\"https://chat.duniter.org\" onclick=\"openExternal(this.href); return false\"><i class=\"fa fa-2x fa-comments-o\"></i><span>{{ 'help.about_duniter.chat' | translate }}</span></a></div></div>");;return buf.join("");
 };
 if (typeof define === 'function' && define.amd) {
   define([], function() {
@@ -110,7 +166,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/error", function(exports, require, module) {
+;require.register("views/error.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -129,7 +185,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/includes/blockchain", function(exports, require, module) {
+;require.register("views/includes/blockchain.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -148,7 +204,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/includes/key", function(exports, require, module) {
+;require.register("views/includes/key.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -167,7 +223,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/includes/money", function(exports, require, module) {
+;require.register("views/includes/money.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -186,7 +242,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/includes/network_local", function(exports, require, module) {
+;require.register("views/includes/network_local.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -205,7 +261,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/includes/network_remote", function(exports, require, module) {
+;require.register("views/includes/network_remote.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -224,7 +280,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/includes/wot", function(exports, require, module) {
+;require.register("views/includes/wot.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -243,7 +299,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/index", function(exports, require, module) {
+;require.register("views/index.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -262,7 +318,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/choose", function(exports, require, module) {
+;require.register("views/init/choose.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -281,7 +337,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/create/create_network", function(exports, require, module) {
+;require.register("views/init/create/create_network.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -300,7 +356,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/create/create_parameters", function(exports, require, module) {
+;require.register("views/init/create/create_parameters.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -319,7 +375,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/create/create_root", function(exports, require, module) {
+;require.register("views/init/create/create_root.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -338,7 +394,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/create/create_uid", function(exports, require, module) {
+;require.register("views/init/create/create_uid.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -357,7 +413,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/layout", function(exports, require, module) {
+;require.register("views/init/layout.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -376,7 +432,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/init/sync/sync", function(exports, require, module) {
+;require.register("views/init/sync/sync.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -395,7 +451,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/logs", function(exports, require, module) {
+;require.register("views/logs.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -414,7 +470,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/graphs/blockchain", function(exports, require, module) {
+;require.register("views/main/graphs/blockchain.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -433,7 +489,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/graphs/graphs", function(exports, require, module) {
+;require.register("views/main/graphs/graphs.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -452,7 +508,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/home/home", function(exports, require, module) {
+;require.register("views/main/home/home.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -471,7 +527,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/home/tabs/logs", function(exports, require, module) {
+;require.register("views/main/home/tabs/logs.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -490,7 +546,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/home/tabs/network", function(exports, require, module) {
+;require.register("views/main/home/tabs/network.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -509,7 +565,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/home/tabs/overview", function(exports, require, module) {
+;require.register("views/main/home/tabs/overview.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -528,7 +584,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/main", function(exports, require, module) {
+;require.register("views/main/main.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -547,7 +603,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/settings", function(exports, require, module) {
+;require.register("views/main/settings/settings.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -566,7 +622,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/backup", function(exports, require, module) {
+;require.register("views/main/settings/tabs/backup.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -585,7 +641,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/cpu", function(exports, require, module) {
+;require.register("views/main/settings/tabs/cpu.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -604,7 +660,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/crypto", function(exports, require, module) {
+;require.register("views/main/settings/tabs/crypto.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -623,7 +679,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/currency", function(exports, require, module) {
+;require.register("views/main/settings/tabs/currency.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -642,7 +698,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/data", function(exports, require, module) {
+;require.register("views/main/settings/tabs/data.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -661,7 +717,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/logs", function(exports, require, module) {
+;require.register("views/main/settings/tabs/logs.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -680,7 +736,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/main/settings/tabs/network", function(exports, require, module) {
+;require.register("views/main/settings/tabs/network.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -699,7 +755,7 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;require.register("views/menu", function(exports, require, module) {
+;require.register("views/menu.jade", function(exports, require, module) {
 var __templateData = function template(locals) {
 var buf = [];
 var jade_mixins = {};
@@ -718,5 +774,9 @@ if (typeof define === 'function' && define.amd) {
 }
 });
 
-;
+;require.register("___globals___", function(exports, require, module) {
+  
+});})();require('___globals___');
+
+
 //# sourceMappingURL=templates.js.map

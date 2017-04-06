@@ -1,23 +1,18 @@
 (function() {
   'use strict';
 
-  var globals = typeof window === 'undefined' ? global : window;
+  var globals = typeof global === 'undefined' ? self : global;
   if (typeof globals.require === 'function') return;
 
   var modules = {};
   var cache = {};
   var aliases = {};
-  var has = ({}).hasOwnProperty;
+  var has = {}.hasOwnProperty;
 
-  var unalias = function(alias, loaderPath) {
-    var result = aliases[alias] || aliases[alias + '/index.js'];
-    return result || alias;
-  };
-
-  var _reg = /^\.\.?(\/|$)/;
+  var expRe = /^\.\.?(\/|$)/;
   var expand = function(root, name) {
     var results = [], part;
-    var parts = (_reg.test(name) ? root + '/' + name : name).split('/');
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
     for (var i = 0, length = parts.length; i < length; i++) {
       part = parts[i];
       if (part === '..') {
@@ -41,32 +36,55 @@
   };
 
   var initModule = function(name, definition) {
-    var module = {id: name, exports: {}};
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
     cache[name] = module;
     definition(module.exports, localRequire(name), module);
     return module.exports;
   };
 
+  var expandAlias = function(name) {
+    return aliases[name] ? expandAlias(aliases[name]) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
   var require = function(name, loaderPath) {
     if (loaderPath == null) loaderPath = '/';
-    var path = unalias(name, loaderPath);
+    var path = expandAlias(name);
 
     if (has.call(cache, path)) return cache[path].exports;
     if (has.call(modules, path)) return initModule(path, modules[path]);
 
-    var dirIndex = expand(path, './index');
-    if (has.call(cache, dirIndex)) return cache[dirIndex].exports;
-    if (has.call(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
-
-    throw new Error('Cannot find module "' + name + '" from ' + '"' + loaderPath + '"');
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
   };
 
   require.alias = function(from, to) {
     aliases[to] = from;
   };
 
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
   require.register = require.define = function(bundle, fn) {
-    if (typeof bundle === 'object') {
+    if (bundle && typeof bundle === 'object') {
       for (var key in bundle) {
         if (has.call(bundle, key)) {
           require.register(key, bundle[key]);
@@ -74,24 +92,62 @@
       }
     } else {
       modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
     }
   };
 
   require.list = function() {
-    var result = [];
+    var list = [];
     for (var item in modules) {
       if (has.call(modules, item)) {
-        result.push(item);
+        list.push(item);
       }
     }
-    return result;
+    return list;
   };
 
-  require.brunch = true;
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
   require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
   globals.require = require;
 })();
-require.register("js/controllers/AboutController", function(exports, require, module) {
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+require.register("js/controllers/AboutController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -119,9 +175,10 @@ module.exports = function ($scope, version, UIUtils) {
     }, _callee, this);
   }));
 };
+
 });
 
-require.register("js/controllers/IndexController", function(exports, require, module) {
+require.register("js/controllers/IndexController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -180,9 +237,10 @@ module.exports = function ($scope, $http, $state, Webmin, summary, UIUtils) {
     }, _callee, this, [[1, 10]]);
   }));
 };
+
 });
 
-require.register("js/controllers/init/create/IdentityController", function(exports, require, module) {
+require.register("js/controllers/init/create/IdentityController.js", function(exports, require, module) {
 "use strict";
 
 var conf = require('js/lib/conf/conf');
@@ -209,18 +267,20 @@ module.exports = function ($scope, $state, PubkeyGenerator) {
     $state.go('configure.create.network');
   }
 };
+
 });
 
-require.register("js/controllers/init/create/ParametersController", function(exports, require, module) {
+require.register("js/controllers/init/create/ParametersController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, UIUtils) {
 
   UIUtils.enableInputs();
 };
+
 });
 
-require.register("js/controllers/init/create/RootBlockController", function(exports, require, module) {
+require.register("js/controllers/init/create/RootBlockController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -438,9 +498,10 @@ module.exports = function ($scope, $http, $state, Webmin) {
     }, _callee7, this, [[0, 8]]);
   }));
 };
+
 });
 
-require.register("js/controllers/init/sync/SyncController", function(exports, require, module) {
+require.register("js/controllers/init/sync/SyncController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -626,9 +687,10 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
     }));
   }
 };
+
 });
 
-require.register("js/controllers/main/MainController", function(exports, require, module) {
+require.register("js/controllers/main/MainController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -867,9 +929,10 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, s
   $interval(checkUpdates, 1000 * 3600);
   $timeout(checkUpdates, 1000);
 };
+
 });
 
-require.register("js/controllers/main/graphs/GraphsBlockchainController", function(exports, require, module) {
+require.register("js/controllers/main/graphs/GraphsBlockchainController.js", function(exports, require, module) {
 "use strict";
 
 var BLOCKS_COUNT = 40;
@@ -1028,9 +1091,10 @@ module.exports = function ($scope, $state, $timeout, Webmin, UIUtils, Graph) {
     }, _callee2, this);
   }));
 };
+
 });
 
-require.register("js/controllers/main/graphs/GraphsController", function(exports, require, module) {
+require.register("js/controllers/main/graphs/GraphsController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, UIUtils) {
@@ -1039,9 +1103,10 @@ module.exports = function ($scope, UIUtils) {
 
   $scope.$parent.menu = 'graphs';
 };
+
 });
 
-require.register("js/controllers/main/home/HomeController", function(exports, require, module) {
+require.register("js/controllers/main/home/HomeController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, UIUtils) {
@@ -1050,9 +1115,10 @@ module.exports = function ($scope, UIUtils) {
 
   $scope.$parent.menu = 'home';
 };
+
 });
 
-require.register("js/controllers/main/home/tabs/HomeNetworkController", function(exports, require, module) {
+require.register("js/controllers/main/home/tabs/HomeNetworkController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, Webmin, peers) {
@@ -1091,9 +1157,10 @@ module.exports = function ($scope, Webmin, peers) {
     }));
   };
 };
+
 });
 
-require.register("js/controllers/main/home/tabs/OverviewController", function(exports, require, module) {
+require.register("js/controllers/main/home/tabs/OverviewController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
@@ -1347,9 +1414,10 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
     }, _callee3, this, [[2, 11]]);
   }));
 };
+
 });
 
-require.register("js/controllers/main/settings/SettingsController", function(exports, require, module) {
+require.register("js/controllers/main/settings/SettingsController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -1388,9 +1456,10 @@ module.exports = function ($scope, $http, $state, $location, Webmin, UIUtils) {
     }));
   };
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/BackupController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/BackupController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, Importer, Webmin) {
@@ -1399,9 +1468,10 @@ module.exports = function ($scope, Importer, Webmin) {
 
   Importer($scope);
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/CPUController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/CPUController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -1435,9 +1505,10 @@ module.exports = function ($scope, $http, $state, $timeout, UIUtils, summary, We
     }));
   };
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/CurrencyController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/CurrencyController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, conf, UIUtils) {
@@ -1447,9 +1518,10 @@ module.exports = function ($scope, conf, UIUtils) {
   UIUtils.enableInputs();
   $('input').attr('disabled', 'disabled');
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/DataController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/DataController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -1501,9 +1573,10 @@ module.exports = function ($scope, $http, $state, Webmin, peers) {
     }));
   };
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/KeyController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/KeyController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -1544,9 +1617,10 @@ module.exports = function ($scope, $state, Webmin, summary, PubkeyGenerator) {
 
   PubkeyGenerator($scope);
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/LogsController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/LogsController.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function ($scope, ws, UIUtils) {
@@ -1636,9 +1710,10 @@ module.exports = function ($scope, ws, UIUtils) {
     }, _callee, this);
   }));
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/LogsSettingsController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/LogsSettingsController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -1692,9 +1767,10 @@ module.exports = function ($scope, Webmin) {
     }));
   };
 };
+
 });
 
-require.register("js/controllers/main/settings/tabs/NetworkController", function(exports, require, module) {
+require.register("js/controllers/main/settings/tabs/NetworkController.js", function(exports, require, module) {
 "use strict";
 
 var co = require('co');
@@ -1777,9 +1853,10 @@ function toArrayOfAddresses(netiScope) {
     }));
   }, []);
 }
+
 });
 
-;require.register("js/app.config", function(exports, require, module) {
+;require.register("js/app.config.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function () {
@@ -1862,9 +1939,10 @@ module.exports = function () {
   homeControllers.controller('GraphsController', require('./controllers/main/graphs/GraphsController'));
   homeControllers.controller('GraphsBlockchainController', require('./controllers/main/graphs/GraphsBlockchainController'));
 };
+
 });
 
-require.register("js/application", function(exports, require, module) {
+require.register("js/application.js", function(exports, require, module) {
 "use strict";
 
 module.exports = {
@@ -1883,9 +1961,10 @@ module.exports = {
     console.log('App initialized.');
   }
 };
+
 });
 
-require.register("js/lib/conf/conf", function(exports, require, module) {
+require.register("js/lib/conf/conf.js", function(exports, require, module) {
 "use strict";
 
 module.exports = {
@@ -1895,9 +1974,10 @@ module.exports = {
   dev_autoconf: false,
   api_timeout: 10000 // 10 sec timeout
 };
+
 });
 
-require.register("js/lib/conf/i18n/en", function(exports, require, module) {
+require.register("js/lib/conf/i18n/en.json", function(exports, require, module) {
 module.exports = {
   "top.menu.overview": "Home",
   "top.menu.data": "Explore",
@@ -2104,10 +2184,8 @@ module.exports = {
 ;
 });
 
-require.register("js/lib/conf/routes", function(exports, require, module) {
+require.register("js/lib/conf/routes.js", function(exports, require, module) {
 'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var co = require('co');
 var _ = require('underscore');
@@ -2268,73 +2346,40 @@ module.exports = function (app) {
       template: require('views/main/settings/tabs/data'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee3() {
-            var _this = this;
-
-            var _ret;
-
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          return co(regeneratorRuntime.mark(function _callee2() {
+            var self, res;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
               while (1) {
-                switch (_context3.prev = _context3.next) {
+                switch (_context2.prev = _context2.next) {
                   case 0:
-                    _context3.prev = 0;
-                    return _context3.delegateYield(regeneratorRuntime.mark(function _callee2() {
-                      var self, res;
-                      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                        while (1) {
-                          switch (_context2.prev = _context2.next) {
-                            case 0:
-                              _context2.next = 2;
-                              return Webmin.network.selfPeer();
+                    _context2.prev = 0;
+                    _context2.next = 3;
+                    return Webmin.network.selfPeer();
 
-                            case 2:
-                              self = _context2.sent;
-                              _context2.next = 5;
-                              return Webmin.network.peers();
+                  case 3:
+                    self = _context2.sent;
+                    _context2.next = 6;
+                    return Webmin.network.peers();
 
-                            case 5:
-                              res = _context2.sent;
-                              return _context2.abrupt('return', {
-                                v: _.filter(res.peers, function (p) {
-                                  return p.pubkey != self.pubkey && p.status == 'UP';
-                                })
-                              });
+                  case 6:
+                    res = _context2.sent;
+                    return _context2.abrupt('return', _.filter(res.peers, function (p) {
+                      return p.pubkey != self.pubkey && p.status == 'UP';
+                    }));
 
-                            case 7:
-                            case 'end':
-                              return _context2.stop();
-                          }
-                        }
-                      }, _callee2, _this);
-                    })(), 't0', 2);
+                  case 10:
+                    _context2.prev = 10;
+                    _context2.t0 = _context2['catch'](0);
 
-                  case 2:
-                    _ret = _context3.t0;
+                    console.error(_context2.t0);
+                    return _context2.abrupt('return', []);
 
-                    if (!((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object")) {
-                      _context3.next = 5;
-                      break;
-                    }
-
-                    return _context3.abrupt('return', _ret.v);
-
-                  case 5:
-                    _context3.next = 11;
-                    break;
-
-                  case 7:
-                    _context3.prev = 7;
-                    _context3.t1 = _context3['catch'](0);
-
-                    console.error(_context3.t1);
-                    return _context3.abrupt('return', []);
-
-                  case 11:
+                  case 14:
                   case 'end':
-                    return _context3.stop();
+                    return _context2.stop();
                 }
               }
-            }, _callee3, this, [[0, 7]]);
+            }, _callee2, this, [[0, 10]]);
           }));
         }
       },
@@ -2376,19 +2421,19 @@ module.exports = function (app) {
       url: '/currency',
       resolve: {
         conf: function conf(summary) {
-          return co(regeneratorRuntime.mark(function _callee4() {
-            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          return co(regeneratorRuntime.mark(function _callee3() {
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
               while (1) {
-                switch (_context4.prev = _context4.next) {
+                switch (_context3.prev = _context3.next) {
                   case 0:
-                    return _context4.abrupt('return', summary.parameters);
+                    return _context3.abrupt('return', summary.parameters);
 
                   case 1:
                   case 'end':
-                    return _context4.stop();
+                    return _context3.stop();
                 }
               }
-            }, _callee4, this);
+            }, _callee3, this);
           }));
         }
       },
@@ -2461,31 +2506,32 @@ module.exports = function (app) {
   });
 
   function resolveNetworkAutoConf(Webmin) {
-    return co(regeneratorRuntime.mark(function _callee5() {
+    return co(regeneratorRuntime.mark(function _callee4() {
       var netinterfaces;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context5.next = 2;
+              _context4.next = 2;
               return Webmin.network.interfaces();
 
             case 2:
-              netinterfaces = _context5.sent;
-              return _context5.abrupt('return', netinterfaces || { local: {}, remote: {} });
+              netinterfaces = _context4.sent;
+              return _context4.abrupt('return', netinterfaces || { local: {}, remote: {} });
 
             case 4:
             case 'end':
-              return _context5.stop();
+              return _context4.stop();
           }
         }
-      }, _callee5, this);
+      }, _callee4, this);
     }));
   }
 };
+
 });
 
-require.register("js/lib/conf/translate", function(exports, require, module) {
+require.register("js/lib/conf/translate.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function (app) {
@@ -2501,9 +2547,10 @@ module.exports = function (app) {
     $translateProvider.useSanitizeValueStrategy('');
   }]);
 };
+
 });
 
-require.register("js/lib/entity/peer", function(exports, require, module) {
+require.register("js/lib/entity/peer.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function Peer(json) {
@@ -2619,9 +2666,10 @@ module.exports = function Peer(json) {
     return that.getURL() ? true : false;
   };
 };
+
 });
 
-require.register("js/lib/mobileDetector", function(exports, require, module) {
+require.register("js/lib/mobileDetector.js", function(exports, require, module) {
 "use strict";
 
 module.exports = function mobilecheck() {
@@ -2631,9 +2679,10 @@ module.exports = function mobilecheck() {
   })(navigator.userAgent || navigator.vendor || window.opera);
   return check;
 };
+
 });
 
-require.register("js/services/base58", function(exports, require, module) {
+require.register("js/services/base58.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function (app) {
@@ -2722,9 +2771,10 @@ module.exports = function (app) {
     };
   });
 };
+
 });
 
-require.register("js/services/datetime", function(exports, require, module) {
+require.register("js/services/datetime.js", function(exports, require, module) {
 'use strict';
 
 var _ = require('underscore');
@@ -2751,9 +2801,10 @@ module.exports = function (app) {
     };
   });
 };
+
 });
 
-require.register("js/services/graphs", function(exports, require, module) {
+require.register("js/services/graphs.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function (app) {
@@ -2996,9 +3047,10 @@ function blockFormatter(offset) {
     return html;
   };
 }
+
 });
 
-;require.register("js/services/importer", function(exports, require, module) {
+;require.register("js/services/importer.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function (app) {
@@ -3033,9 +3085,10 @@ module.exports = function (app) {
     };
   });
 };
+
 });
 
-require.register("js/services/pubkeyGenerator", function(exports, require, module) {
+require.register("js/services/pubkeyGenerator.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function (app) {
@@ -3097,9 +3150,10 @@ module.exports = function (app) {
     };
   });
 };
+
 });
 
-require.register("js/services/ui_utils", function(exports, require, module) {
+require.register("js/services/ui_utils.js", function(exports, require, module) {
 'use strict';
 
 module.exports = function (app) {
@@ -3145,9 +3199,10 @@ module.exports = function (app) {
     };
   });
 };
+
 });
 
-require.register("js/services/webmin", function(exports, require, module) {
+require.register("js/services/webmin.js", function(exports, require, module) {
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -3376,7 +3431,12 @@ module.exports = function (angular) {
     return service;
   });
 };
+
 });
+
+require.register("___globals___", function(exports, require, module) {
+  
+});})();require('___globals___');
 
 
 //# sourceMappingURL=app.js.map
