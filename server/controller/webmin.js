@@ -10,6 +10,8 @@ const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
 const duniterKeypair = require('duniter-keypair');
+const network = require('duniter-bma').duniter.methods;
+const contacter = require('duniter-crawler').duniter.methods.contacter;
 
 module.exports = (duniterServer, startServices, stopServices) => {
   return new WebAdmin(duniterServer, startServices, stopServices);
@@ -24,8 +26,6 @@ function WebAdmin (duniterServer, startServices, stopServices) {
   const rawer = duniterServer.lib.rawer;
   const http2raw = duniterServer.lib.http2raw;
   const dos2unix = duniterServer.lib.dos2unix;
-  const contacter = duniterServer.lib.contacter;
-  const network = duniterServer.lib.network;
   const constants = duniterServer.lib.constants;
   const ucp = duniterServer.lib.ucp;
 

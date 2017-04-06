@@ -25,7 +25,28 @@ module.exports = {
     ],
 
     cli: [{
+
       name: 'webstart',
+      desc: 'Starts Duniter as a daemon (background task).',
+      logs: false,
+      onConfiguredExecute: (server, conf, program, params) => co(function*() {
+        yield server.checkConfig()
+        const daemon = server.getDaemon('direct_webstart', 'webstart')
+        yield startDaemon(daemon)
+      })
+    }, {
+
+      name: 'webrestart',
+      desc: 'Stops Duniter daemon and restart it with its web interface.',
+      logs: false,
+      onConfiguredExecute: (server, conf, program, params) => co(function*() {
+        yield server.checkConfig()
+        const daemon = server.getDaemon('direct_webstart', 'webrestart')
+        yield stopDaemon(daemon)
+        yield startDaemon(daemon)
+      })
+    }, {
+      name: 'direct_webstart',
       desc: 'Do a webstart',
       onDatabaseExecute: (server, conf, program, params, startServices, stopServices) => co(function*(){
 
@@ -57,7 +78,7 @@ module.exports = {
           const wbmin = webminController(server, startServices, stopServices);
           const httpServer = http.createServer(app);
           httpServer.listen(PORT, HOTE);
-          console.log("Serveur web disponible a l'adresse http://%s:%s", HOTE, PORT);
+          server.logger.info("Serveur web disponible a l'adresse http://%s:%s", HOTE, PORT);
 
           require('./server/lib/routes').webmin(wbmin, app);
           require('./server/lib/routes').webminWS(wbmin)(httpServer);
@@ -77,3 +98,18 @@ module.exports = {
     }]
   }
 };
+
+function startDaemon(daemon) {
+  return new Promise((resolve, reject) => daemon.start((err) => {
+    if (err) return reject(err)
+    resolve()
+  }))
+}
+
+function stopDaemon(daemon) {
+  return new Promise((resolve, reject) => daemon.stop((err) => {
+    err && console.error(err);
+    if (err) return reject(err)
+    resolve()
+  }))
+}
