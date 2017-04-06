@@ -182,6 +182,20 @@ archiver@1.0.1:
     tar-stream "^1.5.0"
     zip-stream "^1.0.0"
 
+archiver@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/archiver/-/archiver-1.3.0.tgz#4f2194d6d8f99df3f531e6881f14f15d55faaf22"
+  dependencies:
+    archiver-utils "^1.3.0"
+    async "^2.0.0"
+    buffer-crc32 "^0.2.1"
+    glob "^7.0.0"
+    lodash "^4.8.0"
+    readable-stream "^2.0.0"
+    tar-stream "^1.5.0"
+    walkdir "^0.0.11"
+    zip-stream "^1.1.0"
+
 are-we-there-yet@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/are-we-there-yet/-/are-we-there-yet-1.1.2.tgz#80e470e95a084794fe1899262c5667c6e88de1b3"
@@ -1717,9 +1731,9 @@ ddos@0.1.16:
     hashish ""
     response ""
 
-debug@*, debug@2.6.1, debug@^2.2, debug@^2.2.0:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
+debug@*, debug@2.6.3, debug@^2.1.1:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
   dependencies:
     ms "0.7.2"
 
@@ -1729,9 +1743,9 @@ debug@2.0.0:
   dependencies:
     ms "0.6.2"
 
-debug@2.6.3, debug@^2.1.1:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
+debug@2.6.1, debug@^2.2, debug@^2.2.0:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
     ms "0.7.2"
 
@@ -1887,9 +1901,9 @@ duniter-bma@^0.2.11, duniter-bma@^0.2.4:
     underscore "1.8.3"
     ws "1.1.1"
 
-duniter-bma@^1.0.4, duniter-bma@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/duniter-bma/-/duniter-bma-1.0.7.tgz#6eb008c486f2dac51609ab54ac27a094a3ada183"
+duniter-bma@^1.0.7, duniter-bma@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/duniter-bma/-/duniter-bma-1.1.0.tgz#48ac17d150043dabfc0a0be069c5a45528f938aa"
   dependencies:
     async "2.2.0"
     body-parser "1.17.1"
@@ -1928,7 +1942,7 @@ duniter-common@^1.0.0:
     node-pre-gyp "0.6.32"
     tweetnacl "0.14.3"
 
-duniter-crawler@^0.2.1, duniter-crawler@^0.2.14, duniter-crawler@^0.2.4:
+duniter-crawler@^0.2.1, duniter-crawler@^0.2.14, duniter-crawler@^0.2.17, duniter-crawler@^0.2.4:
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/duniter-crawler/-/duniter-crawler-0.2.17.tgz#dc3e1757cf04160cf62b1e737d666be59b392d2f"
   dependencies:
@@ -1946,13 +1960,13 @@ duniter-crawler@^0.2.1, duniter-crawler@^0.2.14, duniter-crawler@^0.2.4:
     request-promise "4.1.1"
     underscore "1.8.3"
 
-duniter-crawler@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/duniter-crawler/-/duniter-crawler-1.0.8.tgz#aeea9edcf5f79842eee315d8fec7c5ced6931d3c"
+duniter-crawler@^1.0.1, duniter-crawler@^1.0.8, duniter-crawler@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/duniter-crawler/-/duniter-crawler-1.1.0.tgz#db2e3b51462b7db9f69ca1e9d2db2d1cf107600c"
   dependencies:
     async "2.2.0"
     co "4.6.0"
-    duniter-bma "^1.0.4"
+    duniter-bma "^1.1.0"
     duniter-common "^1.0.0"
     moment "2.18.1"
     multimeter "0.1.1"
@@ -1988,9 +2002,9 @@ duniter-keypair@^0.3.0:
     tweetnacl "0.14.3"
     tweetnacl-util "0.13.5"
 
-duniter-keypair@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/duniter-keypair/-/duniter-keypair-1.0.2.tgz#f4994617bb63f60bf389075ad437c9562de9410d"
+duniter-keypair@^1.0.0, duniter-keypair@^1.0.2, duniter-keypair@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/duniter-keypair/-/duniter-keypair-1.1.0.tgz#e4f359a54d40f1f5b615784bf1e6b14ca144b252"
   dependencies:
     bs58 "4.0.0"
     co "4.6.0"
@@ -2020,6 +2034,22 @@ duniter-prover@^0.2.7:
     request-promise "4.1.1"
     underscore "1.8.3"
 
+duniter-prover@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/duniter-prover/-/duniter-prover-1.0.4.tgz#a6be97803d535ff6356b963d473f11f40f0e60a8"
+  dependencies:
+    async "2.2.0"
+    co "4.6.0"
+    duniter-common "^1.0.0"
+    duniter-crawler "^1.0.1"
+    inquirer "3.0.6"
+    moment "2.18.1"
+    node-uuid "1.4.8"
+    querablep "0.1.0"
+    request "2.81.0"
+    request-promise "4.2.0"
+    underscore "1.8.3"
+
 duniter-ui@^0.3.5:
   version "0.3.7"
   resolved "https://registry.yarnpkg.com/duniter-ui/-/duniter-ui-0.3.7.tgz#d6591b981042cb02d728863bd732c27b48eba7de"
@@ -2044,6 +2074,32 @@ duniter-ui@^0.3.5:
     request-promise "4.1.1"
     rimraf "2.5.4"
     tmp "0.0.29"
+    underscore "1.8.3"
+
+duniter-ui@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/duniter-ui/-/duniter-ui-1.0.3.tgz#dd8b703a0fc11238097d1db059872ab9ea569d39"
+  dependencies:
+    adm-zip "0.4.7"
+    body-parser "1.17.1"
+    bower "1.8.0"
+    brunch "2.10.9"
+    co "4.6.0"
+    cors "2.8.2"
+    duniter-crawler "^0.2.17"
+    duniter-keypair "^1.0.0"
+    event-stream "3.3.4"
+    express "4.15.2"
+    express-fileupload "0.0.5"
+    fs-extra "2.1.2"
+    materialize-css "0.98.1"
+    moment "2.18.1"
+    node-pre-gyp "0.6.34"
+    q "1.5.0"
+    request "2.81.0"
+    request-promise "4.2.0"
+    rimraf "2.6.1"
+    tmp "0.0.31"
     underscore "1.8.3"
 
 duniter@^0.90.5:
@@ -2083,6 +2139,46 @@ duniter@^0.90.5:
     unzip2 "0.2.5"
     winston "2.2.0"
     wotb "0.5.1"
+
+duniter@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/duniter/-/duniter-1.2.0.tgz#16fd70e0f85c8c6e51b5dbeba2581f8938f2f7c2"
+  dependencies:
+    archiver "1.3.0"
+    async "2.2.0"
+    bindings "1.2.1"
+    co "4.6.0"
+    colors "1.1.2"
+    commander "2.9.0"
+    daemonize2 "0.4.2"
+    duniter-bma "^1.0.7"
+    duniter-common "^1.0.0"
+    duniter-crawler "^1.0.8"
+    duniter-keypair "^1.0.2"
+    duniter-prover "^1.0.4"
+    duniter-ui "^1.0.3"
+    event-stream "3.3.4"
+    inquirer "3.0.6"
+    jison "0.4.17"
+    merkle "0.5.1"
+    moment "2.18.1"
+    node-pre-gyp "0.6.34"
+    optimist "0.6.1"
+    parallelshell "2.0.0"
+    q "1.5.0"
+    q-io "1.13.2"
+    querablep "^0.1.0"
+    request "2.81.0"
+    request-promise "4.2.0"
+    spawn-sync "^1.0.15"
+    sqlite3 "3.1.4"
+    superagent "3.5.2"
+    tail "^1.2.1"
+    underscore "1.8.3"
+    unzip "0.1.11"
+    unzip2 "0.2.5"
+    winston "2.3.1"
+    wotb "0.5.3"
 
 duplexer@~0.1.1:
   version "0.1.1"
@@ -2165,11 +2261,11 @@ escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
 
-escape-string-regexp@1.0.2, escape-string-regexp@^1.0.2:
+escape-string-regexp@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.2.tgz#4dbc2fe674e71949caf3fb2695ce7f2dc1d9a8d1"
 
-escape-string-regexp@^1.0.5:
+escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
@@ -2508,6 +2604,14 @@ form-data@1.0.0-rc4:
     combined-stream "^1.0.5"
     mime-types "^2.1.10"
 
+form-data@^2.1.1, form-data@~2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.2.tgz#89c3534008b97eada4cbb157d58f6f5df025eae4"
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.5"
+    mime-types "^2.1.12"
+
 form-data@~0.1.0:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-0.1.4.tgz#91abd788aba9702b1aabfa8bc01031a2ac9e3b12"
@@ -2524,15 +2628,7 @@ form-data@~2.0.0:
     combined-stream "^1.0.5"
     mime-types "^2.1.11"
 
-form-data@~2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.2.tgz#89c3534008b97eada4cbb157d58f6f5df025eae4"
-  dependencies:
-    asynckit "^0.4.0"
-    combined-stream "^1.0.5"
-    mime-types "^2.1.12"
-
-formidable@^1.0.17:
+formidable@^1.0.17, formidable@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.1.1.tgz#96b8886f7c3c3508b932d6bd70c4d3a88f35f1a9"
 
@@ -3938,7 +4034,7 @@ node-uuid@1.4.7:
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.7.tgz#6da5a17668c4b3dd59623bda11cf7fa4c1f60a6f"
 
-node-uuid@~1.4.0, node-uuid@~1.4.7:
+node-uuid@1.4.8, node-uuid@~1.4.0, node-uuid@~1.4.7:
   version "1.4.8"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
 
@@ -4781,9 +4877,13 @@ sass-graph@^2.1.1:
     lodash "^4.0.0"
     yargs "^4.7.1"
 
-sax@0.5.x, sax@>=0.1.1:
+sax@0.5.x:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/sax/-/sax-0.5.8.tgz#d472db228eb331c2506b0e8c15524adb939d12c1"
+
+sax@>=0.1.1:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.2.tgz#fd8631a23bc7826bef5d871bdb87378c95647828"
 
 scryptb@6.0.4:
   version "6.0.4"
@@ -5203,6 +5303,21 @@ superagent@2.3.0:
     qs "^6.1.0"
     readable-stream "^2.0.5"
 
+superagent@3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/superagent/-/superagent-3.5.2.tgz#3361a3971567504c351063abeaae0faa23dbf3f8"
+  dependencies:
+    component-emitter "^1.2.0"
+    cookiejar "^2.0.6"
+    debug "^2.2.0"
+    extend "^3.0.0"
+    form-data "^2.1.1"
+    formidable "^1.1.1"
+    methods "^1.1.1"
+    mime "^1.3.4"
+    qs "^6.1.0"
+    readable-stream "^2.0.5"
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -5214,6 +5329,10 @@ supports-color@~1.2.0:
 tag-shell@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/tag-shell/-/tag-shell-0.1.0.tgz#e743816e6a6e805ac3735f4162e016b97a7ddfbd"
+
+tail@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/tail/-/tail-1.2.1.tgz#c998a0cd9f8bf6dce780a6bc7339e66371e0db3f"
 
 tar-pack@^3.4.0:
   version "3.4.0"
@@ -5555,6 +5674,10 @@ void-elements@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+walkdir@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/walkdir/-/walkdir-0.0.11.tgz#a16d025eb931bd03b52f308caed0f40fcebe9532"
+
 walker@~1.0.5:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
@@ -5614,6 +5737,17 @@ winston@2.2.0:
     pkginfo "0.3.x"
     stack-trace "0.0.x"
 
+winston@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-2.3.1.tgz#0b48420d978c01804cf0230b648861598225a119"
+  dependencies:
+    async "~1.0.0"
+    colors "1.0.x"
+    cycle "1.0.x"
+    eyes "0.1.x"
+    isstream "0.1.x"
+    stack-trace "0.0.x"
+
 with@~4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/with/-/with-4.0.3.tgz#eefd154e9e79d2c8d3417b647a8f14d9fecce14e"
@@ -5632,6 +5766,14 @@ wordwrap@~0.0.2:
 wotb@0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/wotb/-/wotb-0.5.1.tgz#35093a808613a9c9d7d8e678c5143e2fbd6c8551"
+  dependencies:
+    bindings "1.2.1"
+    nan "2.2.0"
+    node-pre-gyp "0.6.23"
+
+wotb@0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/wotb/-/wotb-0.5.3.tgz#57e94271166bcbc6ce6f7cff83588c65cf07cf2b"
   dependencies:
     bindings "1.2.1"
     nan "2.2.0"
@@ -5722,7 +5864,7 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-zip-stream@^1.0.0:
+zip-stream@^1.0.0, zip-stream@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/zip-stream/-/zip-stream-1.1.1.tgz#5216b48bbb4d2651f64d5c6e6f09eb4a7399d557"
   dependencies:
