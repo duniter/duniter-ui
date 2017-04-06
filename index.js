@@ -78,7 +78,7 @@ module.exports = {
           const wbmin = webminController(server, startServices, stopServices);
           const httpServer = http.createServer(app);
           httpServer.listen(PORT, HOTE);
-          server.logger.info("Serveur web disponible a l'adresse http://%s:%s", HOTE, PORT);
+          server.logger.info("Web administration accessible at following address: http://%s:%s", HOTE, PORT);
 
           require('./server/lib/routes').webmin(wbmin, app);
           require('./server/lib/routes').webminWS(wbmin)(httpServer);
