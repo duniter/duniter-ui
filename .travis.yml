@@ -14,7 +14,7 @@ deploy:
   provider: npm
   email: cem.moreau@gmail.com
   on:
-    repo: duniter/ucoin-ui
+    repo: duniter/duniter-ui
     tags: true
   api_key:
     secure: xxP7Ki4RUIPJ9oFqAB9Z/1uQq9jJoxhLxrfsZsj3Rdg4Qz0SUk+PkJlC7o0N/Yv/4bW4qDAiqHdRvocZKFetoCF89CKreUKj7/VrVmfcYY7tLTcgaGHEshyz1lHAA51GwkwXF1sVEw5xlZZ13Dv+IDnVdqoIovGZNXJ1ydYKlOghmqxwKGmZF+VmCm2pC57MkDtmupKy5nK+73RB0WD4GgHFDCnZipc7KpiU4yPhWBjd5HbwAK4V6R3rtE9M0Jnqbqilz2hwm/wnL3PmkC/fS+VxV/RreQn8PuU06DzRZr0LvNHni3aYBw5fJuXdlUFazzGWCbDajqVXYfkNCnD6dbhN8pCGyqolhdgxg2aYkCx/+lgO6u+zMidq3hcEL0QJLEhidvI4RGZLCdIQnNXGRLJ6xBKX0Bb+ccKun7Hq3olHNw4j/26h0yW5FVN59g9tnAfvzCv5IbBJMa60OskiDoVdMDtWitWSlu2tUIJjin6LM/FJrvgkCei1+XSlRwYnV19qg5mP2iHu3dJT9d0UuHFq6uBKhlMwNk44kOMKCenHaSF670kAkwzZC3roYAdPbpxgIIYRszs28Aws07otnHR8nc779r9UWtaqhgQ93NEhecCMyQotyVIEvKRaGiJMk5n6ZT0lUpNZ+Gc7Mb86mU/g7PGCtdRp4YeKqX02yIk=
