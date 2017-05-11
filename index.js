@@ -83,7 +83,10 @@ module.exports = {
           require('./server/lib/routes').webmin(wbmin, app);
           require('./server/lib/routes').webminWS(wbmin)(httpServer);
 
-          yield wbmin.startAllServices();
+          const currentBlock = yield server.dal.getCurrentBlockOrNull()
+          if (currentBlock) {
+            yield wbmin.startAllServices()
+          }
 
           // Never ending promise
           return new Promise((resolve) => {});
