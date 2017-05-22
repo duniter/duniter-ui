@@ -10,8 +10,12 @@ const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
 const duniterKeypair = require('duniter-keypair');
+const common = require('duniter-common');
 const network = require('duniter-bma').duniter.methods;
 const contacter = require('duniter-crawler').duniter.methods.contacter;
+
+const Peer = common.document.Peer
+const Identity = common.document.Identity
 
 module.exports = (duniterServer, startServices, stopServices) => {
   return new WebAdmin(duniterServer, startServices, stopServices);
@@ -20,14 +24,16 @@ module.exports = (duniterServer, startServices, stopServices) => {
 function WebAdmin (duniterServer, startServices, stopServices) {
 
   const logger = duniterServer.logger;
-  const keyring = duniterServer.lib.keyring;
-  const Identity = duniterServer.lib.Identity;
-  const Peer = duniterServer.lib.Peer;
-  const rawer = duniterServer.lib.rawer;
-  const http2raw = duniterServer.lib.http2raw;
-  const dos2unix = duniterServer.lib.dos2unix;
-  const constants = duniterServer.lib.constants;
-  const ucp = duniterServer.lib.ucp;
+  const rawer = common.rawer;
+  const http2raw = network.http2raw;
+  const dos2unix = common.dos2unix;
+  const constants = {
+    DEFAULT_CPU: 0.5,
+    ENTITY_BLOCK: 'block',
+    ENTITY_IDENTITY: 'identity',
+    ENTITY_MEMBERSHIP: 'membership',
+    DOCUMENTS_VERSION: 10
+  }
 
   // Node instance: this is the object to be managed by the web admin
   const server = this.server = duniterServer;
@@ -74,7 +80,7 @@ function WebAdmin (duniterServer, startServices, stopServices) {
 
   this.summary = () => co(function *() {
     yield pluggedDALP;
-    const peer = new Peer({
+    const peer = Peer.fromJSON({
       endpoints: [
         network.getEndpoint(server.conf)
       ]
@@ -190,7 +196,7 @@ function WebAdmin (duniterServer, startServices, stopServices) {
     });
     yield pluggedConfP;
     const buid = '0-E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855';
-    const entity = Identity.statics.fromJSON({
+    const entity = Identity.fromJSON({
       buid: buid,
       uid: conf.idty_uid,
       issuer: pair.publicKey,
@@ -204,7 +210,7 @@ function WebAdmin (duniterServer, startServices, stopServices) {
     }
     yield server.dal.fillInMembershipsOfIdentity(Q(found));
     if (_.filter(found.memberships, { membership: 'IN'}).length == 0) {
-      const block = ucp.format.buid(null);
+      const block = common.buid.format(null);
       let join = rawer.getMembershipWithoutSignature({
         "version": constants.DOCUMENTS_VERSION,
         "currency": conf.currency,
@@ -486,7 +492,7 @@ function WebAdmin (duniterServer, startServices, stopServices) {
 
   this.isNodePubliclyReachable = (req) => co(function *() {
     const peer = yield server.PeeringService.peer();
-    const p = Peer.statics.fromJSON(peer);
+    const p = Peer.fromJSON(peer);
     let reachable;
     const node = contacter(p.getHostPreferDNS(), p.getPort());
     try {
