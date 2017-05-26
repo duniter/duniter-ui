@@ -9,6 +9,7 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
+const plugin = require('duniter/app/modules/plugin');
 const duniterKeypair = require('duniter-keypair');
 const common = require('duniter-common');
 const network = require('duniter-bma').duniter.methods;
@@ -17,11 +18,11 @@ const contacter = require('duniter-crawler').duniter.methods.contacter;
 const Peer = common.document.Peer
 const Identity = common.document.Identity
 
-module.exports = (duniterServer, startServices, stopServices) => {
-  return new WebAdmin(duniterServer, startServices, stopServices);
+module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins) => {
+  return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins);
 };
 
-function WebAdmin (duniterServer, startServices, stopServices) {
+function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlugins) {
 
   const logger = duniterServer.logger;
   const rawer = common.rawer;
@@ -554,6 +555,53 @@ function WebAdmin (duniterServer, startServices, stopServices) {
           return server.initDAL();
       });
   }
+
+  /*********
+   * PLUGIN STUFF
+   *********/
+
+  this.plugUiModulesList = (req) => co(function*() {
+    return _.pluck(_.filter(listDuniterUIPlugins(), p => p.required.duniterUI), 'name')
+  })
+
+  this.plugModulesList = (req) => co(function*() {
+    return listDuniterUIPlugins().map(plugin => {
+      return {
+        name: plugin.name,
+        version: plugin.version
+      }
+    })
+  })
+
+  this.plugUiModulesGetInjection = (req) => co(function*() {
+    const module = req.params.package
+    const required = require(module)
+    return required.duniterUI.inject || {}
+  })
+
+  this.plugCheckAccess = (req) => plugin.duniter.methods.canWrite()
+
+  this.plugAdd = (req) => co(function*() {
+    const module = req.params.package
+    if (module.match(/^file:/)) {
+      const resolvedPath = path.resolve(module.replace('file:', ''))
+      const installed = listDuniterUIPlugins()
+      for (const module of installed) {
+        if (module.version.match(new RegExp(resolvedPath))) {
+          return { success: false }
+        }
+      }
+    }
+    // Do not wait for full installation, too long
+    plugin.duniter.methods.npmInstall(module, null, path.join(__dirname, '../../'))
+    return { success: true }
+  })
+
+  this.plugRemove = (req) => co(function*() {
+    const module = req.params.package
+    yield plugin.duniter.methods.npmRemove(module, null, path.join(__dirname, '../../'))
+    return true
+  })
 
 }
 

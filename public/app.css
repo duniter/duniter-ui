@@ -13865,6 +13865,31 @@ blockquote.info {
 .upnp {
   line-height: 76px;
 }
+.modules blockquote {
+  margin-bottom: 5px;
+}
+.modules blockquote a {
+  font-weight: bold !important;
+  text-transform: none !important;
+  color: #dc6f1d !important;
+}
+.modules blockquote a.close {
+  padding-top: 10px;
+}
+.modules li.collection-item {
+  padding: 20px 20px;
+}
+.modules li .installing {
+  margin-top: 30px !important;
+  margin-bottom: 0 !important;
+}
+.modules li .installing h5 {
+  margin-left: 50px;
+  margin-top: 0;
+}
+.install_package .input-field {
+  margin-top: 0;
+}
 
 .mdi-navigation-menu {
   padding-left: 0.5rem;

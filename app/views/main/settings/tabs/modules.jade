@@ -1,0 +1,41 @@
+.container.modules
+  .row
+    form.s12.center
+      .card
+        .card-action
+          i.fa.fa-cubes.fa-5x
+          h1.card-title(translate="settings.modules.title")
+          p(translate="settings.modules.message")
+
+          blockquote.left-align.orange.lighten-5(ng-if="!hasAccess" translate="settings.modules.no_access")
+
+          blockquote.left-align.orange.lighten-5(ng-if="hasAccess && !warningShown")
+            a.waves-effect.waves-light(href="" translate="settings.modules.warning_light" ng-click="showWarning()")
+          blockquote.left-align.orange.lighten-5(ng-if="hasAccess && warningShown")
+            div(translate="settings.modules.warning")
+            a.close.waves-effect.waves-light(href="" translate="settings.modules.warning_close" ng-click="hideWarning()")
+
+    ul.collection.with-header
+      li.collection-item(ng-repeat="mod in modules track by $index")
+        div
+          span {{ mod.fullName }}
+          .switch.secondary-content
+            label
+              span(translate="settings.modules.off")
+              input(type="checkbox" ng-model="mod.installed" ng-disabled="mod.disabled" ng-click="switchModule(mod)")
+              span.lever
+              span(translate="settings.modules.on")
+        div.installing(ng-if="mod.installing")
+          .left.preloader-wrapper.small.active
+            .spinner-layer.spinner-blue-only
+              .circle-clipper.left
+                .circle
+          h5(ng-if="mod.installed === true") {{ 'settings.modules.installing' | translate }}
+          h5(ng-if="mod.installed !== true") {{ 'settings.modules.uninstalling' | translate }}
+          blockquote.left-align.orange.lighten-5(translate='settings.modules.installing_warn')
+      li.collection-item.install_package
+          .input-field.col.s6
+            i.material-icons.prefix language
+            input(type="text" ng-model="module_to_install" placeholder="Package: module@version, git+https://github.com/user/package.git, ...")
+          .switch.secondary-content
+            button.btn.waves-effect(ng-click="installModule()" ng-disabled="installing") {{ 'settings.modules.install' | translate }}

@@ -175,6 +175,14 @@ module.exports = (angular) => {
           },
           currency: {
             parameters: getResource('/webmin/currency/parameters')
+          },
+          plugin: {
+            allModules: getResource('/webmin/plug/modules'),
+            uiModules: getResource('/webmin/plug/ui_modules'),
+            uiGetMenuInjection: (moduleName) => getResource('/webmin/plug/ui_modules/inject/' + moduleName)(),
+            checkAccess: getResource('/webmin/plug/check_access'),
+            addPackage: (pkg) => getResource('/webmin/plug/add/' + encodeURIComponent(pkg), null, 60000)(),
+            removePackage: (pkg) => getResource('/webmin/plug/rem/' + encodeURIComponent(pkg))()
           }
         }
       }

@@ -1,4 +1,7 @@
 module.exports = () => {
+
+  window.uiModules = {}
+
   require('./services/webmin')(angular);
 
   const duniterApp = angular.module('duniterUIApp', [
@@ -86,6 +89,7 @@ module.exports = () => {
   homeControllers.controller('CPUController',              require('./controllers/main/settings/tabs/CPUController'));
   homeControllers.controller('CurrencyController',         require('./controllers/main/settings/tabs/CurrencyController'));
   homeControllers.controller('KeyController',              require('./controllers/main/settings/tabs/KeyController'));
+  homeControllers.controller('ModulesController',          require('./controllers/main/settings/tabs/ModulesController'));
   homeControllers.controller('GraphsController',           require('./controllers/main/graphs/GraphsController'));
   homeControllers.controller('GraphsBlockchainController', require('./controllers/main/graphs/GraphsBlockchainController'));
 };

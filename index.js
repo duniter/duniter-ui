@@ -1,6 +1,8 @@
 "use strict";
 
+const _ = require('underscore')
 const co = require('co');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const http    = require('http');
 const express = require('express');
@@ -75,13 +77,21 @@ module.exports = {
           }));
           app.use(bodyParser.json());
 
-          const wbmin = webminController(server, startServices, stopServices);
+          const wbmin = webminController(server, startServices, stopServices, listDuniterPlugins);
           const httpServer = http.createServer(app);
           httpServer.listen(PORT, HOTE);
           server.logger.info("Web administration accessible at following address: http://%s:%s", HOTE, PORT);
 
           require('./server/lib/routes').webmin(wbmin, app);
           require('./server/lib/routes').webminWS(wbmin)(httpServer);
+
+          const uiDeps = listDuniterUIPlugins()
+          for (const dep of uiDeps) {
+            // Eventual HTTP routing
+            if (dep.required.duniterUI.route) {
+              dep.required.duniterUI.route(app)
+            }
+          }
 
           const currentBlock = yield server.dal.getCurrentBlockOrNull()
           if (currentBlock) {
@@ -150,4 +160,33 @@ function stopDaemon(daemon) {
     if (err) return reject(err)
     resolve()
   }))
+}
+
+function listDuniterPlugins() {
+  return listPlugins(r => !!r.duniter || !!r.duniterUI)
+}
+
+function listDuniterUIPlugins() {
+  return listPlugins(r => !!r.duniterUI)
+}
+
+function listPlugins(conditionTest) {
+  const uiDependencies = []
+  const pathToPackageJSON = path.join(__dirname, './package.json')
+  const pkgJSON = JSON.parse(fs.readFileSync(pathToPackageJSON, 'utf8'))
+  const allDeps = _.extend(pkgJSON.dependencies || {}, pkgJSON.devDependencies || {})
+  const deps = Object.keys(allDeps)
+  for (const dep of deps) {
+    try {
+      const required = require(dep)
+      if (required && conditionTest(required)) {
+        uiDependencies.push({
+          name: dep,
+          version: allDeps[dep],
+          required
+        })
+      }
+    } catch (e) {}
+  }
+  return uiDependencies
 }

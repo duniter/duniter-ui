@@ -35,6 +35,12 @@ module.exports = {
         handleRequest(app.get.bind(app),  '/webmin/network/interfaces',        webminCtrl.listInterfaces);
         handleRequest(app.get.bind(app),  '/webmin/network/self',              webminCtrl.selfPeer);
         handleRequest(app.get.bind(app),  '/webmin/network/peers',             webminCtrl.peers);
+        handleRequest(app.get.bind(app),  '/webmin/plug/modules',              webminCtrl.plugModulesList);
+        handleRequest(app.get.bind(app),  '/webmin/plug/ui_modules',           webminCtrl.plugUiModulesList);
+        handleRequest(app.get.bind(app),  '/webmin/plug/ui_modules/inject/:package', webminCtrl.plugUiModulesGetInjection);
+        handleRequest(app.get.bind(app),  '/webmin/plug/check_access',         webminCtrl.plugCheckAccess);
+        handleRequest(app.get.bind(app),  '/webmin/plug/add/:package',         webminCtrl.plugAdd);
+        handleRequest(app.get.bind(app),  '/webmin/plug/rem/:package',         webminCtrl.plugRemove);
         handleFileRequest(app.get.bind(app),'/webmin/data/duniter_export',     webminCtrl.exportData);
         handleRequest(app.post.bind(app), '/webmin/data/duniter_import',       webminCtrl.importData);
     },

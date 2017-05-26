@@ -108,7 +108,19 @@ module.exports = (app) => {
       template: require('views/main/main'),
       resolve: {
         ws: (Webmin) => Webmin.ws(),
-        summary: (Webmin) => Webmin.summary()
+        summary: (Webmin) => Webmin.summary(),
+        uiModules: (Webmin) => co(function*() {
+          const modules = yield Webmin.plugin.uiModules()
+          for (let i = 0; i < modules.length; i++) {
+            const module = modules[i];
+            const injection = yield Webmin.plugin.uiGetMenuInjection(module)
+            let script   = document.createElement("script");
+            script.type  = "text/javascript";
+            script.text  = ";" +injection.menu
+            document.body.appendChild(script);
+          }
+          return modules
+        })
       },
       controller: 'MainController'
     }).
@@ -187,6 +199,20 @@ module.exports = (app) => {
         summary: (Webmin) => Webmin.summary()
       },
       controller: 'CPUController'
+    }).
+
+    state('main.settings.modules', {
+      url: '/modules',
+      template: require('views/main/settings/tabs/modules'),
+      resolve: {
+        summary: (Webmin) => Webmin.summary(),
+        hasAccess: (Webmin) => Webmin.plugin.checkAccess(),
+        allModules: (Webmin) => co(function*() {
+          const modules = yield Webmin.plugin.allModules()
+          return modules
+        })
+      },
+      controller: 'ModulesController'
     }).
 
     state('main.settings.crypto', {

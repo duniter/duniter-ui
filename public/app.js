@@ -695,25 +695,47 @@ require.register("js/controllers/main/MainController.js", function(exports, requ
 
 var co = require('co');
 
-module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, summary, UIUtils, Base58) {
+module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, uiModules, summary, UIUtils) {
 
-  var local_host = summary.host.split(':')[0]; // We suppose IPv4 configuration
-  var local_port = summary.host.split(':')[1];
-  var local_sign_pk = Base58.decode(summary.pubkey);
-  var local_sign_sk = Base58.decode(summary.seckey);
+  $scope.externalMenus = [];
 
-  var DEFAULT_CESIUM_SETTINGS = {
-    "useRelative": true,
-    "timeWarningExpire": 2592000,
-    "useLocalStorage": true,
-    "rememberMe": true,
-    "plugins": {},
-    "node": {
-      "host": local_host,
-      "port": local_port
-    },
-    "showUDHistory": true
-  };
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    var _loop = function _loop() {
+      var moduleName = _step.value;
+
+      var module = window.uiModules[moduleName];
+      if (module) {
+        $scope.externalMenus.push({
+          menuOpen: function menuOpen() {
+            return module.menuOpen(summary);
+          },
+          menuIconClass: module.menuIconClass,
+          menuLabel: module.menuLabel
+        });
+      }
+    };
+
+    for (var _iterator = uiModules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      _loop();
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
 
   $scope.notifications = {
     help: []
@@ -729,63 +751,6 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, s
   }
 
   UIUtils.changeTitle(summary.version);
-
-  $scope.openWallet = function () {
-
-    var walletHeight = parseInt(localStorage.getItem('wallet_height')) || 1000;
-    var walletWidth = parseInt(localStorage.getItem('wallet_width')) || 1400;
-
-    openNewTab(window.location.origin + '/cesium/index.html', {
-      position: 'center',
-      height: walletHeight,
-      width: walletWidth,
-      show: false
-    }, function (win) {
-      var settingsStr = win.window.localStorage.getItem('CESIUM_SETTINGS');
-      var dataStr = win.window.localStorage.getItem('CESIUM_DATA');
-      var settings = settingsStr && JSON.parse(settingsStr);
-      var data = dataStr && JSON.parse(dataStr);
-      var keyPairOK = data && data.keypair && data.keypair.signPk && data.keypair.signSk && true;
-      if (keyPairOK) {
-        data.keypair.signPk.length = local_sign_pk.length;
-        data.keypair.signSk.length = local_sign_sk.length;
-        keyPairOK = Base58.encode(Array.from(data.keypair.signPk)) == summary.pubkey && Base58.encode(Array.from(data.keypair.signSk)) == summary.seckey && data.pubkey == summary.pubkey;
-      }
-      if (!data || !keyPairOK || settings.node.host != local_host || settings.node.port != local_port) {
-        settings = settings || DEFAULT_CESIUM_SETTINGS;
-        data = data || {};
-        console.debug('Configuring Cesium...');
-        settings.node = {
-          "host": local_host,
-          "port": local_port
-        };
-        settings.plugins = {};
-        settings.rememberMe = true;
-        data.pubkey = summary.pubkey;
-        data.keypair = {
-          signPk: local_sign_pk,
-          signSk: local_sign_sk
-        };
-        win.window.localStorage.setItem('CESIUM_SETTINGS', JSON.stringify(settings));
-        win.window.localStorage.setItem('CESIUM_DATA', JSON.stringify(data));
-        win.on('closed', function () {
-          // Reopen the wallet
-          $timeout(function () {
-            return $scope.openWallet();
-          }, 1);
-        });
-        win.close();
-      } else {
-        // Cesium is correctly configured for the network part
-        win.show();
-        win.on('closed', function () {
-          localStorage.setItem('wallet_height', win.window.innerHeight - 8); // Seems to always have 8 pixels more
-          localStorage.setItem('wallet_width', win.window.innerWidth - 16); // Seems to always have 16 pixels more
-          mainWindow.focus();
-        });
-      }
-    });
-  };
 
   var aboutWin = void 0;
 
@@ -1770,6 +1735,104 @@ module.exports = function ($scope, Webmin) {
 
 });
 
+require.register("js/controllers/main/settings/tabs/ModulesController.js", function(exports, require, module) {
+"use strict";
+
+var co = require('co');
+
+module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, summary, Webmin, allModules, hasAccess) {
+
+  var interval = void 0;
+  $scope.hasAccess = hasAccess;
+  $scope.module_to_install = '';
+  $scope.installing = false;
+  $scope.initialLength = allModules.length;
+
+  $scope.showWarning = function () {
+    return $scope.warningShown = true;
+  };
+  $scope.hideWarning = function () {
+    return $scope.warningShown = false;
+  };
+
+  $scope.modules = modulesTransform(allModules);
+
+  $scope.switchModule = function (mod) {
+    $scope.modules.map(function (m) {
+      return m.disabled = true;
+    });
+    mod.installing = !mod.installing;
+    Webmin.plugin.removePackage(mod.name);
+    $scope.checkModulesInstallation();
+  };
+
+  $scope.installModule = function () {
+    $scope.modules.map(function (m) {
+      return m.disabled = true;
+    });
+    co(regeneratorRuntime.mark(function _callee() {
+      var res;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return Webmin.plugin.addPackage($scope.module_to_install);
+
+            case 2:
+              res = _context.sent;
+
+              if (res.success) {
+                $scope.modules.push({
+                  fullName: $scope.module_to_install,
+                  disabled: true,
+                  installing: true,
+                  installed: true
+                });
+                $scope.installing = true;
+                $scope.checkModulesInstallation();
+              } else {
+                $scope.modules = modulesTransform(allModules);
+                UIUtils.toast('settings.modules.already_install');
+              }
+
+            case 4:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+  };
+
+  $scope.checkModulesInstallation = function () {
+    interval = $interval(function () {
+      Webmin.plugin.allModules().then(function (modules) {
+        if (modules.length !== $scope.initialLength) {
+          $scope.initialLength = modules.length;
+          $scope.modules = modulesTransform(modules);
+          $scope.installing = false;
+          $interval.cancel(interval);
+        }
+      });
+    }, 1500);
+  };
+
+  function modulesTransform(modules) {
+    return modules.map(function (m) {
+      return {
+        name: m.name,
+        fullName: [m.name, m.version].join('@'),
+        disabled: !$scope.hasAccess,
+        installing: false,
+        installed: true
+      };
+    });
+  }
+};
+
+});
+
 require.register("js/controllers/main/settings/tabs/NetworkController.js", function(exports, require, module) {
 "use strict";
 
@@ -1860,6 +1923,9 @@ function toArrayOfAddresses(netiScope) {
 'use strict';
 
 module.exports = function () {
+
+  window.uiModules = {};
+
   require('./services/webmin')(angular);
 
   var duniterApp = angular.module('duniterUIApp', ['ui.router', 'homeControllers', 'pascalprecht.translate']);
@@ -1936,6 +2002,7 @@ module.exports = function () {
   homeControllers.controller('CPUController', require('./controllers/main/settings/tabs/CPUController'));
   homeControllers.controller('CurrencyController', require('./controllers/main/settings/tabs/CurrencyController'));
   homeControllers.controller('KeyController', require('./controllers/main/settings/tabs/KeyController'));
+  homeControllers.controller('ModulesController', require('./controllers/main/settings/tabs/ModulesController'));
   homeControllers.controller('GraphsController', require('./controllers/main/graphs/GraphsController'));
   homeControllers.controller('GraphsBlockchainController', require('./controllers/main/graphs/GraphsBlockchainController'));
 };
@@ -2129,6 +2196,7 @@ module.exports = {
   "settings.tabs.network": "Network",
   "settings.tabs.currency": "Currency",
   "settings.tabs.cpu": "CPU",
+  "settings.tabs.modules": "Modules",
   "settings.data.reset.title": "Reset this node",
   "settings.data.reset.message": "If you desire to reset this node's data and sync it again with the network, please select a node to sync against and validate.",
   "settings.data.reset.warning": "This process <strong>will not</strong> reset the node identity and network settings, which will be reused.",
@@ -2167,6 +2235,19 @@ module.exports = {
   "settings.cpu.range": "% of CPU power core dedicated to proof-of-work :",
   "settings.cpu.power": "Core power:",
   "settings.cpu.saved": "CPU settings saved.",
+  "settings.modules.title": "Modules",
+  "settings.modules.message": "You can install extensions to your Duniter node to provide new features. These extensions are called <b>Duniter modules</b>.",
+  "settings.modules.no_access": "This instance does not have enough system rights to install new modules on disk.",
+  "settings.modules.install": "Install this module",
+  "settings.modules.already_install": "Module already installed",
+  "settings.modules.warning": "Please be <b>VERY CAREFUL</b> when choosing to install a module: you should have checked that this module is not a virus, nor wants to steal your informations.<br>A module has <i>a lot of power</i> and can likely access to any part of your computer in the limit of the user's access rights:<ul><li>- your node's keyring (in the computer's memory)</li><li>- your personal files (photos, unencrypted passwords, browser favorites, ...)</li><li>- your internet access</li><li>- your local network</li></ul>You could get informations about a module by looking on the Internet.",
+  "settings.modules.warning_light": "Please read this warning before installing a module!",
+  "settings.modules.warning_close": "Close this message",
+  "settings.modules.on": "On",
+  "settings.modules.off": "Off",
+  "settings.modules.installing": "Installation...",
+  "settings.modules.installing_warn": "Please <b>do not close Duniter</b> during this process!",
+  "settings.modules.uninstalling": "Removal...",
   "graphs.tabs.blockchain": "Blockchain",
   "graphs.tabs.currency": "Currency",
   "graphs.blockchain.range": "Graphs for the last X blocks: (please choose X value)",
@@ -2292,6 +2373,55 @@ module.exports = function (app) {
         },
         summary: function summary(Webmin) {
           return Webmin.summary();
+        },
+        uiModules: function uiModules(Webmin) {
+          return co(regeneratorRuntime.mark(function _callee() {
+            var modules, i, _module, injection, script;
+
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    _context.next = 2;
+                    return Webmin.plugin.uiModules();
+
+                  case 2:
+                    modules = _context.sent;
+                    i = 0;
+
+                  case 4:
+                    if (!(i < modules.length)) {
+                      _context.next = 16;
+                      break;
+                    }
+
+                    _module = modules[i];
+                    _context.next = 8;
+                    return Webmin.plugin.uiGetMenuInjection(_module);
+
+                  case 8:
+                    injection = _context.sent;
+                    script = document.createElement("script");
+
+                    script.type = "text/javascript";
+                    script.text = ";" + injection.menu;
+                    document.body.appendChild(script);
+
+                  case 13:
+                    i++;
+                    _context.next = 4;
+                    break;
+
+                  case 16:
+                    return _context.abrupt('return', modules);
+
+                  case 17:
+                  case 'end':
+                    return _context.stop();
+                }
+              }
+            }, _callee, this);
+          }));
         }
       },
       controller: 'MainController'
@@ -2314,19 +2444,19 @@ module.exports = function (app) {
       template: require('views/main/home/tabs/network'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee() {
-            return regeneratorRuntime.wrap(function _callee$(_context) {
+          return co(regeneratorRuntime.mark(function _callee2() {
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
               while (1) {
-                switch (_context.prev = _context.next) {
+                switch (_context2.prev = _context2.next) {
                   case 0:
-                    return _context.abrupt('return', Webmin.network.peers());
+                    return _context2.abrupt('return', Webmin.network.peers());
 
                   case 1:
                   case 'end':
-                    return _context.stop();
+                    return _context2.stop();
                 }
               }
-            }, _callee, this);
+            }, _callee2, this);
           }));
         }
       },
@@ -2346,40 +2476,40 @@ module.exports = function (app) {
       template: require('views/main/settings/tabs/data'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee2() {
+          return co(regeneratorRuntime.mark(function _callee3() {
             var self, res;
-            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
               while (1) {
-                switch (_context2.prev = _context2.next) {
+                switch (_context3.prev = _context3.next) {
                   case 0:
-                    _context2.prev = 0;
-                    _context2.next = 3;
+                    _context3.prev = 0;
+                    _context3.next = 3;
                     return Webmin.network.selfPeer();
 
                   case 3:
-                    self = _context2.sent;
-                    _context2.next = 6;
+                    self = _context3.sent;
+                    _context3.next = 6;
                     return Webmin.network.peers();
 
                   case 6:
-                    res = _context2.sent;
-                    return _context2.abrupt('return', _.filter(res.peers, function (p) {
+                    res = _context3.sent;
+                    return _context3.abrupt('return', _.filter(res.peers, function (p) {
                       return p.pubkey != self.pubkey && p.status == 'UP';
                     }));
 
                   case 10:
-                    _context2.prev = 10;
-                    _context2.t0 = _context2['catch'](0);
+                    _context3.prev = 10;
+                    _context3.t0 = _context3['catch'](0);
 
-                    console.error(_context2.t0);
-                    return _context2.abrupt('return', []);
+                    console.error(_context3.t0);
+                    return _context3.abrupt('return', []);
 
                   case 14:
                   case 'end':
-                    return _context2.stop();
+                    return _context3.stop();
                 }
               }
-            }, _callee2, this, [[0, 10]]);
+            }, _callee3, this, [[0, 10]]);
           }));
         }
       },
@@ -2401,6 +2531,40 @@ module.exports = function (app) {
         }
       },
       controller: 'CPUController'
+    }).state('main.settings.modules', {
+      url: '/modules',
+      template: require('views/main/settings/tabs/modules'),
+      resolve: {
+        summary: function summary(Webmin) {
+          return Webmin.summary();
+        },
+        hasAccess: function hasAccess(Webmin) {
+          return Webmin.plugin.checkAccess();
+        },
+        allModules: function allModules(Webmin) {
+          return co(regeneratorRuntime.mark(function _callee4() {
+            var modules;
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+              while (1) {
+                switch (_context4.prev = _context4.next) {
+                  case 0:
+                    _context4.next = 2;
+                    return Webmin.plugin.allModules();
+
+                  case 2:
+                    modules = _context4.sent;
+                    return _context4.abrupt('return', modules);
+
+                  case 4:
+                  case 'end':
+                    return _context4.stop();
+                }
+              }
+            }, _callee4, this);
+          }));
+        }
+      },
+      controller: 'ModulesController'
     }).state('main.settings.crypto', {
       url: '/crypto',
       template: require('views/main/settings/tabs/crypto'),
@@ -2421,19 +2585,19 @@ module.exports = function (app) {
       url: '/currency',
       resolve: {
         conf: function conf(summary) {
-          return co(regeneratorRuntime.mark(function _callee3() {
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          return co(regeneratorRuntime.mark(function _callee5() {
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
               while (1) {
-                switch (_context3.prev = _context3.next) {
+                switch (_context5.prev = _context5.next) {
                   case 0:
-                    return _context3.abrupt('return', summary.parameters);
+                    return _context5.abrupt('return', summary.parameters);
 
                   case 1:
                   case 'end':
-                    return _context3.stop();
+                    return _context5.stop();
                 }
               }
-            }, _callee3, this);
+            }, _callee5, this);
           }));
         }
       },
@@ -2506,25 +2670,25 @@ module.exports = function (app) {
   });
 
   function resolveNetworkAutoConf(Webmin) {
-    return co(regeneratorRuntime.mark(function _callee4() {
+    return co(regeneratorRuntime.mark(function _callee6() {
       var netinterfaces;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context4.next = 2;
+              _context6.next = 2;
               return Webmin.network.interfaces();
 
             case 2:
-              netinterfaces = _context4.sent;
-              return _context4.abrupt('return', netinterfaces || { local: {}, remote: {} });
+              netinterfaces = _context6.sent;
+              return _context6.abrupt('return', netinterfaces || { local: {}, remote: {} });
 
             case 4:
             case 'end':
-              return _context4.stop();
+              return _context6.stop();
           }
         }
-      }, _callee4, this);
+      }, _callee6, this);
     }));
   }
 };
@@ -3421,6 +3585,20 @@ module.exports = function (angular) {
         },
         currency: {
           parameters: getResource('/webmin/currency/parameters')
+        },
+        plugin: {
+          allModules: getResource('/webmin/plug/modules'),
+          uiModules: getResource('/webmin/plug/ui_modules'),
+          uiGetMenuInjection: function uiGetMenuInjection(moduleName) {
+            return getResource('/webmin/plug/ui_modules/inject/' + moduleName)();
+          },
+          checkAccess: getResource('/webmin/plug/check_access'),
+          addPackage: function addPackage(pkg) {
+            return getResource('/webmin/plug/add/' + encodeURIComponent(pkg), null, 60000)();
+          },
+          removePackage: function removePackage(pkg) {
+            return getResource('/webmin/plug/rem/' + encodeURIComponent(pkg))();
+          }
         }
       };
     }

@@ -41,10 +41,10 @@ block content
             i.fa.fa-2x.fa-gear.left
             span {{ 'top.menu.settings' | translate }}
       ul.right
-        li
-          a.waves-effect.waves-light(ng-click="openWallet()")
-            i.fa.fa-2x.fa-suitcase.left
-            span {{ 'top.menu.wallet' | translate }}
+        li(ng-repeat="menu in externalMenus")
+          a.waves-effect.waves-light(ng-click="menu.menuOpen()")
+            i.fa.fa-2x.left(ng-class="menu.menuIconClass")
+            span {{ menu.menuLabel }}
         li: a.waves-effect.waves-light.dropdown-button(href="#!" data-activates="about" data-badge="{{ notifications.help.length }}"): i.material-icons info_outline
         li: a.waves-effect.waves-light.dropdown-button(href="#!" data-activates="serveractions"): i.material-icons more_vert
 
