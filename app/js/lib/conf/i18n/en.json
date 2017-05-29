@@ -213,5 +213,7 @@
   "help.about_duniter.version": "Version: ",
   "help.about_duniter.forum": "Forum",
   "help.about_duniter.chat": "Chat",
-  "help.new_version_available": "New version available"
+  "help.new_version_available": "New version available",
+  "help.restart_required": "Restart to apply changes",
+  "help.restart_required.message": "Please close Duniter and restart it."
 }

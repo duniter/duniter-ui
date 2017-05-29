@@ -1739,14 +1739,14 @@ require.register("js/controllers/main/settings/tabs/ModulesController.js", funct
 "use strict";
 
 var co = require('co');
+var _ = require('underscore');
 
 module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, summary, Webmin, allModules, hasAccess) {
 
   var interval = void 0;
   $scope.hasAccess = hasAccess;
-  $scope.module_to_install = '';
+  $scope.module_to_install = 'file:../duniter-ui-cesium';
   $scope.installing = false;
-  $scope.initialLength = allModules.length;
 
   $scope.showWarning = function () {
     return $scope.warningShown = true;
@@ -1808,11 +1808,72 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
   $scope.checkModulesInstallation = function () {
     interval = $interval(function () {
       Webmin.plugin.allModules().then(function (modules) {
-        if (modules.length !== $scope.initialLength) {
-          $scope.initialLength = modules.length;
+        var initialModulesNames = _.pluck(allModules, 'name');
+        var newModulesNames = _.pluck(modules, 'name');
+        var added = _.difference(newModulesNames, initialModulesNames);
+        var removed = _.difference(initialModulesNames, newModulesNames);
+        if (added.length || removed.length) {
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = added[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var addedName = _step.value;
+
+              UIUtils.toastRaw('Installed module \'' + addedName + '\'');
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = removed[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var removedName = _step2.value;
+
+              UIUtils.toastRaw('Removed module \'' + removedName + '\'');
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+
+          allModules = modules;
           $scope.modules = modulesTransform(modules);
           $scope.installing = false;
           $interval.cancel(interval);
+          $scope.notifications.help.push({
+            icon: 'loop',
+            message: 'help.restart_required',
+            onclick: function onclick() {
+              return UIUtils.toast('help.restart_required.message');
+            }
+          });
         }
       });
     }, 1500);
@@ -2260,7 +2321,9 @@ module.exports = {
   "help.about_duniter.version": "Version: ",
   "help.about_duniter.forum": "Forum",
   "help.about_duniter.chat": "Chat",
-  "help.new_version_available": "New version available"
+  "help.new_version_available": "New version available",
+  "help.restart_required": "Restart to apply changes",
+  "help.restart_required.message": "Please close Duniter and restart it."
 }
 ;
 });

@@ -1,6 +1,7 @@
 "use strict";
 
 const co = require('co')
+const _ = require('underscore')
 
 module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, Webmin, allModules, hasAccess) => {
 
@@ -8,7 +9,6 @@ module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, 
   $scope.hasAccess = hasAccess
   $scope.module_to_install = ''
   $scope.installing = false
-  $scope.initialLength = allModules.length
 
   $scope.showWarning = () => $scope.warningShown = true
   $scope.hideWarning = () => $scope.warningShown = false
@@ -46,11 +46,26 @@ module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, 
     interval = $interval(() => {
       Webmin.plugin.allModules()
         .then(modules => {
-          if (modules.length !== $scope.initialLength) {
-            $scope.initialLength = modules.length
+          const initialModulesNames = _.pluck(allModules, 'name')
+          const newModulesNames = _.pluck(modules, 'name')
+          const added = _.difference(newModulesNames, initialModulesNames)
+          const removed = _.difference(initialModulesNames, newModulesNames)
+          if (added.length || removed.length) {
+            for (const addedName of added) {
+              UIUtils.toastRaw('Installed module \'' + addedName + '\'');
+            }
+            for (const removedName of removed) {
+              UIUtils.toastRaw('Removed module \'' + removedName + '\'');
+            }
+            allModules = modules
             $scope.modules = modulesTransform(modules)
             $scope.installing = false
             $interval.cancel(interval)
+            $scope.notifications.help.push({
+              icon: 'loop',
+              message: 'help.restart_required',
+              onclick: () => UIUtils.toast('help.restart_required.message')
+            });
           }
         })
     }, 1500)
