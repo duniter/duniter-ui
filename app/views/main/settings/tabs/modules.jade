@@ -19,6 +19,7 @@
       li.collection-item(ng-repeat="mod in modules track by $index")
         div
           span {{ mod.fullName }}
+          span.badge.new.deep-orange.darken-4(ng-if="mod.locked") required
           .switch.secondary-content
             label
               span(translate="settings.modules.off")

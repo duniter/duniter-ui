@@ -50,7 +50,7 @@ module.exports = {
     }, {
       name: 'direct_webstart',
       desc: 'Do a webstart',
-      onDatabaseExecute: (server, conf, program, params, startServices, stopServices) => co(function*(){
+      onDatabaseExecute: (server, conf, program, params, startServices, stopServices, stack) => co(function*(){
 
         try {
 
@@ -77,7 +77,7 @@ module.exports = {
           }));
           app.use(bodyParser.json());
 
-          const wbmin = webminController(server, startServices, stopServices, listDuniterPlugins);
+          const wbmin = webminController(server, startServices, stopServices, listDuniterPlugins, stack);
           const httpServer = http.createServer(app);
           httpServer.listen(PORT, HOTE);
           server.logger.info("Web administration accessible at following address: http://%s:%s", HOTE, PORT);
@@ -172,8 +172,9 @@ function listDuniterUIPlugins() {
 
 function listPlugins(conditionTest) {
   const uiDependencies = []
-  const pathToPackageJSON = path.join(__dirname, './package.json')
+  const pathToPackageJSON = path.resolve('./package.json')
   const pkgJSON = JSON.parse(fs.readFileSync(pathToPackageJSON, 'utf8'))
+  const peerDeps = pkgJSON.peerDependencies || {}
   const allDeps = _.extend(pkgJSON.dependencies || {}, pkgJSON.devDependencies || {})
   const deps = Object.keys(allDeps)
   for (const dep of deps) {
@@ -183,6 +184,7 @@ function listPlugins(conditionTest) {
         uiDependencies.push({
           name: dep,
           version: allDeps[dep],
+          locked: !!peerDeps[dep],
           required
         })
       }

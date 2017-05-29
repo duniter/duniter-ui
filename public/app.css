@@ -13868,6 +13868,12 @@ blockquote.info {
 .modules blockquote {
   margin-bottom: 5px;
 }
+.modules span.badge {
+  margin-right: 120px;
+}
+.modules span.badge:after {
+  content: "" !important;
+}
 .modules blockquote a {
   font-weight: bold !important;
   text-transform: none !important;

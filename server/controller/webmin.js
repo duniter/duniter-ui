@@ -9,7 +9,6 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
-const plugin = require('duniter/app/modules/plugin');
 const duniterKeypair = require('duniter-keypair');
 const common = require('duniter-common');
 const network = require('duniter-bma').duniter.methods;
@@ -18,11 +17,11 @@ const contacter = require('duniter-crawler').duniter.methods.contacter;
 const Peer = common.document.Peer
 const Identity = common.document.Identity
 
-module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins) => {
-  return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins);
+module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) => {
+  return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins, stack);
 };
 
-function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlugins) {
+function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) {
 
   const logger = duniterServer.logger;
   const rawer = common.rawer;
@@ -560,6 +559,10 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
    * PLUGIN STUFF
    *********/
 
+  function requirePlugin() {
+    return stack.getModule('duniter-plugin');
+  }
+
   this.plugUiModulesList = (req) => co(function*() {
     return _.pluck(_.filter(listDuniterUIPlugins(), p => p.required.duniterUI), 'name')
   })
@@ -568,7 +571,8 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     return listDuniterUIPlugins().map(plugin => {
       return {
         name: plugin.name,
-        version: plugin.version
+        version: plugin.version,
+        locked: plugin.locked
       }
     })
   })
@@ -579,7 +583,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     return required.duniterUI.inject || {}
   })
 
-  this.plugCheckAccess = (req) => plugin.duniter.methods.canWrite()
+  this.plugCheckAccess = (req) => requirePlugin().duniter.methods.canWrite()
 
   this.plugAdd = (req) => co(function*() {
     const module = req.params.package
@@ -593,13 +597,13 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       }
     }
     // Do not wait for full installation, too long
-    plugin.duniter.methods.npmInstall(module, null, path.join(__dirname, '../../'))
+    requirePlugin().duniter.methods.npmInstall(module, null, path.resolve('./'))
     return { success: true }
   })
 
   this.plugRemove = (req) => co(function*() {
     const module = req.params.package
-    yield plugin.duniter.methods.npmRemove(module, null, path.join(__dirname, '../../'))
+    yield requirePlugin().duniter.methods.npmRemove(module, null, path.resolve('./'))
     return true
   })
 

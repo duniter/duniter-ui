@@ -76,7 +76,8 @@ module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, 
       return {
         name: m.name,
         fullName: [m.name, m.version].join('@'),
-        disabled: !$scope.hasAccess,
+        locked: m.locked,
+        disabled: !$scope.hasAccess || m.locked,
         installing: false,
         installed: true
       }

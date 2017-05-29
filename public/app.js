@@ -1745,7 +1745,7 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
 
   var interval = void 0;
   $scope.hasAccess = hasAccess;
-  $scope.module_to_install = 'file:../duniter-ui-cesium';
+  $scope.module_to_install = '';
   $scope.installing = false;
 
   $scope.showWarning = function () {
@@ -1884,7 +1884,8 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
       return {
         name: m.name,
         fullName: [m.name, m.version].join('@'),
-        disabled: !$scope.hasAccess,
+        locked: m.locked,
+        disabled: !$scope.hasAccess || m.locked,
         installing: false,
         installed: true
       };
