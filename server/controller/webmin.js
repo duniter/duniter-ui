@@ -59,18 +59,18 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   let pluggedDALP = Promise.resolve(); // Initially, the node is already plugged in
 
 
-    this.pushEntity = (req, rawer, type) => co(function *() {
-        let rawDocument = rawer(req);
-        rawDocument = dos2unix(rawDocument);
-        const written = yield server.writeRaw(rawDocument, type);
-        try {
-            return written.json();
-        } catch (e) {
-            logger.error('Written:', written);
-            logger.error(e);
-            throw e;
-        }
-    });
+  this.pushEntity = (req, rawer, type) => co(function *() {
+    let rawDocument = rawer(req);
+    rawDocument = dos2unix(rawDocument);
+    const written = yield server.writeRaw(rawDocument, type);
+    try {
+      return written.json();
+    } catch (e) {
+      logger.error('Written:', written);
+      logger.error(e);
+      throw e;
+    }
+  });
 
   function replugDAL() {
     return co(function *() {
@@ -542,18 +542,18 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   });
 
   function plugForConf() {
-      return co(function *() {
-          yield server.plugFileSystem();
-          yield server.loadConf();
-          // bmapi = yield bma(server, null, true);
-      });
+    return co(function *() {
+      yield server.plugFileSystem();
+      yield server.loadConf();
+      // bmapi = yield bma(server, null, true);
+    });
   }
 
   function plugForDAL() {
-      return co(function *() {
-          yield pluggedConfP;
-          return server.initDAL();
-      });
+    return co(function *() {
+      yield pluggedConfP;
+      return server.initDAL();
+    });
   }
 
   /*********
