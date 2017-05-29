@@ -23,6 +23,11 @@ module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, 
   }
 
   $scope.installModule = () => {
+    const pkg = $scope.module_to_install
+    if (!(pkg.match(/^file:\/\//) || pkg.match(/^https?:\/\/.+\.(tar\.gz|tgz)$/) || pkg.match(/^git(\+ssh|\+http|\+https)?:\/\/.+\.git$/))) {
+      UIUtils.toast('settings.modules.wrong_package_source')
+      return
+    }
     $scope.modules.map(m => m.disabled = true)
     co(function*() {
       const res = yield Webmin.plugin.addPackage($scope.module_to_install)
@@ -37,7 +42,13 @@ module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, 
         $scope.checkModulesInstallation()
       } else {
         $scope.modules = modulesTransform(allModules)
-        UIUtils.toast('settings.modules.already_install');
+        if (res.error === 1) {
+          UIUtils.toast('settings.modules.already_install');
+        } else if (res.error === 2) {
+          UIUtils.toast('settings.modules.path_does_not_exist');
+        } else {
+          UIUtils.toast('settings.modules.unknown_error');
+        }
       }
     })
   }

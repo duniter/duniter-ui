@@ -1767,6 +1767,11 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
   };
 
   $scope.installModule = function () {
+    var pkg = $scope.module_to_install;
+    if (!(pkg.match(/^file:\/\//) || pkg.match(/^https?:\/\/.+\.(tar\.gz|tgz)$/) || pkg.match(/^git(\+ssh|\+http|\+https)?:\/\/.+\.git$/))) {
+      UIUtils.toast('settings.modules.wrong_package_source');
+      return;
+    }
     $scope.modules.map(function (m) {
       return m.disabled = true;
     });
@@ -1793,7 +1798,13 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
                 $scope.checkModulesInstallation();
               } else {
                 $scope.modules = modulesTransform(allModules);
-                UIUtils.toast('settings.modules.already_install');
+                if (res.error === 1) {
+                  UIUtils.toast('settings.modules.already_install');
+                } else if (res.error === 2) {
+                  UIUtils.toast('settings.modules.path_does_not_exist');
+                } else {
+                  UIUtils.toast('settings.modules.unknown_error');
+                }
               }
 
             case 4:
@@ -2302,6 +2313,8 @@ module.exports = {
   "settings.modules.no_access": "This instance does not have enough system rights to install new modules on disk.",
   "settings.modules.install": "Install this module",
   "settings.modules.already_install": "Module already installed",
+  "settings.modules.path_does_not_exist": "Path does not lead to a module",
+  "settings.modules.wrong_package_source": "Package URL has wrong format",
   "settings.modules.warning": "Please be <b>VERY CAREFUL</b> when choosing to install a module: you should have checked that this module is not a virus, nor wants to steal your informations.<br>A module has <i>a lot of power</i> and can likely access to any part of your computer in the limit of the user's access rights:<ul><li>- your node's keyring (in the computer's memory)</li><li>- your personal files (photos, unencrypted passwords, browser favorites, ...)</li><li>- your internet access</li><li>- your local network</li></ul>You could get informations about a module by looking on the Internet.",
   "settings.modules.warning_light": "Please read this warning before installing a module!",
   "settings.modules.warning_close": "Close this message",

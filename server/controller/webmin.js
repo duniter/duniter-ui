@@ -1,6 +1,7 @@
 "use strict";
 
 const os = require('os');
+const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const es = require('event-stream');
@@ -592,8 +593,11 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       const installed = listDuniterUIPlugins()
       for (const module of installed) {
         if (module.version.match(new RegExp(resolvedPath))) {
-          return { success: false }
+          return { success: false, error: 1 }
         }
+      }
+      if (!fs.existsSync(path.join(resolvedPath, '/package.json'))) {
+        return { success: false, error: 2 }
       }
     }
     // Do not wait for full installation, too long
