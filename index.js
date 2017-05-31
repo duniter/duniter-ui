@@ -89,7 +89,7 @@ module.exports = {
           for (const dep of uiDeps) {
             // Eventual HTTP routing
             if (dep.required.duniterUI.route) {
-              dep.required.duniterUI.route(app)
+              dep.required.duniterUI.route(app, server, conf, program, params)
             }
           }
 
