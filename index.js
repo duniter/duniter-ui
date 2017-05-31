@@ -190,5 +190,18 @@ function listPlugins(conditionTest) {
       }
     } catch (e) {}
   }
+  // Special: self dependency (if local package is also a module)
+  if (pkgJSON.main) {
+    const dep = pkgJSON.name
+    const required = require(path.resolve('./' + pkgJSON.main))
+    if (required && conditionTest(required)) {
+      uiDependencies.push({
+        name: dep,
+        version: 'local',
+        locked: true,
+        required
+      })
+    }
+  }
   return uiDependencies
 }

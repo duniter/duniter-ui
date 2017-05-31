@@ -580,8 +580,13 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
 
   this.plugUiModulesGetInjection = (req) => co(function*() {
     const module = req.params.package
-    const required = require(module)
-    return required.duniterUI.inject || {}
+    const plugins = listDuniterUIPlugins()
+    for (const plugin of plugins) {
+      if (plugin.name === module) {
+        return plugin.required.duniterUI.inject || {}
+      }
+    }
+    return {}
   })
 
   this.plugCheckAccess = (req) => requirePlugin().duniter.methods.canWrite()
