@@ -191,7 +191,7 @@ function listPlugins(conditionTest) {
     } catch (e) {}
   }
   // Special: self dependency (if local package is also a module)
-  if (pkgJSON.main) {
+  if (pkgJSON.main && pkgJSON.main.match(/\.js/)) { // With NW.js, the main is an index.html file, which causes a bug
     const dep = pkgJSON.name
     const required = require(path.resolve('./' + pkgJSON.main))
     if (required && conditionTest(required)) {
