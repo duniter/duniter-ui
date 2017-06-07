@@ -131,7 +131,7 @@
   "sync.simplified.default_option": "Please select a node to continue",
   "sync.simplified.currency": "Currency",
   "sync.simplified.main_mirror": "(main mirror)",
-  "sync.simplified.official_mirror": "(other official mirror)",
+  "sync.simplified.other mirror": "(other mirror)",
   "sync.ready.node.part1": "This node is available!",
   "sync.ready.node.part2": "Click on the green button to proceed.",
   "sync.started.node": "Synchronization started on node:",

@@ -21,8 +21,12 @@ main
                 .input-field.col.s12(ng-show="sync_mode == 'simplified'")
                   select.browser-default(ng-model="simplified_host", ng-change="checkNode()", ng-disabled="synchronizing")
                     option(value="", disabled, selected) {{ 'sync.simplified.default_option' | translate }}
-                    optgroup(label="{{ 'sync.simplified.currency' | translate }} « Ğ1 »")
-                      option(value="g1.duniter.org:10901") g1.duniter.org:10901 {{ 'sync.simplified.main_mirror' | translate }}
+                    optgroup(label="{{ 'sync.simplified.currency' | translate }} « Ğune »")
+                      option(value="g1.duniter.org:443") https://g1.duniter.org {{ 'sync.simplified.main_mirror' | translate }}
+                      option(value="g1.duniter.org:80") http://g1.duniter.org {{ 'sync.simplified.other mirror' | translate }}
+                    optgroup(label="{{ 'sync.simplified.currency' | translate }} « Ğune-TEST »")
+                      option(value="g1-test.duniter.org:443") https://g1-test.duniter.org {{ 'sync.simplified.main_mirror' | translate }}
+                      option(value="g1-test.duniter.org:80") http://g1-test.duniter.org {{ 'sync.simplified.other mirror' | translate }}
                   label {{ 'sync.simplified.choose' | translate }}
 
                 .input-field.col.s8(ng-show="sync_mode != 'simplified'")
