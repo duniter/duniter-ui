@@ -1744,7 +1744,7 @@ var _ = require('underscore');
 module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, summary, Webmin, allModules, hasAccess) {
 
   var interval = void 0;
-  $scope.hasAccess = hasAccess;
+  $scope.hasAccess = hasAccess.hasAccess;
   $scope.module_to_install = '';
   $scope.installing = false;
 

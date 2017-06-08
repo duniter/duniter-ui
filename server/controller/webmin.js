@@ -589,7 +589,10 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     return {}
   })
 
-  this.plugCheckAccess = (req) => requirePlugin().duniter.methods.canWrite()
+  this.plugCheckAccess = (req) => co(function*() {
+    const hasAccess = yield requirePlugin().duniter.methods.canWrite()
+    return { hasAccess }
+  })
 
   this.plugAdd = (req) => co(function*() {
     const module = req.params.package

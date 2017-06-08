@@ -6,7 +6,7 @@ const _ = require('underscore')
 module.exports = ($scope, $http, $state, $interval, $timeout, UIUtils, summary, Webmin, allModules, hasAccess) => {
 
   let interval
-  $scope.hasAccess = hasAccess
+  $scope.hasAccess = hasAccess.hasAccess
   $scope.module_to_install = ''
   $scope.installing = false
 
