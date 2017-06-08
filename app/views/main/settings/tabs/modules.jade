@@ -34,7 +34,7 @@
           h5(ng-if="mod.installed === true") {{ 'settings.modules.installing' | translate }}
           h5(ng-if="mod.installed !== true") {{ 'settings.modules.uninstalling' | translate }}
           blockquote.left-align.orange.lighten-5(translate='settings.modules.installing_warn')
-      li.collection-item.install_package(ng-if="hasAccess")
+      li.collection-item.install_package(ng-show="hasAccess")
           .input-field.col.s6
             i.material-icons.prefix language
             input(type="text" ng-model="module_to_install" placeholder="Package: module@version, git+https://github.com/user/package.git, ...")
