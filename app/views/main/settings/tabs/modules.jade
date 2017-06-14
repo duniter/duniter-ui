@@ -8,12 +8,11 @@
           p(translate="settings.modules.message")
 
           blockquote.left-align.orange.lighten-5(ng-if="!hasAccess" translate="settings.modules.no_access")
-
-          blockquote.left-align.orange.lighten-5(ng-if="hasAccess && !warningShown")
-            a.waves-effect.waves-light(href="" translate="settings.modules.warning_light" ng-click="showWarning()")
-          blockquote.left-align.orange.lighten-5(ng-if="hasAccess && warningShown")
+          blockquote.left-align.orange.lighten-5(ng-if="hasAccess")
             div(translate="settings.modules.warning")
-            a.close.waves-effect.waves-light(href="" translate="settings.modules.warning_close" ng-click="hideWarning()")
+            br
+            div More informations at: 
+              a(href="https://duniter.org/fr/wiki/duniter/modules" target="_blank") https://duniter.org/fr/wiki/duniter/modules
 
     ul.collection.with-header
       li.collection-item(ng-repeat="mod in modules track by $index")
