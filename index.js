@@ -89,7 +89,9 @@ module.exports = {
           for (const dep of uiDeps) {
             // Eventual HTTP routing
             if (dep.required.duniterUI.route) {
-              dep.required.duniterUI.route(app, server, conf, program, params)
+              const subApp = express()
+              dep.required.duniterUI.route(subApp, server, conf, program, params)
+              app.use('/modules/', subApp)
             }
           }
 
