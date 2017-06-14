@@ -2046,6 +2046,17 @@ module.exports = function () {
     }
   };
 
+  window.openModule = function openWindow(path, options, callback) {
+    var url = window.location.origin + '/modules' + path;
+    if (window.gui) {
+      // Duniter Desktop
+      window.gui.Window.open(url, options, callback);
+    } else {
+      // Browser
+      window.open(url, '_blank ');
+    }
+  };
+
   window.openExternal = function openExternal(url) {
     if (window.gui) {
       window.gui.Shell.openExternal(url);
@@ -2315,8 +2326,8 @@ module.exports = {
   "settings.modules.already_install": "Module already installed",
   "settings.modules.path_does_not_exist": "Path does not lead to a module",
   "settings.modules.wrong_package_source": "Package URL has wrong format",
-  "settings.modules.warning": "Please be <b>VERY CAREFUL</b> when choosing to install a module: you should have checked that this module is not a virus, nor wants to steal your informations.<br>A module has <i>a lot of power</i> and can likely access to any part of your computer in the limit of the user's access rights:<ul><li>- your node's keyring (in the computer's memory)</li><li>- your personal files (photos, unencrypted passwords, browser favorites, ...)</li><li>- your internet access</li><li>- your local network</li></ul>You could get informations about a module by looking on the Internet.",
-  "settings.modules.warning_light": "Please read this warning before installing a module!",
+  "settings.modules.warning": "Please be <b>VERY CAREFUL</b> when installing a module: you should <b>check that it is not a virus</b>, nor wants to steal your informations. <b>A MODULE HAS A LOT OF POWER</b> and can access/modify any part of your system (including your private key), in the limit of the user's access rights.",
+  "settings.modules.warning_light": "WARNING! (click to see more)",
   "settings.modules.warning_close": "Close this message",
   "settings.modules.on": "On",
   "settings.modules.off": "Off",
@@ -3671,10 +3682,10 @@ module.exports = function (angular) {
           },
           checkAccess: getResource('/webmin/plug/check_access'),
           addPackage: function addPackage(pkg) {
-            return getResource('/webmin/plug/add/' + encodeURIComponent(pkg), null, 60000)();
+            return postResource('/webmin/plug/add/')({ pkg: pkg });
           },
           removePackage: function removePackage(pkg) {
-            return getResource('/webmin/plug/rem/' + encodeURIComponent(pkg))();
+            return postResource('/webmin/plug/rem/')({ pkg: pkg });
           }
         }
       };
