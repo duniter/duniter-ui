@@ -595,7 +595,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   })
 
   this.plugAdd = (req) => co(function*() {
-    const module = req.params.package
+    const module = req.body.pkg
     if (module.match(/^file:/)) {
       const resolvedPath = path.resolve(module.replace('file:', ''))
       const installed = listDuniterUIPlugins()
@@ -614,7 +614,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   })
 
   this.plugRemove = (req) => co(function*() {
-    const module = req.params.package
+    const module = req.body.pkg
     yield requirePlugin().duniter.methods.npmRemove(module, null, path.resolve('./'))
     return true
   })

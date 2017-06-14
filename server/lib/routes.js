@@ -39,8 +39,8 @@ module.exports = {
         handleRequest(app.get.bind(app),  '/webmin/plug/ui_modules',           webminCtrl.plugUiModulesList);
         handleRequest(app.get.bind(app),  '/webmin/plug/ui_modules/inject/:package', webminCtrl.plugUiModulesGetInjection);
         handleRequest(app.get.bind(app),  '/webmin/plug/check_access',         webminCtrl.plugCheckAccess);
-        handleRequest(app.get.bind(app),  '/webmin/plug/add/:package',         webminCtrl.plugAdd);
-        handleRequest(app.get.bind(app),  '/webmin/plug/rem/:package',         webminCtrl.plugRemove);
+        handleRequest(app.post.bind(app), '/webmin/plug/add',                  webminCtrl.plugAdd);
+        handleRequest(app.post.bind(app), '/webmin/plug/rem',                  webminCtrl.plugRemove);
         handleFileRequest(app.get.bind(app),'/webmin/data/duniter_export',     webminCtrl.exportData);
         handleRequest(app.post.bind(app), '/webmin/data/duniter_import',       webminCtrl.importData);
     },

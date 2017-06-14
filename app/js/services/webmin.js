@@ -181,8 +181,8 @@ module.exports = (angular) => {
             uiModules: getResource('/webmin/plug/ui_modules'),
             uiGetMenuInjection: (moduleName) => getResource('/webmin/plug/ui_modules/inject/' + moduleName)(),
             checkAccess: getResource('/webmin/plug/check_access'),
-            addPackage: (pkg) => getResource('/webmin/plug/add/' + encodeURIComponent(pkg), null, 60000)(),
-            removePackage: (pkg) => getResource('/webmin/plug/rem/' + encodeURIComponent(pkg))()
+            addPackage: (pkg) => postResource('/webmin/plug/add/')({ pkg }),
+            removePackage: (pkg) => postResource('/webmin/plug/rem/')({ pkg })
           }
         }
       }
