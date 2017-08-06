@@ -13896,6 +13896,9 @@ blockquote.info {
 .install_package .input-field {
   margin-top: 0;
 }
+.syncMain {
+  overflow: auto;
+}
 
 .mdi-navigation-menu {
   padding-left: 0.5rem;
