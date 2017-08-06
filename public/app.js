@@ -842,7 +842,7 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
   function checkUpdates() {
     var LATEST_RELEASE_URL = 'https://api.github.com/repos/duniter/duniter/releases/latest';
     co(regeneratorRuntime.mark(function _callee4() {
-      var latest, local_string_version, m, localVersion, localSuffix, isLocalAPreRelease, remoteVersion;
+      var latest, local_string_version, m, localVersion, localSuffix, isLocalAPreRelease, remoteVersion, localMajor, localMinor, localFix, remoteMajor, remoteMinor, remoteFix, newMajor, newMinor, newFix;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -859,8 +859,17 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
               localSuffix = m && m[2];
               isLocalAPreRelease = !!localSuffix;
               remoteVersion = latest.data.tag_name.substr(1);
+              localMajor = parseInt(localVersion.split('.')[0]);
+              localMinor = parseInt(localVersion.split('.')[1]);
+              localFix = parseInt(localVersion.split('.')[2]);
+              remoteMajor = parseInt(remoteVersion.split('.')[0]);
+              remoteMinor = parseInt(remoteVersion.split('.')[1]);
+              remoteFix = parseInt(remoteVersion.split('.')[2]);
+              newMajor = remoteMajor > localMajor;
+              newMinor = !newMajor && remoteMinor > localMinor;
+              newFix = !newMinor && remoteFix > localFix;
 
-              if (localVersion < remoteVersion || localVersion == remoteVersion && isLocalAPreRelease) {
+              if (newMajor || newMinor || newFix || localVersion == remoteVersion && isLocalAPreRelease) {
                 if ($scope.notifications.help.filter(function (entry) {
                   return entry.message == 'help.new_version_available';
                 }).length == 0) {
@@ -873,21 +882,21 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
                   });
                 }
               }
-              _context4.next = 16;
+              _context4.next = 25;
               break;
 
-            case 13:
-              _context4.prev = 13;
+            case 22:
+              _context4.prev = 22;
               _context4.t0 = _context4['catch'](0);
 
               console.error(_context4.t0);
 
-            case 16:
+            case 25:
             case 'end':
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[0, 13]]);
+      }, _callee4, this, [[0, 22]]);
     }));
   }
 

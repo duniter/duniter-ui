@@ -87,7 +87,16 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, uiModules,
         const localSuffix = m && m[2];
         const isLocalAPreRelease = !!(localSuffix);
         const remoteVersion = latest.data.tag_name.substr(1);
-        if (localVersion < remoteVersion || (localVersion == remoteVersion && isLocalAPreRelease)) {
+        const localMajor = parseInt(localVersion.split('.')[0]);
+        const localMinor = parseInt(localVersion.split('.')[1]);
+        const localFix = parseInt(localVersion.split('.')[2]);
+        const remoteMajor = parseInt(remoteVersion.split('.')[0]);
+        const remoteMinor = parseInt(remoteVersion.split('.')[1]);
+        const remoteFix = parseInt(remoteVersion.split('.')[2]);
+        const newMajor = remoteMajor > localMajor
+        const newMinor = !newMajor && remoteMinor > localMinor
+        const newFix = !newMinor && remoteFix > localFix
+        if (newMajor || newMinor || newFix || (localVersion == remoteVersion && isLocalAPreRelease)) {
           if ($scope.notifications.help.filter((entry) => entry.message == 'help.new_version_available').length == 0) {
             $scope.notifications.help.push({
               icon: 'play_for_work',
