@@ -10,13 +10,18 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
-const duniterKeypair = require('duniter-keypair');
-const common = require('duniter-common');
-const network = require('duniter-bma').duniter.methods;
-const contacter = require('duniter-crawler').duniter.methods.contacter;
+const scrypt = require('duniter/app/modules/keypair').KeypairDependency.duniter.methods.scrypt
+const synchronize = require('duniter/app/modules/crawler').CrawlerDependency.duniter.methods.synchronize
+const testForSync = require('duniter/app/modules/crawler').CrawlerDependency.duniter.methods.testForSync
+const Network = require('duniter/app/modules/bma/lib/network').Network
+const getEndpoint = require('duniter/app/modules/bma').BmaDependency.duniter.methods.getMainEndpoint
+const http2raw = require('duniter/app/modules/bma/lib/http2raw')
+const dos2unix = require('duniter/app/lib/common-libs/dos2unix').dos2unix
+const rawer = {}
+const Contacter = require('duniter/app/modules/crawler/lib/contacter').Contacter
 
-const Peer = common.document.Peer
-const Identity = common.document.Identity
+const PeerDTO = require('duniter/app/lib/dto/PeerDTO').PeerDTO
+const IdentityDTO = require('duniter/app/lib/dto/IdentityDTO').IdentityDTO
 
 module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) => {
   return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins, stack);
@@ -25,9 +30,6 @@ module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugi
 function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) {
 
   const logger = duniterServer.logger;
-  const rawer = common.rawer;
-  const http2raw = network.http2raw;
-  const dos2unix = common.dos2unix;
   const constants = {
     DEFAULT_CPU: 0.5,
     ENTITY_BLOCK: 'block',
@@ -81,10 +83,9 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
 
   this.summary = () => co(function *() {
     yield pluggedDALP;
-    const peer = Peer.fromJSON({
-      endpoints: [
-        network.getEndpoint(server.conf)
-      ]
+    const ep = yield getEndpoint(server.conf)
+    const peer = PeerDTO.fromJSONObject({
+      endpoints: [ep]
     });
     const host = peer.getURL();
     const current = yield server.dal.getCurrentBlockOrNull();
@@ -117,7 +118,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
 
   this.previewPubkey = (req) => co(function *() {
     const conf = http2raw.conf(req);
-    const pair = yield duniterKeypair.duniter.methods.scrypt(conf.idty_entropy, conf.idty_password);
+    const pair = yield scrypt(conf.idty_entropy, conf.idty_password);
     return {
       "pubkey": pair.pub
     };
@@ -154,7 +155,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   this.sendConf = (req) => co(function *() {
     yield pluggedConfP;
     const conf = http2raw.conf(req);
-    const pair = yield duniterKeypair.duniter.methods.scrypt(conf.idty_entropy, conf.idty_password);
+    const pair = yield scrypt(conf.idty_entropy, conf.idty_password);
     yield server.dal.saveConf(_.extend(server.conf, {
       routing: true,
       createNext: true,
@@ -197,7 +198,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     });
     yield pluggedConfP;
     const buid = '0-E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855';
-    const entity = Identity.fromJSON({
+    const entity = IdentityDTO.fromJSONObject({
       buid: buid,
       uid: conf.idty_uid,
       issuer: pair.publicKey,
@@ -211,7 +212,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     }
     yield server.dal.fillInMembershipsOfIdentity(Q(found));
     if (_.filter(found.memberships, { membership: 'IN'}).length == 0) {
-      const block = common.buid.format(null);
+      const block = '0-E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855'
       let join = rawer.getMembershipWithoutSignature({
         "version": constants.DOCUMENTS_VERSION,
         "currency": conf.currency,
@@ -264,7 +265,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   this.applyNewKeyConf = (req) => co(function *() {
     yield pluggedConfP;
     const conf = http2raw.conf(req);
-    const keyPair = yield duniterKeypair.duniter.methods.scrypt(conf.idty_entropy, conf.idty_password);
+    const keyPair = yield scrypt(conf.idty_entropy, conf.idty_password);
     const publicKey = keyPair.pub;
     const secretKey = keyPair.sec;
     yield server.dal.saveConf(_.extend(server.conf, {
@@ -313,7 +314,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     }
     let upnpConf;
     try {
-      upnpConf = yield network.upnpConf(null, logger);
+      upnpConf = yield Network.upnpConf(null, logger);
       if (upnpConf.remoteipv4) {
         upnp.addresses.push({
           family: 'IPv4',
@@ -343,14 +344,14 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
         address: addr.value
       });
     });
-    const randomPort = network.getRandomPort(conf);
+    const randomPort = Network.getRandomPort(conf);
     return {
-      local: network.listInterfaces(),
+      local: Network.listInterfaces(),
       remote: [upnp, manual, lan],
       auto: {
         local: {
-          ipv4: network.getBestLocalIPv4(),
-          ipv6: network.getBestLocalIPv6(),
+          ipv4: Network.getBestLocalIPv4(),
+          ipv6: Network.getBestLocalIPv6(),
           port: randomPort
         },
         remote: {
@@ -410,20 +411,20 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   this.autoConfNetwork = () => co(function *() {
     // Reconfigure the network if it has not been initialized yet
     if (!server.conf.remoteipv4 && !server.conf.remoteipv6 && !server.conf.remotehost) {
-      const bestLocal4 = network.getBestLocalIPv4();
-      const bestLocal6 = network.getBestLocalIPv6();
+      const bestLocal4 = Network.getBestLocalIPv4();
+      const bestLocal6 = Network.getBestLocalIPv6();
       let upnpConf = {
         remoteipv4: bestLocal4,
         remoteipv6: bestLocal6,
         upnp: false
       };
       try {
-        upnpConf = yield network.upnpConf();
+        upnpConf = yield Network.upnpConf();
         upnpConf.upnp = true;
       } catch (e) {
         logger.error(e.stack || e);
       }
-      let randomPort = network.getRandomPort(server.conf);
+      let randomPort = Network.getRandomPort(server.conf);
       _.extend(server.conf, {
         ipv4: bestLocal4,
         ipv6: bestLocal6,
@@ -444,7 +445,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   });
 
   this.startSync = (req) => co(function *() {
-    const sync = require('duniter-crawler').duniter.methods.synchronize(server, req.body.host, parseInt(req.body.port), parseInt(req.body.to), parseInt(req.body.chunkLen));
+    const sync = synchronize(server, req.body.host, parseInt(req.body.port), parseInt(req.body.to), parseInt(req.body.chunkLen));
     sync.flow.pipe(es.mapSync(function(data) {
       // Broadcast block
       that.push(data);
@@ -456,7 +457,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   this.resetData = () => co(function *() {
     yield pluggedDALP;
     // We have to wait for a non-breaking window to process reset
-    yield server.BlockchainService.pushFIFO(() => co(function *() {
+    yield server.BlockchainService.pushFIFO('uiResetData', () => co(function *() {
       yield that.stopAllServices();
       yield server.unplugFileSystem();
       yield server.cleanDBData();
@@ -493,9 +494,9 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
 
   this.isNodePubliclyReachable = (req) => co(function *() {
     const peer = yield server.PeeringService.peer();
-    const p = Peer.fromJSON(peer);
+    const p = PeerDTO.fromJSONObject(peer);
     let reachable;
-    const node = contacter(p.getHostPreferDNS(), p.getPort());
+    const node = new Contacter(p.getHostPreferDNS(), p.getPort());
     try {
       yield node.getPeer();
       reachable = true;
@@ -506,7 +507,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   });
 
   this.testPeer = (req) => co(function *() {
-    return require('duniter-crawler').duniter.methods.testForSync(server, req.body.host, parseInt(req.body.port));
+    return testForSync(server, req.body.host, parseInt(req.body.port));
   });
 
   this.logsExport = (req) => co(function *() {
