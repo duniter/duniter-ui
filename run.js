@@ -10,6 +10,7 @@ if (process.argv.length === 2) {
 process.on('uncaughtException', (err) => {
   // Dunno why this specific exception is not caught
   if (err.code !== "EADDRNOTAVAIL" && err.code !== "EINVAL" && err.code !== "ENOENT") {
+    console.error(err)
     process.exit(2);
   }
 })
