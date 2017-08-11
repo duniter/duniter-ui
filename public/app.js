@@ -1777,7 +1777,7 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
 
   $scope.installModule = function () {
     var pkg = $scope.module_to_install;
-    if (!(pkg.match(/^file:\/\//) || pkg.match(/^https?:\/\/.+\.(tar\.gz|tgz)$/) || pkg.match(/^git(\+ssh|\+http|\+https)?:\/\/.+\.git$/))) {
+    if (!(pkg.match(/^.+@(~||\^)?\d+\.\d+\.\d+$/) || pkg.match(/^file:\/\//) || pkg.match(/^https?:\/\/.+\.(tar\.gz|tgz)$/) || pkg.match(/^git(\+ssh|\+http|\+https)?:\/\/.+\.git$/))) {
       UIUtils.toast('settings.modules.wrong_package_source');
       return;
     }
