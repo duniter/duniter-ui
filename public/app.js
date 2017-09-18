@@ -1092,6 +1092,129 @@ module.exports = function ($scope, UIUtils) {
 
 });
 
+require.register("js/controllers/main/home/tabs/HomeConnectionsController.js", function(exports, require, module) {
+"use strict";
+
+module.exports = function ($scope, Webmin, heads, info, ws) {
+
+  $scope.info = info;
+  $scope.heads = [];
+
+  var headsMap = {};
+
+  $scope.headsIntoMap = function (heads) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = heads[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var value = _step.value;
+
+        var sp = value.message.split(':');
+        var pubkey = sp[2];
+        var blockstamp = sp[3];
+        headsMap[pubkey] = blockstamp;
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    $scope.heads = Object.keys(headsMap).map(function (k) {
+      return {
+        pubkey: k,
+        blockstamp: headsMap[k]
+      };
+    });
+  };
+
+  $scope.headsIntoMap(heads);
+
+  ws.on('ws2p', function (obj) {
+    return co(regeneratorRuntime.mark(function _callee2() {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (obj.value.ws2p === 'heads') {
+                $scope.headsIntoMap(obj.value.added);
+              } else if (obj.value.ws2p === 'connected' || obj.value.ws2p === 'disconnected') {
+                co(regeneratorRuntime.mark(function _callee() {
+                  return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          _context.next = 2;
+                          return Webmin.network.ws2p.info();
+
+                        case 2:
+                          $scope.info = _context.sent;
+
+                        case 3:
+                        case 'end':
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee, this);
+                }));
+              }
+              $scope.$apply();
+
+            case 2:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this);
+    }));
+  });
+
+  var co = require('co');
+
+  $scope.update = function () {
+    return co(regeneratorRuntime.mark(function _callee3() {
+      var delayP;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              $scope.searching = true;
+              delayP = Q.delay(500);
+              _context3.next = 4;
+              return Webmin.network.peers();
+
+            case 4:
+              $scope.peers = _context3.sent.peers;
+              _context3.next = 7;
+              return delayP;
+
+            case 7:
+              $scope.searching = false;
+              $scope.$apply();
+
+            case 9:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this);
+    }));
+  };
+};
+
+});
+
 require.register("js/controllers/main/home/tabs/HomeNetworkController.js", function(exports, require, module) {
 "use strict";
 
@@ -1142,6 +1265,120 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
   var co = require('co');
   var moment = require('moment');
 
+  $scope.connected_ws2p_peers = 0;
+
+  $scope.updateInfo = function () {
+    return co(regeneratorRuntime.mark(function _callee() {
+      var info, map, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, level1, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, level2;
+
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return Webmin.network.ws2p.info();
+
+            case 2:
+              info = _context.sent;
+              map = {};
+              _iteratorNormalCompletion = true;
+              _didIteratorError = false;
+              _iteratorError = undefined;
+              _context.prev = 7;
+
+              for (_iterator = info.connections.level1[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                level1 = _step.value;
+
+                map[level1.pubkey] = true;
+              }
+              _context.next = 15;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context['catch'](7);
+              _didIteratorError = true;
+              _iteratorError = _context.t0;
+
+            case 15:
+              _context.prev = 15;
+              _context.prev = 16;
+
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+
+            case 18:
+              _context.prev = 18;
+
+              if (!_didIteratorError) {
+                _context.next = 21;
+                break;
+              }
+
+              throw _iteratorError;
+
+            case 21:
+              return _context.finish(18);
+
+            case 22:
+              return _context.finish(15);
+
+            case 23:
+              _iteratorNormalCompletion2 = true;
+              _didIteratorError2 = false;
+              _iteratorError2 = undefined;
+              _context.prev = 26;
+              for (_iterator2 = info.connections.level2[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                level2 = _step2.value;
+
+                map[level2.pubkey] = true;
+              }
+              _context.next = 34;
+              break;
+
+            case 30:
+              _context.prev = 30;
+              _context.t1 = _context['catch'](26);
+              _didIteratorError2 = true;
+              _iteratorError2 = _context.t1;
+
+            case 34:
+              _context.prev = 34;
+              _context.prev = 35;
+
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+
+            case 37:
+              _context.prev = 37;
+
+              if (!_didIteratorError2) {
+                _context.next = 40;
+                break;
+              }
+
+              throw _iteratorError2;
+
+            case 40:
+              return _context.finish(37);
+
+            case 41:
+              return _context.finish(34);
+
+            case 42:
+              $scope.connected_ws2p_peers = Object.keys(map).length;
+
+            case 43:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[7, 11, 15, 23], [16,, 18, 22], [26, 30, 34, 42], [35,, 37, 41]]);
+    }));
+  };
+
   bindBlockWS(function () {
     $scope.loadPowData();
   });
@@ -1186,17 +1423,17 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
   }, 1000);
 
   $scope.loadPowData = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co(regeneratorRuntime.mark(function _callee2() {
       var res;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context.next = 2;
+              _context2.next = 2;
               return Webmin.powSummary();
 
             case 2:
-              res = _context.sent;
+              res = _context2.sent;
 
               $scope.pow_total = res.total;
               $scope.pow_mirror = res.mirror;
@@ -1204,10 +1441,10 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
 
             case 6:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, this);
+      }, _callee2, this);
     }));
   };
 
@@ -1266,6 +1503,28 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
         $scope.$apply();
       }
     }
+    if (data.type === 'ws2p') {
+      if (data.value.ws2p === 'connected' || data.value.ws2p === 'disconnected') {
+        co(regeneratorRuntime.mark(function _callee3() {
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  _context3.next = 2;
+                  return $scope.updateInfo();
+
+                case 2:
+                  $scope.$apply();
+
+                case 3:
+                case 'end':
+                  return _context3.stop();
+              }
+            }
+          }, _callee3, this);
+        }));
+      }
+    }
   });
 
   function bindBlockWS(cb) {
@@ -1288,20 +1547,20 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
   }
 
   $scope.reconfigure_network = function () {
-    return co(regeneratorRuntime.mark(function _callee2() {
+    return co(regeneratorRuntime.mark(function _callee4() {
       var delay, netinferfaces, conf;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               $scope.reconfiguring = true;
               delay = Q.delay(1000);
-              _context2.prev = 2;
-              _context2.next = 5;
+              _context4.prev = 2;
+              _context4.next = 5;
               return Webmin.network.interfaces();
 
             case 5:
-              netinferfaces = _context2.sent;
+              netinferfaces = _context4.sent;
               conf = {};
 
               conf.local_ipv4 = netinferfaces.auto.local.ipv4 || '';
@@ -1312,26 +1571,26 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
               conf.rport = netinferfaces.auto.remote.port || 9330;
               conf.upnp = netinferfaces.auto.remote.upnp || false;
               conf.dns = netinferfaces.auto.remote.dns || '';
-              _context2.next = 17;
+              _context4.next = 17;
               return Webmin.server.netConf({
                 conf: conf
               });
 
             case 17:
-              _context2.next = 19;
+              _context4.next = 19;
               return delay;
 
             case 19:
               $scope.should_reconfigure = false;
               UIUtils.toast('general.network.reconf_ok');
               $scope.$apply();
-              _context2.next = 30;
+              _context4.next = 30;
               break;
 
             case 24:
-              _context2.prev = 24;
-              _context2.t0 = _context2['catch'](2);
-              _context2.next = 28;
+              _context4.prev = 24;
+              _context4.t0 = _context4['catch'](2);
+              _context4.next = 28;
               return delay;
 
             case 28:
@@ -1340,52 +1599,54 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
 
             case 30:
             case 'end':
-              return _context2.stop();
+              return _context4.stop();
           }
         }
-      }, _callee2, this, [[2, 24]]);
+      }, _callee4, this, [[2, 24]]);
     }));
   };
 
-  return co(regeneratorRuntime.mark(function _callee3() {
+  return co(regeneratorRuntime.mark(function _callee5() {
     var reachable;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
-            _context3.next = 2;
+            _context5.next = 2;
             return $scope.startServer();
 
           case 2:
-            _context3.prev = 2;
-            _context3.next = 5;
+            _context5.prev = 2;
+
+            $scope.updateInfo();
+            _context5.next = 6;
             return $scope.loadPowData();
 
-          case 5:
-            _context3.next = 7;
+          case 6:
+            _context5.next = 8;
             return Webmin.isNodePubliclyReachable();
 
-          case 7:
-            reachable = _context3.sent;
+          case 8:
+            reachable = _context5.sent;
 
             if (!reachable || !reachable.success) {
               $scope.should_reconfigure = true;
             }
-            _context3.next = 14;
+            _context5.next = 15;
             break;
 
-          case 11:
-            _context3.prev = 11;
-            _context3.t0 = _context3['catch'](2);
+          case 12:
+            _context5.prev = 12;
+            _context5.t0 = _context5['catch'](2);
 
-            console.log(_context3.t0);
+            console.log(_context5.t0);
 
-          case 14:
+          case 15:
           case 'end':
-            return _context3.stop();
+            return _context5.stop();
         }
       }
-    }, _callee3, this, [[2, 11]]);
+    }, _callee5, this, [[2, 12]]);
   }));
 };
 
@@ -2086,6 +2347,7 @@ module.exports = function () {
   homeControllers.controller('HomeController', require('./controllers/main/home/HomeController'));
   homeControllers.controller('OverviewController', require('./controllers/main/home/tabs/OverviewController'));
   homeControllers.controller('HomeNetworkController', require('./controllers/main/home/tabs/HomeNetworkController'));
+  homeControllers.controller('HomeConnectionsController', require('./controllers/main/home/tabs/HomeConnectionsController'));
   homeControllers.controller('LogsController', require('./controllers/main/settings/tabs/LogsController'));
   homeControllers.controller('LogsSettingsController', require('./controllers/main/settings/tabs/LogsSettingsController'));
   homeControllers.controller('NetworkController', require('./controllers/main/settings/tabs/NetworkController'));
@@ -2233,6 +2495,7 @@ module.exports = {
   "configuration.create_root.button.cancel": "Cancel creation and go to home screen",
   "configuration.create_root.host_listening": "Host listening at:",
   "configuration.create_uid.pubkey_preview": "Public key preview",
+  "home.ws2p_peers": "Connected peers",
   "home.current.number": "Current block #",
   "home.current.membersCount": "Members count",
   "home.current.medianTime": "Median time",
@@ -2250,6 +2513,9 @@ module.exports = {
   "home.tabs.overview.should_reconfigure": "Your configuration has changed and your node is no more reachable from the network. You should reconfigure it to have a functional node. If this message appears again, you should manually configure the network settings. Often, selecting only IPv6 interface (disabling IPv4) solves the problem.",
   "home.tabs.network": "Peers",
   "home.tabs.network.button.update": "Check peers again",
+  "home.tabs.connections": "Network",
+  "home.tabs.connections.title.connections": "WS2P Connections",
+  "home.tabs.connections.title.network": "Network view",
   "home.tabs.logs": "Logs",
   "home.tabs.logs.follow.logs": "Follow logs",
   "home.tabs.logs.pause.logs": "Pause logs",
@@ -2558,6 +2824,47 @@ module.exports = function (app) {
         }
       },
       controller: 'HomeNetworkController'
+    }).state('main.home.connections', {
+      url: '/connections',
+      template: require('views/main/home/tabs/connections'),
+      resolve: {
+        info: function info(Webmin) {
+          return co(regeneratorRuntime.mark(function _callee3() {
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+              while (1) {
+                switch (_context3.prev = _context3.next) {
+                  case 0:
+                    return _context3.abrupt('return', Webmin.network.ws2p.info());
+
+                  case 1:
+                  case 'end':
+                    return _context3.stop();
+                }
+              }
+            }, _callee3, this);
+          }));
+        },
+        heads: function heads(Webmin) {
+          return co(regeneratorRuntime.mark(function _callee4() {
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+              while (1) {
+                switch (_context4.prev = _context4.next) {
+                  case 0:
+                    return _context4.abrupt('return', Webmin.network.ws2p.heads());
+
+                  case 1:
+                  case 'end':
+                    return _context4.stop();
+                }
+              }
+            }, _callee4, this);
+          }));
+        },
+        ws: function ws(Webmin) {
+          return Webmin.ws();
+        }
+      },
+      controller: 'HomeConnectionsController'
     }).state('main.settings', {
       abstract: true,
       url: '/settings',
@@ -2573,40 +2880,40 @@ module.exports = function (app) {
       template: require('views/main/settings/tabs/data'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee3() {
+          return co(regeneratorRuntime.mark(function _callee5() {
             var self, res;
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
               while (1) {
-                switch (_context3.prev = _context3.next) {
+                switch (_context5.prev = _context5.next) {
                   case 0:
-                    _context3.prev = 0;
-                    _context3.next = 3;
+                    _context5.prev = 0;
+                    _context5.next = 3;
                     return Webmin.network.selfPeer();
 
                   case 3:
-                    self = _context3.sent;
-                    _context3.next = 6;
+                    self = _context5.sent;
+                    _context5.next = 6;
                     return Webmin.network.peers();
 
                   case 6:
-                    res = _context3.sent;
-                    return _context3.abrupt('return', _.filter(res.peers, function (p) {
+                    res = _context5.sent;
+                    return _context5.abrupt('return', _.filter(res.peers, function (p) {
                       return p.pubkey != self.pubkey && p.status == 'UP';
                     }));
 
                   case 10:
-                    _context3.prev = 10;
-                    _context3.t0 = _context3['catch'](0);
+                    _context5.prev = 10;
+                    _context5.t0 = _context5['catch'](0);
 
-                    console.error(_context3.t0);
-                    return _context3.abrupt('return', []);
+                    console.error(_context5.t0);
+                    return _context5.abrupt('return', []);
 
                   case 14:
                   case 'end':
-                    return _context3.stop();
+                    return _context5.stop();
                 }
               }
-            }, _callee3, this, [[0, 10]]);
+            }, _callee5, this, [[0, 10]]);
           }));
         }
       },
@@ -2639,25 +2946,25 @@ module.exports = function (app) {
           return Webmin.plugin.checkAccess();
         },
         allModules: function allModules(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee4() {
+          return co(regeneratorRuntime.mark(function _callee6() {
             var modules;
-            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+            return regeneratorRuntime.wrap(function _callee6$(_context6) {
               while (1) {
-                switch (_context4.prev = _context4.next) {
+                switch (_context6.prev = _context6.next) {
                   case 0:
-                    _context4.next = 2;
+                    _context6.next = 2;
                     return Webmin.plugin.allModules();
 
                   case 2:
-                    modules = _context4.sent;
-                    return _context4.abrupt('return', modules);
+                    modules = _context6.sent;
+                    return _context6.abrupt('return', modules);
 
                   case 4:
                   case 'end':
-                    return _context4.stop();
+                    return _context6.stop();
                 }
               }
-            }, _callee4, this);
+            }, _callee6, this);
           }));
         }
       },
@@ -2682,19 +2989,19 @@ module.exports = function (app) {
       url: '/currency',
       resolve: {
         conf: function conf(summary) {
-          return co(regeneratorRuntime.mark(function _callee5() {
-            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          return co(regeneratorRuntime.mark(function _callee7() {
+            return regeneratorRuntime.wrap(function _callee7$(_context7) {
               while (1) {
-                switch (_context5.prev = _context5.next) {
+                switch (_context7.prev = _context7.next) {
                   case 0:
-                    return _context5.abrupt('return', summary.parameters);
+                    return _context7.abrupt('return', summary.parameters);
 
                   case 1:
                   case 'end':
-                    return _context5.stop();
+                    return _context7.stop();
                 }
               }
-            }, _callee5, this);
+            }, _callee7, this);
           }));
         }
       },
@@ -2767,25 +3074,25 @@ module.exports = function (app) {
   });
 
   function resolveNetworkAutoConf(Webmin) {
-    return co(regeneratorRuntime.mark(function _callee6() {
+    return co(regeneratorRuntime.mark(function _callee8() {
       var netinterfaces;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      return regeneratorRuntime.wrap(function _callee8$(_context8) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
-              _context6.next = 2;
+              _context8.next = 2;
               return Webmin.network.interfaces();
 
             case 2:
-              netinterfaces = _context6.sent;
-              return _context6.abrupt('return', netinterfaces || { local: {}, remote: {} });
+              netinterfaces = _context8.sent;
+              return _context8.abrupt('return', netinterfaces || { local: {}, remote: {} });
 
             case 4:
             case 'end':
-              return _context6.stop();
+              return _context8.stop();
           }
         }
-      }, _callee6, this);
+      }, _callee8, this);
     }));
   }
 };
@@ -3678,7 +3985,11 @@ module.exports = function (angular) {
         network: {
           interfaces: getResource('/webmin/network/interfaces'),
           selfPeer: getResource('/webmin/network/self'),
-          peers: getResource('/webmin/network/peers')
+          peers: getResource('/webmin/network/peers'),
+          ws2p: {
+            info: getResource('/webmin/network/ws2p/info'),
+            heads: getResource('/webmin/network/ws2p/heads')
+          }
         },
         currency: {
           parameters: getResource('/webmin/currency/parameters')

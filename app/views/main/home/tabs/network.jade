@@ -22,4 +22,5 @@
               tr(ng-repeat="peer in peers track by $index")
                 td {{ peer.pubkey.substr(0,6) }}
                 td {{ peer.status }}
-                td {{ peer.endpoints[0] }}
+                td
+                  div(ng-repeat="ep in peer.endpoints track by $index") {{ ep }}

@@ -43,7 +43,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   const that = this;
 
   server.pipe(es.mapSync(function(data) {
-    if (data.pulling !== undefined || data.pow !== undefined) {
+    if (data.pulling !== undefined || data.pow !== undefined || data.ws2p !== undefined) {
       that.push(data);
     }
   }));
@@ -620,6 +620,48 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     return true
   })
 
+  this.ws2pHeads = () => co(function*() {
+    if (server.ws2pCluster) {
+      return server.ws2pCluster.getKnownHeads()
+    } else {
+      return []
+    }
+  })
+
+  this.ws2pInfo = () => co(function*() {
+    if (server.ws2pCluster) {
+      let level1 = yield server.ws2pCluster.getLevel1Connections()
+      let level2 = yield server.ws2pCluster.getLevel2Connections()
+      return {
+        connections: {
+          level1: level1.map(ws2pConnectionToJSON),
+          level2: level2.map(ws2pConnectionToJSON)
+        }
+      }
+    } else {
+      return {
+        connections: {
+          level1: [],
+          level2: []
+        }
+      }
+    }
+  })
+}
+
+function ws2pConnectionToJSON(connection) {
+  if (connection.ws._socket.server) {
+    return {
+      pubkey: connection.pubkey,
+      handle: connection.ws._socket.server._connectionKey.split(':').slice(1).join(':')
+    }
+  }
+  else {
+    return {
+      pubkey: connection.pubkey,
+      handle: [connection.ws._socket.remoteAddress, connection.ws._socket.remotePort].join(':')
+    }
+  }
 }
 
 function getLANIPv4 () {

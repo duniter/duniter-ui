@@ -1,0 +1,36 @@
+.container
+  .row
+    .col.s12
+      .card
+        .card-action
+          .center(ng-if="searching")
+            .preloader-wrapper.active
+              .spinner-layer.spinner-blue-only
+                .circle-clipper.left
+                  .circle
+          h5(translate="home.tabs.connections.title.connections")
+          table.bordered.connections
+            thead
+              tr
+                th Pubkey
+                th Type
+                th Connection
+            tbody
+              tr(ng-repeat="peer in info.connections.level1 track by $index")
+                td {{ peer.pubkey }}
+                td OUTCOMING
+                td {{ peer.handle }}
+              tr(ng-repeat="peer in info.connections.level2 track by $index")
+                td {{ peer.pubkey }}
+                td INCOMING
+                td {{ peer.handle }}
+          h5(translate="home.tabs.connections.title.network")
+          table.bordered.connections
+            thead
+              tr
+                th Pubkey
+                th HEAD
+            tbody
+              tr(ng-repeat="head in heads | orderBy:'-blockstamp' track by $index ")
+                td {{ head.pubkey }}
+                td {{ head.blockstamp }}

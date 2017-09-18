@@ -5,6 +5,20 @@ module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
   let co = require('co');
   let moment = require('moment');
 
+  $scope.connected_ws2p_peers = 0
+
+  $scope.updateInfo = () => co(function*() {
+    const info = yield Webmin.network.ws2p.info()
+    const map = {}
+    for (const level1 of info.connections.level1) {
+      map[level1.pubkey] = true
+    }
+    for (const level2 of info.connections.level2) {
+      map[level2.pubkey] = true
+    }
+    $scope.connected_ws2p_peers = Object.keys(map).length
+  })
+
   bindBlockWS(() => {
     $scope.loadPowData();
   });
@@ -110,6 +124,14 @@ module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
         $scope.$apply();
       }
     }
+    if (data.type === 'ws2p') {
+      if (data.value.ws2p === 'connected' || data.value.ws2p === 'disconnected') {
+        co(function*() {
+          yield $scope.updateInfo()
+          $scope.$apply()
+        })
+      }
+    }
   });
 
   function bindBlockWS(cb) {
@@ -162,6 +184,7 @@ module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
   return co(function *() {
     yield $scope.startServer();
     try {
+      $scope.updateInfo()
       yield $scope.loadPowData();
       const reachable = yield Webmin.isNodePubliclyReachable();
       if (!reachable || !reachable.success) {

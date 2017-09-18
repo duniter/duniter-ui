@@ -171,7 +171,11 @@ module.exports = (angular) => {
           network: {
             interfaces: getResource('/webmin/network/interfaces'),
             selfPeer: getResource('/webmin/network/self'),
-            peers: getResource('/webmin/network/peers')
+            peers: getResource('/webmin/network/peers'),
+            ws2p: {
+              info: getResource('/webmin/network/ws2p/info'),
+              heads: getResource('/webmin/network/ws2p/heads')
+            }
           },
           currency: {
             parameters: getResource('/webmin/currency/parameters')

@@ -23,6 +23,14 @@
         h1 {{ current_currency }}
   .row.home
     .col.s6.m3
+      .card
+        .card-content
+          i.fa.fa-chain.fa-5x
+          .card-title
+            span {{ connected_ws2p_peers }}
+        .card-action
+          p {{ 'home.ws2p_peers' | translate }}
+    .col.s6.m3(ng-show="false")
       .card.sync
         .card-content
           .card-title(ng-show="is_pulling")

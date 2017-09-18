@@ -91,6 +91,7 @@ module.exports = () => {
   homeControllers.controller('HomeController',             require('./controllers/main/home/HomeController'));
   homeControllers.controller('OverviewController',         require('./controllers/main/home/tabs/OverviewController'));
   homeControllers.controller('HomeNetworkController',      require('./controllers/main/home/tabs/HomeNetworkController'));
+  homeControllers.controller('HomeConnectionsController',  require('./controllers/main/home/tabs/HomeConnectionsController'));
   homeControllers.controller('LogsController',             require('./controllers/main/settings/tabs/LogsController'));
   homeControllers.controller('LogsSettingsController',     require('./controllers/main/settings/tabs/LogsSettingsController'));
   homeControllers.controller('NetworkController',          require('./controllers/main/settings/tabs/NetworkController'));

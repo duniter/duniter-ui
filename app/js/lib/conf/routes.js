@@ -152,6 +152,21 @@ module.exports = (app) => {
       controller: 'HomeNetworkController'
     }).
 
+    state('main.home.connections', {
+      url: '/connections',
+      template: require('views/main/home/tabs/connections'),
+      resolve: {
+        info: (Webmin) => co(function *() {
+          return Webmin.network.ws2p.info();
+        }),
+        heads: (Webmin) => co(function *() {
+          return Webmin.network.ws2p.heads();
+        }),
+        ws: (Webmin) => Webmin.ws()
+      },
+      controller: 'HomeConnectionsController'
+    }).
+
     state('main.settings', {
       abstract: true,
       url: '/settings',

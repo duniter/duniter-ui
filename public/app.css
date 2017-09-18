@@ -13899,6 +13899,10 @@ blockquote.info {
 .syncMain {
   overflow: auto;
 }
+.connections td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
 
 .mdi-navigation-menu {
   padding-left: 0.5rem;
