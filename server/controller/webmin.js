@@ -500,6 +500,9 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   });
 
   this.isNodePubliclyReachable = (req) => co(function *() {
+    if (server.conf.nobma) {
+      return { success: true }
+    }
     const peer = yield server.PeeringService.peer();
     const p = PeerDTO.fromJSONObject(peer);
     let reachable;
