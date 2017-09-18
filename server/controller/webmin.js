@@ -395,8 +395,13 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   this.startAllServices = () => co(function *() {
     // Allow services to be stopped
     stopServicesP = null;
+    const wasStarted = !!startServicesP
     yield startServicesP || (startServicesP = startServices());
-    that.push({ started: true });
+    if (wasStarted) {
+      that.push({ already_started: true });
+    } else {
+      that.push({ started: true });
+    }
     return {};
   });
 

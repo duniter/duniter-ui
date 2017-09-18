@@ -2,9 +2,12 @@
 
 module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
 
+
+  UIUtils.enableTabs();
   let co = require('co');
   let moment = require('moment');
 
+  $scope.$parent.isStarted = false
   $scope.connected_ws2p_peers = 0
 
   $scope.updateInfo = () => co(function*() {
@@ -77,6 +80,14 @@ module.exports = ($scope, $interval, Webmin, UIUtils, summary, ws) => {
         $scope.loadPowData();
       });
       UIUtils.toast('general.server.started');
+      $scope.$apply();
+    }
+    if (data.type === 'already_started') {
+      $scope.server_started = true;
+      $scope.server_stopped = false;
+      bindBlockWS(() => {
+        $scope.loadPowData();
+      });
       $scope.$apply();
     }
     if (data.type === 'stopped') {

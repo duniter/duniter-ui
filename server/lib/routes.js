@@ -127,6 +127,12 @@ module.exports = {
                             value: data.started
                         }));
                     }
+                    if (data.already_started !== undefined) {
+                        wssEvents.broadcast(JSON.stringify({
+                            type: 'already_started',
+                            value: data.already_started
+                        }));
+                    }
                     if (data.stopped !== undefined) {
                         wssEvents.broadcast(JSON.stringify({
                             type: 'stopped',

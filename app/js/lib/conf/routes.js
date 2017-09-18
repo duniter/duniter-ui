@@ -161,8 +161,7 @@ module.exports = (app) => {
         }),
         heads: (Webmin) => co(function *() {
           return Webmin.network.ws2p.heads();
-        }),
-        ws: (Webmin) => Webmin.ws()
+        })
       },
       controller: 'HomeConnectionsController'
     }).

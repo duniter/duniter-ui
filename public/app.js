@@ -1262,9 +1262,11 @@ require.register("js/controllers/main/home/tabs/OverviewController.js", function
 
 module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
 
+  UIUtils.enableTabs();
   var co = require('co');
   var moment = require('moment');
 
+  $scope.$parent.isStarted = false;
   $scope.connected_ws2p_peers = 0;
 
   $scope.updateInfo = function () {
@@ -1456,6 +1458,14 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
         $scope.loadPowData();
       });
       UIUtils.toast('general.server.started');
+      $scope.$apply();
+    }
+    if (data.type === 'already_started') {
+      $scope.server_started = true;
+      $scope.server_stopped = false;
+      bindBlockWS(function () {
+        $scope.loadPowData();
+      });
       $scope.$apply();
     }
     if (data.type === 'stopped') {
@@ -2859,9 +2869,6 @@ module.exports = function (app) {
               }
             }, _callee4, this);
           }));
-        },
-        ws: function ws(Webmin) {
-          return Webmin.ws();
         }
       },
       controller: 'HomeConnectionsController'
