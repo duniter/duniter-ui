@@ -68,6 +68,6 @@
     "util-deprecate": "1.0.2"
   },
   "peerDependencies": {
-    "duniter": "1.4.x"
+    "duniter": "1.6.x"
   }
 }
