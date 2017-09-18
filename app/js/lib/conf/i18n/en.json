@@ -55,6 +55,7 @@
   "configuration.create_network.dns": "Domain name",
   "configuration.create_network.dns.message": "IPv6 (AAAA) and IPv4 (A) DNS records will be used.",
   "configuration.create_network.upnp": "Use UPnP",
+  "configuration.create_network.bma": "Enable BMA (the legacy HTTP API from Duniter v0.1.x to v1.5.x)",
   "configuration.create_network.button.validate": "Continue",
   "configuration.create_network.button.autoconf": "Automatic configuration",
   "configuration.create_parameters.title": "Currency",

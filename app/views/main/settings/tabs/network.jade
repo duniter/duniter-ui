@@ -11,12 +11,18 @@
             span(translate="configuration.create_network.button.autoconf")
 
           .row
+            .col.s12
+              p
+                input#bma.filled-in(type="checkbox" ng-model="$parent.conf.bma")
+                label(for="bma") {{ 'configuration.create_network.bma' | translate }}
+
+          .row
             .col.s12.m6.common-network
 
               h1.card-title(translate="configuration.create_network.ipv6.title")
               p(translate="configuration.create_network.ipv6.message")
 
-              select.browser-default(ng-model="$parent.conf.local_ipv6")
+              select.browser-default(ng-model="$parent.conf.local_ipv6" ng-disabled="!$parent.conf.bma")
                 option(value="" selected translate="configuration.create_network.none")
                 option(ng-repeat="inet in local_neti | filter : 'IPv6'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.local_ipv6}}") {{ inet.name }}
               label {{ 'configuration.create_network.local_ipv6' | translate }}
@@ -27,13 +33,13 @@
               p(translate="configuration.create_network.ipv4.message")
 
               .col.s12.m6
-                select.browser-default(ng-model="$parent.conf.local_ipv4")
+                select.browser-default(ng-model="$parent.conf.local_ipv4" ng-disabled="!$parent.conf.bma")
                   option(value="" translate="configuration.create_network.none")
                   option(ng-repeat="inet in local_neti | filter : 'IPv4'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.local_ipv4}}") {{ inet.name }}
                 label {{ 'configuration.create_network.local_ipv4' | translate }}
 
               .col.s12.m6
-                select.browser-default(ng-model="$parent.conf.remote_ipv4")
+                select.browser-default(ng-model="$parent.conf.remote_ipv4" ng-disabled="!$parent.conf.bma")
                   option(value="" selected translate="configuration.create_network.none")
                   option(ng-repeat="inet in remote_neti | filter : 'IPv4'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.remote_ipv4}}") {{ inet.name }}
                 label {{ 'configuration.create_network.remote_ipv4' | translate }}
@@ -41,7 +47,7 @@
               .row
 
               .col.s12.m4.upnp
-                input#upnp.filled-in(type="checkbox" ng-model="$parent.conf.upnp")
+                input#upnp.filled-in(type="checkbox" ng-model="$parent.conf.upnp" ng-disabled="!$parent.conf.bma")
                 label(for="upnp") {{ 'configuration.create_network.upnp' | translate }}
 
             .row
@@ -51,11 +57,11 @@
               p(translate="configuration.create_network.port.message")
               .input-field.col.s6
                 i.prefix.fa.fa-plug
-                input#lport(type="number" ng-model="$parent.conf.lport")
+                input#lport(type="number" ng-model="$parent.conf.lport" ng-disabled="!$parent.conf.bma")
                 label(for="lport") {{ 'configuration.create_network.lport' | translate }}
               .input-field.col.s6
                 i.prefix.fa.fa-plug
-                input#rport(type="number" ng-model="$parent.conf.rport")
+                input#rport(type="number" ng-model="$parent.conf.rport" ng-disabled="!$parent.conf.bma")
                 label(for="rport") {{ 'configuration.create_network.rport' | translate }}
 
             .col.s12.m6.common-network
@@ -63,7 +69,7 @@
               p(translate="configuration.create_network.dns.message")
               .input-field
                 i.prefix.material-icons language
-                input#dns(type="text" ng-model="$parent.conf.dns")
+                input#dns(type="text" ng-model="$parent.conf.dns" ng-disabled="!$parent.conf.bma")
                 label(for="dns") {{ 'configuration.create_network.dns' | translate }}
 
           .row: button.btn-large.waves-effect.waves-light(ng-click="saveConf()")

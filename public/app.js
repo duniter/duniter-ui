@@ -2215,6 +2215,7 @@ module.exports = function ($scope, $http, $state, Webmin, UIUtils, netinterfaces
   $scope.remote_neti = toArrayOfAddresses(netinterfaces.remote);
 
   $scope.$parent.conf = $scope.$parent.conf || {};
+  $scope.$parent.conf.bma = !netinterfaces.conf.nobma;
   $scope.$parent.conf.local_ipv4 = netinterfaces.conf.local.ipv4;
   $scope.$parent.conf.local_ipv6 = netinterfaces.conf.local.ipv6;
   $scope.$parent.conf.remote_ipv4 = netinterfaces.conf.remote.ipv4;
@@ -2467,6 +2468,7 @@ module.exports = {
   "configuration.create_network.dns": "Domain name",
   "configuration.create_network.dns.message": "IPv6 (AAAA) and IPv4 (A) DNS records will be used.",
   "configuration.create_network.upnp": "Use UPnP",
+  "configuration.create_network.bma": "Enable BMA (the legacy HTTP API from Duniter v0.1.x to v1.5.x)",
   "configuration.create_network.button.validate": "Continue",
   "configuration.create_network.button.autoconf": "Automatic configuration",
   "configuration.create_parameters.title": "Currency",
