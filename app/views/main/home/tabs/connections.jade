@@ -13,15 +13,18 @@
             thead
               tr
                 th Pubkey
+                th Membre
                 th Type
                 th Connection
             tbody
               tr(ng-repeat="peer in info.connections.level1 track by $index")
-                td {{ peer.pubkey }}
+                td {{ peer.pubkey.slice(0, 20) }}
+                td {{ peer.uid }}
                 td OUTCOMING
                 td {{ peer.handle }}
               tr(ng-repeat="peer in info.connections.level2 track by $index")
-                td {{ peer.pubkey }}
+                td {{ peer.pubkey.slice(0, 20) }}
+                td {{ peer.uid }}
                 td INCOMING
                 td {{ peer.handle }}
           h5(translate="home.tabs.connections.title.network")
@@ -29,8 +32,10 @@
             thead
               tr
                 th Pubkey
+                th UID
                 th HEAD
             tbody
               tr(ng-repeat="head in heads | orderBy:'-blockstamp' track by $index ")
-                td {{ head.pubkey }}
+                td {{ head.pubkey.slice(0, 20) }}
+                td {{ head.uid }}
                 td {{ head.blockstamp }}

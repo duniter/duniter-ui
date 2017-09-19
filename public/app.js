@@ -1114,7 +1114,10 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
         var sp = value.message.split(':');
         var pubkey = sp[2];
         var blockstamp = sp[3];
-        headsMap[pubkey] = blockstamp;
+        var uid = value.uid;
+        headsMap[pubkey] = {
+          blockstamp: blockstamp, uid: uid
+        };
       }
     } catch (err) {
       _didIteratorError = true;
@@ -1134,7 +1137,8 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
     $scope.heads = Object.keys(headsMap).map(function (k) {
       return {
         pubkey: k,
-        blockstamp: headsMap[k]
+        uid: headsMap[k].uid,
+        blockstamp: headsMap[k].blockstamp
       };
     });
   };

@@ -152,10 +152,23 @@ module.exports = {
                         }));
                     }
                     if (data.ws2p !== undefined) {
-                        wssEvents.broadcast(JSON.stringify({
+                      co(function*() {
+                        if (data.ws2p === 'heads') {
+                          for (const head of data.added) {
+                            const member = yield server.dal.getWrittenIdtyByPubkey(head.message.split(':')[2])
+                            head.uid = member && member.uid || ''
+                          }
+                          wssEvents.broadcast(JSON.stringify({
                             type: 'ws2p',
                             value: data
-                        }));
+                          }));
+                        } else {
+                          wssEvents.broadcast(JSON.stringify({
+                            type: 'ws2p',
+                            value: data
+                          }));
+                        }
+                      })
                     }
                 }));
 

@@ -12,12 +12,16 @@ module.exports = ($scope, Webmin, heads, info, ws) => {
       const sp = value.message.split(':')
       const pubkey = sp[2]
       const blockstamp = sp[3]
-      headsMap[pubkey] = blockstamp
+      const uid = value.uid
+      headsMap[pubkey] = {
+        blockstamp, uid
+      }
     }
     $scope.heads = Object.keys(headsMap).map(k => {
       return {
         pubkey: k,
-        blockstamp: headsMap[k]
+        uid: headsMap[k].uid,
+        blockstamp: headsMap[k].blockstamp
       }
     })
   }

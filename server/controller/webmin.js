@@ -632,7 +632,12 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
 
   this.ws2pHeads = () => co(function*() {
     if (server.ws2pCluster) {
-      return server.ws2pCluster.getKnownHeads()
+      const heads = yield server.ws2pCluster.getKnownHeads()
+      for (const head of heads) {
+        const member = yield duniterServer.dal.getWrittenIdtyByPubkey(head.message.split(':')[2])
+        head.uid = member && member.uid || ''
+      }
+      return heads
     } else {
       return []
     }
@@ -644,8 +649,8 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       let level2 = yield server.ws2pCluster.getLevel2Connections()
       return {
         connections: {
-          level1: level1.map(ws2pConnectionToJSON),
-          level2: level2.map(ws2pConnectionToJSON)
+          level1: yield level1.map(ws2pConnectionToJSON),
+          level2: yield level2.map(ws2pConnectionToJSON)
         }
       }
     } else {
@@ -657,20 +662,26 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       }
     }
   })
-}
 
-function ws2pConnectionToJSON(connection) {
-  if (connection.ws._socket.server) {
-    return {
-      pubkey: connection.pubkey,
-      handle: connection.ws._socket.server._connectionKey.split(':').slice(1).join(':')
-    }
-  }
-  else {
-    return {
-      pubkey: connection.pubkey,
-      handle: [connection.ws._socket.remoteAddress, connection.ws._socket.remotePort].join(':')
-    }
+  function ws2pConnectionToJSON(connection) {
+    return co(function*() {
+      const pubkey = connection.pubkey
+      const member = yield duniterServer.dal.getWrittenIdtyByPubkey(pubkey)
+      if (connection.ws._socket.server) {
+        return {
+          pubkey: connection.pubkey,
+          uid: member ? member.uid : '',
+          handle: connection.ws._socket.server._connectionKey.split(':').slice(1).join(':')
+        }
+      }
+      else {
+        return {
+          pubkey: connection.pubkey,
+          uid: member ? member.uid : '',
+          handle: [connection.ws._socket.remoteAddress, connection.ws._socket.remotePort].join(':')
+        }
+      }
+    })
   }
 }
 
