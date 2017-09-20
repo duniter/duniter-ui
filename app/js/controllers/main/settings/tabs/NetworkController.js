@@ -26,6 +26,7 @@ module.exports = ($scope, $http, $state, Webmin, UIUtils, netinterfaces, firstCo
   $scope.remote_neti = toArrayOfAddresses(netinterfaces.remote);
 
   $scope.$parent.conf = $scope.$parent.conf || {};
+  $scope.$parent.conf.ws2p = netinterfaces.conf.ws2p
   $scope.$parent.conf.bma = !netinterfaces.conf.nobma;
   $scope.$parent.conf.local_ipv4 = netinterfaces.conf.local.ipv4;
   $scope.$parent.conf.local_ipv6 = netinterfaces.conf.local.ipv6;

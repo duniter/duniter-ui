@@ -240,6 +240,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     yield pluggedConfP;
     const conf = http2raw.conf(req);
     yield server.dal.saveConf(_.extend(server.conf, {
+      ws2p: conf.ws2p || null,
       nobma: !conf.bma || false,
       ipv4: conf.local_ipv4,
       ipv6: conf.local_ipv6,
@@ -364,6 +365,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
         }
       },
       conf: {
+        ws2p: conf.ws2p,
         nobma: conf.nobma || false,
         local: {
           ipv4: conf && conf.ipv4,

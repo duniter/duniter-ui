@@ -13903,6 +13903,13 @@ blockquote.info {
   padding-top: 2px;
   padding-bottom: 2px;
 }
+#ws2phost {
+  margin-bottom: 0;
+}
+.network-title label {
+  font-size: 24px;
+  color: #26a69a;
+}
 
 .mdi-navigation-menu {
   padding-left: 0.5rem;

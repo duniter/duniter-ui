@@ -6,17 +6,100 @@
           i.fa.fa-globe.fa-5x
           h1.card-title(translate="configuration.create_network.title")
 
-          .row: buttn.btn-large.waves-effect.waves-light(ng-click="autoconfig()")
-            i.left.fa.fa-magic
-            span(translate="configuration.create_network.button.autoconf")
+          //.row: buttn.btn-large.waves-effect.waves-light(ng-click="autoconfig()")
+          //  i.left.fa.fa-magic
+          //  span(translate="configuration.create_network.button.autoconf")
+
+
+          //--------------
+          // WS2P PRIVATE
+          //--------------
+          .row
+            .col.s12.network-title
+              p
+                input#ws2pprivate.filled-in(type="checkbox" ng-model="$parent.conf.ws2p.privateAccess")
+                label(for="ws2pprivate") {{ 'configuration.ws2p.private' | translate }}
+              blockquote.info.left-align(translate="configuration.ws2p.private.desc")
+
+          .row(ng-show="$parent.conf.ws2p.privateAccess")
+            .col.s12.m6.common-network
+
+              h1.card-title(translate="configuration.ws2p.private.connections.title")
+              p(translate="configuration.ws2p.private.connections.message")
+
+              p
+                .input-field.col.s12.m6
+                  i.prefix.fa.fa-signal
+                  input#ws2pMaxPrivate(type="number" ng-model="$parent.conf.ws2p.maxPrivate")
+                  label(for="ws2pMaxPrivate") {{ 'configuration.ws2p.private.max' | translate }}
+
+          //--------------
+          // WS2P PUBLIC
+          //--------------
+          .row
+            .col.s12.network-title
+              p
+                input#ws2ppublic.filled-in(type="checkbox" ng-model="$parent.conf.ws2p.publicAccess")
+                label(for="ws2ppublic") {{ 'configuration.ws2p.public' | translate }}
+              blockquote.info.left-align(translate="configuration.ws2p.public.desc")
+
+          .row(ng-show="$parent.conf.ws2p.publicAccess")
+
+            .col.s12.m6.common-network
+
+              h1.card-title(translate="configuration.ws2p.public.connections.title")
+              p(translate="configuration.ws2p.public.connections.message")
+
+              p
+                .input-field.col.s12.m4
+                  i.prefix.fa.fa-signal
+                  input#ws2pMaxPublic(type="number" ng-model="$parent.conf.ws2p.maxPublic")
+                  label(for="ws2pMaxPublic") {{ 'configuration.ws2p.public.max' | translate }}
+
+            .col.s12.m6.common-network
+
+              h1.card-title(translate="configuration.ws2p.public.upnp.title")
+              p(translate="configuration.ws2p.public.upnp.message")
+
+              p
+                input#ws2pupnp.filled-in(type="checkbox" ng-model="$parent.conf.ws2p.upnp")
+                label(for="ws2pupnp") {{ 'configuration.ws2p.public.upnp.value' | translate }}
+
+            .col.s12.m6.common-network(ng-show="!$parent.conf.ws2p.upnp")
+
+              h1.card-title(translate="configuration.ws2p.public.manual.title")
+              p(translate="configuration.ws2p.public.manual.message")
+
+              .col.s12.m6
+                select.browser-default(ng-model="$parent.conf.ws2p.host" ng-disabled="$parent.conf.ws2p.upnp")
+                  option(value="" translate="configuration.create_network.none")
+                  option(ng-repeat="inet in local_neti | filter : 'IPv4'" value="{{ inet.addr }}" ng-selected="{{inet.addr == $parent.conf.ws2p.host }}") {{ inet.name }}
+                label {{ 'configuration.ws2p.public.manual.local_ipv4' | translate }}
+
+                p
+                  .input-field.col.s12
+                    i.prefix.fa.fa-plug
+                    input#ws2plport(type="number" ng-model="$parent.conf.ws2p.port" ng-disabled="$parent.conf.ws2p.upnp")
+                    label(for="ws2plport") {{ 'configuration.ws2p.public.manual.lport' | translate }}
+
+              .col.s12.m6
+                input#ws2phost.browser-default(ng-model="$parent.conf.ws2p.remotehost" ng-disabled="$parent.conf.ws2p.upnp")
+                label(for="ws2phost") {{ 'configuration.ws2p.public.manual.host' | translate }}
+
+                p
+                  .input-field.col.s12
+                    i.prefix.fa.fa-plug
+                    input#ws2prport(type="number" ng-model="$parent.conf.ws2p.remoteport" ng-disabled="$parent.conf.ws2p.upnp")
+                    label(for="ws2prport") {{ 'configuration.ws2p.public.manual.rport' | translate }}
 
           .row
-            .col.s12
+            .col.s12.network-title
               p
                 input#bma.filled-in(type="checkbox" ng-model="$parent.conf.bma")
                 label(for="bma") {{ 'configuration.create_network.bma' | translate }}
+              blockquote.info.left-align(translate="configuration.create_network.desc")
 
-          .row
+          .row(ng-show="$parent.conf.bma")
             .col.s12.m6.common-network
 
               h1.card-title(translate="configuration.create_network.ipv6.title")
