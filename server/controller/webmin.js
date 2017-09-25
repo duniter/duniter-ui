@@ -10,24 +10,24 @@ const stream      = require('stream');
 const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
-const scrypt = require('duniter/app/modules/keypair').KeypairDependency.duniter.methods.scrypt
-const synchronize = require('duniter/app/modules/crawler').CrawlerDependency.duniter.methods.synchronize
-const testForSync = require('duniter/app/modules/crawler').CrawlerDependency.duniter.methods.testForSync
-const Network = require('duniter/app/modules/bma/lib/network').Network
-const getEndpoint = require('duniter/app/modules/bma').BmaDependency.duniter.methods.getMainEndpoint
-const http2raw = require('duniter/app/modules/bma/lib/http2raw')
-const dos2unix = require('duniter/app/lib/common-libs/dos2unix').dos2unix
 const rawer = {}
-const Contacter = require('duniter/app/modules/crawler/lib/contacter').Contacter
-
-const PeerDTO = require('duniter/app/lib/dto/PeerDTO').PeerDTO
-const IdentityDTO = require('duniter/app/lib/dto/IdentityDTO').IdentityDTO
 
 module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) => {
   return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins, stack);
 };
 
 function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) {
+
+  const scrypt = duniterServer.requireFile('app/modules/keypair').KeypairDependency.duniter.methods.scrypt
+  const synchronize = duniterServer.requireFile('app/modules/crawler').CrawlerDependency.duniter.methods.synchronize
+  const testForSync = duniterServer.requireFile('app/modules/crawler').CrawlerDependency.duniter.methods.testForSync
+  const Network = duniterServer.requireFile('app/modules/bma/lib/network').Network
+  const getEndpoint = duniterServer.requireFile('app/modules/bma').BmaDependency.duniter.methods.getMainEndpoint
+  const http2raw = duniterServer.requireFile('app/modules/bma/lib/http2raw')
+  const dos2unix = duniterServer.requireFile('app/lib/common-libs/dos2unix').dos2unix
+  const Contacter = duniterServer.requireFile('app/modules/crawler/lib/contacter').Contacter
+  const PeerDTO = duniterServer.requireFile('app/lib/dto/PeerDTO').PeerDTO
+  const IdentityDTO = duniterServer.requireFile('app/lib/dto/IdentityDTO').IdentityDTO
 
   const logger = duniterServer.logger;
   const constants = {
