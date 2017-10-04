@@ -239,6 +239,16 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   this.applyNetworkConf = (req) => co(function *() {
     yield pluggedConfP;
     const conf = http2raw.conf(req);
+    if (conf.ws2p) {
+      conf.ws2p.maxPublic = parseInt(conf.ws2p.maxPublic)
+      conf.ws2p.maxPrivate = parseInt(conf.ws2p.maxPrivate)
+      if (isNaN(conf.ws2p.maxPublic)) {
+        conf.ws2p.maxPublic = 10
+      }
+      if (isNaN(conf.ws2p.maxPrivate)) {
+        conf.ws2p.maxPrivate = 10
+      }
+    }
     yield server.dal.saveConf(_.extend(server.conf, {
       ws2p: conf.ws2p || null,
       nobma: !conf.bma || false,
