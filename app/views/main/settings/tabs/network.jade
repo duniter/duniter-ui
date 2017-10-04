@@ -92,6 +92,12 @@
                     input#ws2prport(type="number" ng-model="$parent.conf.ws2p.remoteport" ng-disabled="$parent.conf.ws2p.upnp")
                     label(for="ws2prport") {{ 'configuration.ws2p.public.manual.rport' | translate }}
 
+                p
+                  .input-field.col.s12
+                    i.prefix.fa.fa-globe
+                    input#ws2prpath(type="text" ng-model="$parent.conf.ws2p.remotepath" ng-disabled="$parent.conf.ws2p.upnp" placeholder="ex.: /")
+                    label(for="ws2prpath") {{ 'configuration.ws2p.public.manual.rpath' | translate }}
+
           .row
             .col.s12.network-title
               p

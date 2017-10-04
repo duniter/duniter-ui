@@ -156,7 +156,7 @@ module.exports = function ($scope, version, UIUtils) {
 
   $scope.version = version;
 
-  return co(regeneratorRuntime.mark(function _callee() {
+  return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -188,7 +188,7 @@ module.exports = function ($scope, $http, $state, Webmin, summary, UIUtils) {
   UIUtils.changeTitle(summary.version);
 
   $scope.message = 'index.message.loading';
-  co(regeneratorRuntime.mark(function _callee() {
+  co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     var connected, _summary;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -293,7 +293,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
   $scope.message = 'configuration.create_root.need_a_try';
 
   $scope.start = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var hosts;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -339,7 +339,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
   };
 
   $scope.stop = function () {
-    return co(regeneratorRuntime.mark(function _callee2() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -356,7 +356,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
   };
 
   $scope.try = function () {
-    return co(regeneratorRuntime.mark(function _callee3() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -389,7 +389,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
   };
 
   $scope.accept = function () {
-    return co(regeneratorRuntime.mark(function _callee4() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
       var res;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
@@ -421,7 +421,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
   };
 
   $scope.startServices = function () {
-    return co(regeneratorRuntime.mark(function _callee5() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
       return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -442,7 +442,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
   };
 
   $scope.cancelAndReset = function () {
-    return co(regeneratorRuntime.mark(function _callee6() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
       return regeneratorRuntime.wrap(function _callee6$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
@@ -466,7 +466,7 @@ module.exports = function ($scope, $http, $state, Webmin) {
     }));
   };
 
-  return co(regeneratorRuntime.mark(function _callee7() {
+  return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
     return regeneratorRuntime.wrap(function _callee7$(_context7) {
       while (1) {
         switch (_context7.prev = _context7.next) {
@@ -522,7 +522,7 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
   $scope.remote_current = null;
 
   $scope.checkNode = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var current, targetHost;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -584,7 +584,7 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
     $scope.apply_percent = 0;
     $scope.sync_failed = false;
     $scope.synchronizing = true;
-    return co(regeneratorRuntime.mark(function _callee2() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       var sp, translatedErr;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
@@ -659,7 +659,7 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
 
   // Autostart
   if ($scope.host && $scope.port && $stateParams.sync) {
-    return co(regeneratorRuntime.mark(function _callee3() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       var nodeOK;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
@@ -775,7 +775,7 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
 
   $scope.startServer = function () {
     $scope.server_stopped = false;
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -797,7 +797,7 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
 
   $scope.stopServer = function () {
     $scope.server_started = false;
-    return co(regeneratorRuntime.mark(function _callee2() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -818,7 +818,7 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
   };
 
   $scope.restartServer = function () {
-    return co(regeneratorRuntime.mark(function _callee3() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -841,7 +841,7 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
 
   function checkUpdates() {
     var LATEST_RELEASE_URL = 'https://api.github.com/repos/duniter/duniter/releases/latest';
-    co(regeneratorRuntime.mark(function _callee4() {
+    co( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
       var latest, local_string_version, m, localVersion, localSuffix, isLocalAPreRelease, remoteVersion, localMajor, localMinor, localFix, remoteMajor, remoteMinor, remoteFix, newMajor, newMinor, newFix;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
@@ -939,7 +939,7 @@ module.exports = function ($scope, $state, $timeout, Webmin, UIUtils, Graph) {
   });
 
   $scope.updateGraphs = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var summary, parameters, blocks, speeds, accelerations, medianTimeIncrements, actualDurations, BY_HOUR, i, len, block, acc, previousPos, j, availPreviousBlocks, localAvgSpeed, realDuration, graphs, _i, _len;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -1044,7 +1044,7 @@ module.exports = function ($scope, $state, $timeout, Webmin, UIUtils, Graph) {
     }
   }
 
-  return co(regeneratorRuntime.mark(function _callee2() {
+  return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -1146,7 +1146,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
   $scope.headsIntoMap(heads);
 
   ws.on('ws2p', function (obj) {
-    return co(regeneratorRuntime.mark(function _callee2() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -1154,7 +1154,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
               if (obj.value.ws2p === 'heads') {
                 $scope.headsIntoMap(obj.value.added);
               } else if (obj.value.ws2p === 'connected' || obj.value.ws2p === 'disconnected') {
-                co(regeneratorRuntime.mark(function _callee() {
+                co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
                   return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                       switch (_context.prev = _context.next) {
@@ -1187,7 +1187,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
   var co = require('co');
 
   $scope.update = function () {
-    return co(regeneratorRuntime.mark(function _callee3() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       var delayP;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
@@ -1229,7 +1229,7 @@ module.exports = function ($scope, Webmin, peers) {
   var co = require('co');
 
   $scope.update = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var delayP;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -1274,7 +1274,7 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
   $scope.connected_ws2p_peers = 0;
 
   $scope.updateInfo = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var info, map, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, level1, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, level2;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -1429,7 +1429,7 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
   }, 1000);
 
   $scope.loadPowData = function () {
-    return co(regeneratorRuntime.mark(function _callee2() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       var res;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
@@ -1519,7 +1519,7 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
     }
     if (data.type === 'ws2p') {
       if (data.value.ws2p === 'connected' || data.value.ws2p === 'disconnected') {
-        co(regeneratorRuntime.mark(function _callee3() {
+        co( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
           return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
               switch (_context3.prev = _context3.next) {
@@ -1561,7 +1561,7 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
   }
 
   $scope.reconfigure_network = function () {
-    return co(regeneratorRuntime.mark(function _callee4() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
       var delay, netinferfaces, conf;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
@@ -1620,7 +1620,7 @@ module.exports = function ($scope, $interval, Webmin, UIUtils, summary, ws) {
     }));
   };
 
-  return co(regeneratorRuntime.mark(function _callee5() {
+  return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
     var reachable;
     return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
@@ -1681,7 +1681,7 @@ module.exports = function ($scope, $http, $state, $location, Webmin, UIUtils) {
   $(".dropdown-button").dropdown({ constrainwidth: false });
 
   $scope.fullReset = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -1730,7 +1730,7 @@ module.exports = function ($scope, $http, $state, $timeout, UIUtils, summary, We
   $scope.cpuPower = parseInt(summary.conf.cpu * 100);
 
   $scope.updateCPUpower = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -1791,7 +1791,7 @@ module.exports = function ($scope, $http, $state, Webmin, peers) {
   };
 
   $scope.resetNodeAndSync = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var sp;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -1839,7 +1839,7 @@ module.exports = function ($scope, $state, Webmin, summary, PubkeyGenerator) {
   }, 500);
 
   $scope.accept = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -1940,7 +1940,7 @@ module.exports = function ($scope, ws, UIUtils) {
     }
   }
 
-  return co(regeneratorRuntime.mark(function _callee() {
+  return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -1973,7 +1973,7 @@ module.exports = function ($scope, Webmin) {
   $scope.error = '';
 
   $scope.shareLogs = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -2059,7 +2059,7 @@ module.exports = function ($scope, $http, $state, $interval, $timeout, UIUtils, 
     $scope.modules.map(function (m) {
       return m.disabled = true;
     });
-    co(regeneratorRuntime.mark(function _callee() {
+    co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -2240,7 +2240,7 @@ module.exports = function ($scope, $http, $state, Webmin, UIUtils, netinterfaces
   }
 
   $scope.saveConf = function () {
-    return co(regeneratorRuntime.mark(function _callee() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -2471,6 +2471,7 @@ module.exports = {
   "configuration.ws2p.public.manual.host": "Public (remote host)",
   "configuration.ws2p.public.manual.lport": "Private port",
   "configuration.ws2p.public.manual.rport": "Public port",
+  "configuration.ws2p.public.manual.rpath": "WebSocket web path",
   "configuration.ws2p.public.connections.title": "Connections",
   "configuration.ws2p.public.connections.message": "You can limit the number of active public connections.",
   "configuration.ws2p.public.max": "Maximum",
@@ -2775,7 +2776,7 @@ module.exports = function (app) {
           return Webmin.summary();
         },
         uiModules: function uiModules(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
             var modules, i, _module, injection, script;
 
             return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -2844,7 +2845,7 @@ module.exports = function (app) {
       template: require('views/main/home/tabs/network'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee2() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
@@ -2866,7 +2867,7 @@ module.exports = function (app) {
       template: require('views/main/home/tabs/connections'),
       resolve: {
         info: function info(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee3() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
             return regeneratorRuntime.wrap(function _callee3$(_context3) {
               while (1) {
                 switch (_context3.prev = _context3.next) {
@@ -2882,7 +2883,7 @@ module.exports = function (app) {
           }));
         },
         heads: function heads(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee4() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
               while (1) {
                 switch (_context4.prev = _context4.next) {
@@ -2914,7 +2915,7 @@ module.exports = function (app) {
       template: require('views/main/settings/tabs/data'),
       resolve: {
         peers: function peers(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee5() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
             var self, res;
             return regeneratorRuntime.wrap(function _callee5$(_context5) {
               while (1) {
@@ -2980,7 +2981,7 @@ module.exports = function (app) {
           return Webmin.plugin.checkAccess();
         },
         allModules: function allModules(Webmin) {
-          return co(regeneratorRuntime.mark(function _callee6() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             var modules;
             return regeneratorRuntime.wrap(function _callee6$(_context6) {
               while (1) {
@@ -3023,7 +3024,7 @@ module.exports = function (app) {
       url: '/currency',
       resolve: {
         conf: function conf(summary) {
-          return co(regeneratorRuntime.mark(function _callee7() {
+          return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
             return regeneratorRuntime.wrap(function _callee7$(_context7) {
               while (1) {
                 switch (_context7.prev = _context7.next) {
@@ -3108,7 +3109,7 @@ module.exports = function (app) {
   });
 
   function resolveNetworkAutoConf(Webmin) {
-    return co(regeneratorRuntime.mark(function _callee8() {
+    return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
       var netinterfaces;
       return regeneratorRuntime.wrap(function _callee8$(_context8) {
         while (1) {
@@ -3723,7 +3724,7 @@ module.exports = function (app) {
       }
 
       $scope.previewPubkey = function () {
-        return co(regeneratorRuntime.mark(function _callee() {
+        return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
           var data;
           return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
@@ -3931,7 +3932,7 @@ module.exports = function (angular) {
             listener = callback;
           },
           whenOpened: function whenOpened() {
-            return co(regeneratorRuntime.mark(function _callee() {
+            return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
               return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                   switch (_context.prev = _context.next) {

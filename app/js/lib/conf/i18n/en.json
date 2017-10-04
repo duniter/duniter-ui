@@ -53,6 +53,7 @@
   "configuration.ws2p.public.manual.host": "Public (remote host)",
   "configuration.ws2p.public.manual.lport": "Private port",
   "configuration.ws2p.public.manual.rport": "Public port",
+  "configuration.ws2p.public.manual.rpath": "WebSocket web path",
   "configuration.ws2p.public.connections.title": "Connections",
   "configuration.ws2p.public.connections.message": "You can limit the number of active public connections.",
   "configuration.ws2p.public.max": "Maximum",
