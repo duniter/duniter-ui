@@ -32,10 +32,16 @@
             thead
               tr
                 th Pubkey
+                th WS2PID
                 th UID
                 th HEAD
+                th Software
+                th Prefix
             tbody
               tr(ng-repeat="head in heads | orderBy:'-blockstamp' track by $index ")
                 td {{ head.pubkey.slice(0, 20) }}
+                td {{ head.ws2pId }}
                 td {{ head.uid }}
-                td {{ head.blockstamp }}
+                td {{ head.blockstamp.slice(0, 30) }}
+                td {{ head.software }} {{ head.softVersion }}
+                td {{ head.prefix }}

@@ -1112,11 +1112,22 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
         var value = _step.value;
 
         var sp = value.message.split(':');
-        var pubkey = sp[2];
-        var blockstamp = sp[3];
+        var pubkey = sp[3];
+        var blockstamp = sp[4];
+        var ws2pId = sp[5];
+        var software = sp[6];
+        var softVersion = sp[7];
+        var prefix = sp[8];
         var uid = value.uid;
+        // Gestion de l'ancien format
+        console.log(value.message);
+        if (!value.message.match(/:1:/)) {
+          pubkey = sp[2];
+          blockstamp = sp[3];
+          uid = value.uid;
+        }
         headsMap[pubkey] = {
-          blockstamp: blockstamp, uid: uid
+          blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix
         };
       }
     } catch (err) {
@@ -1138,7 +1149,11 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
       return {
         pubkey: k,
         uid: headsMap[k].uid,
-        blockstamp: headsMap[k].blockstamp
+        blockstamp: headsMap[k].blockstamp,
+        ws2pId: headsMap[k].ws2pId,
+        software: headsMap[k].software,
+        softVersion: headsMap[k].softVersion,
+        prefix: headsMap[k].prefix
       };
     });
   };

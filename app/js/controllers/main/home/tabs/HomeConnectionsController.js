@@ -10,18 +10,33 @@ module.exports = ($scope, Webmin, heads, info, ws) => {
   $scope.headsIntoMap = (heads) => {
     for (const value of heads) {
       const sp = value.message.split(':')
-      const pubkey = sp[2]
-      const blockstamp = sp[3]
-      const uid = value.uid
+      let pubkey = sp[3]
+      let blockstamp = sp[4]
+      let ws2pId = sp[5]
+      let software = sp[6]
+      let softVersion = sp[7]
+      let prefix = sp[8]
+      let uid = value.uid
+      // Gestion de l'ancien format
+      console.log(value.message)
+      if (!value.message.match(/:1:/)) {
+        pubkey = sp[2]
+        blockstamp = sp[3]
+        uid = value.uid
+      }
       headsMap[pubkey] = {
-        blockstamp, uid
+        blockstamp, uid, ws2pId, software, softVersion, prefix
       }
     }
     $scope.heads = Object.keys(headsMap).map(k => {
       return {
         pubkey: k,
         uid: headsMap[k].uid,
-        blockstamp: headsMap[k].blockstamp
+        blockstamp: headsMap[k].blockstamp,
+        ws2pId: headsMap[k].ws2pId,
+        software: headsMap[k].software,
+        softVersion: headsMap[k].softVersion,
+        prefix: headsMap[k].prefix
       }
     })
   }
