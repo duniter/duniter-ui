@@ -649,7 +649,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       for (const head of heads) {
         let posPubkey = 3;
         // Gestion de l'ancien format
-        if (head.message.match(/:1:/)) {
+        if (!head.message.match(/:1:/)) {
           posPubkey = 2;
         }
         const member = yield duniterServer.dal.getWrittenIdtyByPubkey(head.message.split(':')[posPubkey])
