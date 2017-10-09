@@ -647,7 +647,12 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     if (server.ws2pCluster) {
       const heads = yield server.ws2pCluster.getKnownHeads()
       for (const head of heads) {
-        const member = yield duniterServer.dal.getWrittenIdtyByPubkey(head.message.split(':')[2])
+        let posPubkey = 3;
+        // Gestion de l'ancien format
+        if (head.message.match(/:1:/)) {
+          posPubkey = 2;
+        }
+        const member = yield duniterServer.dal.getWrittenIdtyByPubkey(head.message.split(':')[posPubkey])
         head.uid = member && member.uid || ''
       }
       return heads
