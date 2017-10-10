@@ -1,6 +1,6 @@
 {
   "name": "duniter-ui",
-  "version": "1.6.10",
+  "version": "1.6.11",
   "main": "index.js",
   "scripts": {
     "build": "bower install && brunch build",
