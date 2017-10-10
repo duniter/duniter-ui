@@ -24,7 +24,8 @@ module.exports = ($scope, Webmin, heads, info, ws) => {
         blockstamp = sp[3]
         uid = value.uid
       }
-      headsMap[pubkey] = {
+      let ws2pFullId = pubkey+"-"+ws2pId
+      headsMap[ws2pFullId] = {
         blockstamp, uid, ws2pId, software, softVersion, prefix
       }
     }
