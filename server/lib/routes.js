@@ -155,7 +155,12 @@ module.exports = {
                       co(function*() {
                         if (data.ws2p === 'heads') {
                           for (const head of data.added) {
-                            const member = yield server.dal.getWrittenIdtyByPubkey(head.message.split(':')[2])
+                            let posPubkey = 3;
+                            // Gestion de l'ancien format
+                            if (!head.message.match(/:1:/)) {
+                              posPubkey = 2;
+                            }
+                            const member = yield server.dal.getWrittenIdtyByPubkey(head.message.split(':')[posPubkey])
                             head.uid = member && member.uid || ''
                           }
                           wssEvents.broadcast(JSON.stringify({
