@@ -1126,7 +1126,8 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
           blockstamp = sp[3];
           uid = value.uid;
         }
-        headsMap[pubkey] = {
+        var ws2pFullId = pubkey + "-" + ws2pId;
+        headsMap[ws2pFullId] = {
           blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix
         };
       }
@@ -1181,7 +1182,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
                           $scope.info = _context.sent;
 
                         case 3:
-                        case 'end':
+                        case "end":
                           return _context.stop();
                       }
                     }
@@ -1191,7 +1192,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
               $scope.$apply();
 
             case 2:
-            case 'end':
+            case "end":
               return _context2.stop();
           }
         }
@@ -1223,7 +1224,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
               $scope.$apply();
 
             case 9:
-            case 'end':
+            case "end":
               return _context3.stop();
           }
         }
