@@ -10,6 +10,7 @@ module.exports = ($scope, Webmin, heads, info, ws) => {
   $scope.headsIntoMap = (heads) => {
     for (const value of heads) {
       const sp = value.message.split(':')
+      let api = sp[0]
       let pubkey = sp[3]
       let blockstamp = sp[4]
       let ws2pId = sp[5]
@@ -26,12 +27,13 @@ module.exports = ($scope, Webmin, heads, info, ws) => {
       }
       let ws2pFullId = pubkey+"-"+ws2pId
       headsMap[ws2pFullId] = {
-        blockstamp, uid, ws2pId, software, softVersion, prefix
+        api, blockstamp, uid, ws2pId, software, softVersion, prefix
       }
     }
     $scope.heads = Object.keys(headsMap).map(k => {
       return {
         pubkey: k,
+        api: headsMap[k].api,
         uid: headsMap[k].uid,
         blockstamp: headsMap[k].blockstamp,
         ws2pId: headsMap[k].ws2pId,

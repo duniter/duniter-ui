@@ -1112,6 +1112,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
         var value = _step.value;
 
         var sp = value.message.split(':');
+        var api = sp[0];
         var pubkey = sp[3];
         var blockstamp = sp[4];
         var ws2pId = sp[5];
@@ -1149,6 +1150,7 @@ module.exports = function ($scope, Webmin, heads, info, ws) {
     $scope.heads = Object.keys(headsMap).map(function (k) {
       return {
         pubkey: k,
+        api: headsMap[k].api,
         uid: headsMap[k].uid,
         blockstamp: headsMap[k].blockstamp,
         ws2pId: headsMap[k].ws2pId,
