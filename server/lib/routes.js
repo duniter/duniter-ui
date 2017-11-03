@@ -37,6 +37,7 @@ module.exports = {
         handleRequest(app.get.bind(app),  '/webmin/network/peers',             webminCtrl.peers);
         handleRequest(app.get.bind(app),  '/webmin/network/ws2p/info',         webminCtrl.ws2pInfo);
         handleRequest(app.get.bind(app),  '/webmin/network/ws2p/heads',        webminCtrl.ws2pHeads);
+        handleRequest(app.get.bind(app),  '/webmin/network/ws2p/conf',         webminCtrl.ws2pConf);
         handleRequest(app.get.bind(app),  '/webmin/plug/modules',              webminCtrl.plugModulesList);
         handleRequest(app.get.bind(app),  '/webmin/plug/ui_modules',           webminCtrl.plugUiModulesList);
         handleRequest(app.get.bind(app),  '/webmin/plug/ui_modules/inject/:package', webminCtrl.plugUiModulesGetInjection);

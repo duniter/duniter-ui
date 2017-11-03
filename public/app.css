@@ -13910,6 +13910,26 @@ blockquote.info {
   font-size: 24px;
   color: #26a69a;
 }
+.privileged {
+  background-color: #d9d9ff;
+}
+.prefered {
+  background-color: #e0ffdf;
+}
+.legend {
+  background-color: #fcfcfc;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.legend h5 {
+  font-style: italic;
+  font-size: 20px;
+}
+.legend span {
+  width: 500px;
+  display: block;
+  margin-bottom: 4px;
+}
 
 .mdi-navigation-menu {
   padding-left: 0.5rem;

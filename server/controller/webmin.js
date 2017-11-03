@@ -661,6 +661,10 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     }
   })
 
+  this.ws2pConf = () => co(function*() {
+    return server.conf.ws2p || {}
+  })
+
   this.ws2pInfo = () => co(function*() {
     if (server.ws2pCluster) {
       let level1 = yield server.ws2pCluster.getLevel1Connections()

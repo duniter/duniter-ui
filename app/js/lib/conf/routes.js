@@ -156,7 +156,10 @@ module.exports = (app) => {
       url: '/connections',
       template: require('views/main/home/tabs/connections'),
       resolve: {
-        info: (Webmin) => co(function *() {
+        conf: (Webmin) => co(function *() {
+          return Webmin.network.ws2p.conf();
+        }),
+        info: (Webmin, conf) => co(function *() {
           return Webmin.network.ws2p.info();
         }),
         heads: (Webmin) => co(function *() {

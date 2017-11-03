@@ -1,8 +1,16 @@
 "use strict";
 
-module.exports = ($scope, Webmin, heads, info, ws) => {
+module.exports = ($scope, Webmin, heads, info, conf, ws) => {
+  
+  $scope.discriminateNodes = (info) => {
+    info.connections.level1.concat(info.connections.level2).forEach(c => {
+      c.prefered = (conf.preferedNodes || []).indexOf(c.pubkey) !== -1
+      c.privileged = (conf.privilegedNodes || []).indexOf(c.pubkey) !== -1
+    })
+    return info
+  }
 
-  $scope.info = info;
+  $scope.info = $scope.discriminateNodes(info);
   $scope.heads = []
 
   const headsMap = {}
@@ -52,7 +60,7 @@ module.exports = ($scope, Webmin, heads, info, ws) => {
     }
     else if (obj.value.ws2p === 'connected' || obj.value.ws2p === 'disconnected') {
       co(function*() {
-        $scope.info = yield Webmin.network.ws2p.info()
+        $scope.info = $scope.discriminateNodes(yield Webmin.network.ws2p.info())
       })
     }
     $scope.$apply()

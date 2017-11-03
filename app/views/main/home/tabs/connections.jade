@@ -17,16 +17,20 @@
                 th Type
                 th Connection
             tbody
-              tr(ng-repeat="peer in info.connections.level1 track by $index")
+              tr(ng-repeat="peer in info.connections.level1 track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
                 td {{ peer.pubkey.slice(0, 20) }}
                 td {{ peer.uid }}
                 td OUTCOMING
                 td {{ peer.handle }}
-              tr(ng-repeat="peer in info.connections.level2 track by $index")
+              tr(ng-repeat="peer in info.connections.level2 track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
                 td {{ peer.pubkey.slice(0, 20) }}
                 td {{ peer.uid }}
                 td INCOMING
                 td {{ peer.handle }}
+          .legend
+            h5(translate="home.tabs.connections.legend.title")
+            span.prefered(translate="home.tabs.connections.legend.prefered")
+            span.privileged(translate="home.tabs.connections.legend.privileged")
           h5(translate="home.tabs.connections.title.network")
           table.bordered.connections
             thead
