@@ -250,8 +250,14 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       }
       conf.ws2p.remotepath = conf.ws2p.remotepath || ""
     }
+    if (conf.proxiesConf) {
+      conf.proxiesConf.proxySocksAddress = conf.proxiesConf.proxySocksAddress || undefined
+      conf.proxiesConf.proxyTorAddress = conf.proxiesConf.proxyTorAddress || undefined
+      conf.proxiesConf.reachingClearEp = conf.proxiesConf.reachingClearEp
+    }
     yield server.dal.saveConf(_.extend(server.conf, {
       ws2p: conf.ws2p || null,
+      proxiesConf: conf.proxiesConf || undefined,
       nobma: !conf.bma || false,
       ipv4: conf.local_ipv4,
       ipv6: conf.local_ipv6,
@@ -377,6 +383,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       },
       conf: {
         ws2p: conf.ws2p,
+        proxiesConf: conf.proxiesConf || undefined,
         nobma: conf.nobma || false,
         local: {
           ipv4: conf && conf.ipv4,

@@ -33,6 +33,29 @@
                   input#ws2pMaxPrivate(type="number" ng-model="$parent.conf.ws2p.maxPrivate")
                   label(for="ws2pMaxPrivate") {{ 'configuration.ws2p.private.max' | translate }}
 
+            .col.s12.m6.common-network
+
+              h1.card-title(translate="configuration.proxiesConf.title")
+              p
+              blockquote.info.left-align(translate="configuration.proxiesConf.torMessage")
+
+              p
+                .input-field.col.s12.m6
+                  input#proxyTorAddress(type="text" ng-model="$parent.conf.proxiesConf.proxyTorAddress" placeholder="ex.: 127.0.0.1:9050")
+                  label(for="proxyTorAddress") {{ 'configuration.proxiesConf.proxyTorAddress' | translate }}
+
+              p
+                .input-field.col.s12.m6
+                  input#proxySocksAddress(type="text" ng-model="$parent.conf.proxiesConf.proxySocksAddress" placeholder="ex.: 127.0.0.1:8888")
+                  label(for="proxySocksAddress") {{ 'configuration.proxiesConf.proxySocksAddress' | translate }}
+
+              p
+                label {{ 'configuration.proxiesConf.reachingClearEp' | translate }}
+                select.browser-default(ng-model="parent.conf.proxiesConf.reachingClearEp")
+                  option(value="clear" translate="configuration.proxiesConf.clear")
+                  option(value="tor" translate="configuration.proxiesConf.tor")
+                  option(value="none" translate="configuration.proxiesConf.none")
+
           //--------------
           // WS2P PUBLIC
           //--------------

@@ -1137,7 +1137,7 @@ module.exports = function ($scope, Webmin, heads, info, conf, ws) {
         }
         var ws2pFullId = pubkey + "-" + ws2pId;
         headsMap[ws2pFullId] = {
-          blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix
+          api: api, blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix
         };
       }
     } catch (err) {
@@ -2248,6 +2248,7 @@ module.exports = function ($scope, $http, $state, Webmin, UIUtils, netinterfaces
 
   $scope.$parent.conf = $scope.$parent.conf || {};
   $scope.$parent.conf.ws2p = netinterfaces.conf.ws2p;
+  $scope.$parent.conf.proxiesConf = netinterfaces.conf.proxiesConf;
   $scope.$parent.conf.bma = !netinterfaces.conf.nobma;
   $scope.$parent.conf.local_ipv4 = netinterfaces.conf.local.ipv4;
   $scope.$parent.conf.local_ipv6 = netinterfaces.conf.local.ipv6;
@@ -2488,6 +2489,14 @@ module.exports = {
   "configuration.ws2p.private.connections.title": "Connections",
   "configuration.ws2p.private.connections.message": "You can limit the number of active private connections.",
   "configuration.ws2p.private.max": "Maximum",
+  "configuration.proxiesConf.title": "Setting up a Proxy",
+  "configuration.proxiesConf.proxySocksAddress": "Classical socks proxy",
+  "configuration.proxiesConf.torMessage": "<b>Warning :</b> If you want to use a socks proxy to redirect all outgoing traffic via <b>Tor</b>, you must use the <i>\"Tor socks proxy\"</i> field :",
+  "configuration.proxiesConf.proxyTorAddress": "Tor socks proxy",
+  "configuration.proxiesConf.clear": "clear",
+  "configuration.proxiesConf.tor": "tor",
+  "configuration.proxiesConf.none": "none",
+  "configuration.proxiesConf.reachingClearEp": "How do you want to reach the classic nodes ? (clear endpoints)",
   "configuration.ws2p.public": "Enable WS2P Public access",
   "configuration.ws2p.public.desc": "<b>Recommanded</b>. Public WS2P access allows your node to be publicly visible to communicate through WS2P. Considering that most of the nodes will communicate through WS2P access, it is important to have a maximum number of nodes with Public WS2P access enabled to have a decentralized network.",
   "configuration.ws2p.public.upnp.title": "UPnP",
