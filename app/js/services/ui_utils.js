@@ -31,7 +31,7 @@ module.exports = (app) => {
           jTabs.tabs('select_tab', currentID);
         },
 
-        changeTitle: (version) => document.title = 'Duniter ' + version
+        changeTitle: (version, currency, prefix) => document.title = 'Duniter ' + version + ' : ' + currency + '-' + prefix
       }
     });
 };

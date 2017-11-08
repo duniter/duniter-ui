@@ -185,7 +185,7 @@ var co = require('co');
 
 module.exports = function ($scope, $http, $state, Webmin, summary, UIUtils) {
 
-  UIUtils.changeTitle(summary.version);
+  UIUtils.changeTitle(summary.version, summary.parameters.currency, summary.conf.prefix);
 
   $scope.message = 'index.message.loading';
   co( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -750,7 +750,7 @@ module.exports = function ($scope, $state, $http, $timeout, $interval, Webmin, u
     });
   }
 
-  UIUtils.changeTitle(summary.version);
+  UIUtils.changeTitle(summary.version, summary.parameters.currency, summary.conf.prefix);
 
   var aboutWin = void 0;
 
@@ -3852,8 +3852,8 @@ module.exports = function (app) {
         jTabs.tabs('select_tab', currentID);
       },
 
-      changeTitle: function changeTitle(version) {
-        return document.title = 'Duniter ' + version;
+      changeTitle: function changeTitle(version, currency, prefix) {
+        return document.title = 'Duniter ' + version + ' : ' + currency + '-' + prefix;
       }
     };
   });

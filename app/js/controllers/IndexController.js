@@ -4,7 +4,7 @@ var co = require('co');
 
 module.exports = ($scope, $http, $state, Webmin, summary, UIUtils) => {
 
-  UIUtils.changeTitle(summary.version);
+  UIUtils.changeTitle(summary.version, summary.parameters.currency, summary.conf.prefix);
 
   $scope.message = 'index.message.loading';
   co(function *() {

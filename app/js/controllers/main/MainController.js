@@ -30,7 +30,7 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, uiModules,
     });
   }
 
-  UIUtils.changeTitle(summary.version);
+  UIUtils.changeTitle(summary.version, summary.parameters.currency, summary.conf.prefix);
 
   let aboutWin;
 

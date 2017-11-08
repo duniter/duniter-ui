@@ -100,7 +100,8 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       "pubkey": server.keyPair.publicKey,
       "seckey": server.keyPair.secretKey,
       "conf": {
-        "cpu": server.conf.cpu
+        "cpu": server.conf.cpu,
+        "prefix": server.conf.prefix
       },
       "parameters": parameters,
       "lastUDBlock": lastUDBlock
