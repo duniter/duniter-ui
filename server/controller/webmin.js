@@ -696,10 +696,12 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
   function ws2pConnectionToJSON(connection) {
     return co(function*() {
       const pubkey = connection.pubkey
+      const ws2pid = connection.uuid
       const member = yield duniterServer.dal.getWrittenIdtyByPubkey(pubkey)
       if (connection.ws._socket.server) {
         return {
           pubkey: connection.pubkey,
+          ws2pid: connection.uuid,
           uid: member ? member.uid : '',
           handle: connection.ws._socket.server._connectionKey.split(':').slice(1).join(':')
         }
@@ -707,6 +709,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       else {
         return {
           pubkey: connection.pubkey,
+          ws2pid: connection.uuid,
           uid: member ? member.uid : '',
           handle: [connection.ws._socket.remoteAddress, connection.ws._socket.remotePort].join(':')
         }
