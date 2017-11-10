@@ -13,20 +13,17 @@
             thead
               tr
                 th Pubkey
-                th WS2PID
                 th Member
                 th Type
                 th Connection
             tbody
               tr(ng-repeat="peer in info.connections.level1 track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
                 td {{ peer.pubkey.slice(0, 20) }}
-                td {{ peer.ws2pid }}
                 td {{ peer.uid }}
                 td OUTCOMING
                 td {{ peer.handle }}
               tr(ng-repeat="peer in info.connections.level2 track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
                 td {{ peer.pubkey.slice(0, 20) }}
-                td {{ peer.ws2pid }}
                 td {{ peer.uid }}
                 td INCOMING
                 td {{ peer.handle }}
