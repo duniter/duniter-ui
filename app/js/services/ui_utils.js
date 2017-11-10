@@ -31,7 +31,7 @@ module.exports = (app) => {
           jTabs.tabs('select_tab', currentID);
         },
 
-        changeTitle: (version, currency, prefix) => document.title = 'Duniter ' + version + ' : ' + currency + '-' + prefix
+        changeTitle: (version, currency, prefix) => document.title = (prefix!=1) ? 'Duniter ' + version + ' : ğ' + currency.slice(1) + '-' + prefix:'Duniter ' + version + ' : ğ' + currency.slice(1)
       }
     });
 };

@@ -3853,7 +3853,7 @@ module.exports = function (app) {
       },
 
       changeTitle: function changeTitle(version, currency, prefix) {
-        return document.title = 'Duniter ' + version + ' : ' + currency + '-' + prefix;
+        return document.title = prefix != 1 ? 'Duniter ' + version + ' : ğ' + currency.slice(1) + '-' + prefix : 'Duniter ' + version + ' : ğ' + currency.slice(1);
       }
     };
   });
