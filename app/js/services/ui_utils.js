@@ -31,7 +31,16 @@ module.exports = (app) => {
           jTabs.tabs('select_tab', currentID);
         },
 
-        changeTitle: (version, currency, prefix) => document.title = (prefix!=1) ? 'Duniter ' + version + ' : ğ' + currency.slice(1) + '-' + prefix:'Duniter ' + version + ' : ğ' + currency.slice(1)
+        changeTitle: (version, currency, prefix) =>{ 
+          let printCurrency = "";
+          if (typeof(currency) != "undefined" && currency != null) {
+            printCurrency = currency
+            if (currency == "g1" || currency == "g1-test") {
+              printCurrency = currency = 'ğ' + currency.slice(1)
+            }
+          }
+          return document.title = (typeof(prefix) != "undefined" && prefix!=1) ? 'Duniter ' + version + ' : ' + printCurrency + '-' + prefix:'Duniter ' + version + ' : ' + printCurrency
+        }
       }
     });
 };

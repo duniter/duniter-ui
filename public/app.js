@@ -2514,7 +2514,7 @@ module.exports = {
   "configuration.ws2p.public.max": "Maximum",
   "configuration.create_network.desc": "<b>Deprecated</b>. BMA is the legacy communication interface for Duniter nodes. It is being deprecated. Yet, you can activate it if you know what you are doing.",
   "configuration.create_network.title": "Network",
-  "configuration.create_network.message": "uCoin is a P2P software and needs bidirectionnal access to the network. Please chose carefully the following parameters.",
+  "configuration.create_network.message": "Duniter is a P2P software and needs bidirectionnal access to the network. Please chose carefully the following parameters.",
   "configuration.create_network.none": "None",
   "configuration.create_network.ipv4.title": "IPv4",
   "configuration.create_network.ipv6.title": "IPv6",
@@ -2665,7 +2665,7 @@ module.exports = {
   "settings.data.modal_message": "This action will completely reset the data of your node and redirect you to initial configuration screen. Do you confirm?",
   "settings.data.modal_disagree": "No, cancel this",
   "settings.data.modal_agree": "Yes, process the reset",
-  "settings.data.reset.experimental": "This functionality is still considered experimental. If you encounters strange behaviors, please stop the software and reset manually your node by removing all the files BUT conf.json under ~/.config/ucoin/ucoin_default, and restart the software.",
+  "settings.data.reset.experimental": "This functionality is still considered experimental. If you encounters strange behaviors, please stop the software and reset manually your node by removing all the files BUT conf.json under ~/.config/duniter/duniter_default, and restart the software.",
   "settings.cpu.title": "CPU settings",
   "settings.cpu.message": "You can adjust the CPU power dedicated to proof-of-work computation. The higher the value, the faster is your node, the higher the chances you have to compute a block early.",
   "settings.cpu.warning": "<b>Up to 8 cores</b> of your machine are dedicated to proof-of-work computation currently. Also, setting CPU to 100% does not mean Duniter will use 100% of each core, but will use as much as possible each of them, as a core is also shared with other programs.",
@@ -3853,7 +3853,14 @@ module.exports = function (app) {
       },
 
       changeTitle: function changeTitle(version, currency, prefix) {
-        return document.title = prefix != 1 ? 'Duniter ' + version + ' : ğ' + currency.slice(1) + '-' + prefix : 'Duniter ' + version + ' : ğ' + currency.slice(1);
+        var printCurrency = "";
+        if (typeof currency != "undefined" && currency != null) {
+          printCurrency = currency;
+          if (currency == "g1" || currency == "g1-test") {
+            printCurrency = currency = 'ğ' + currency.slice(1);
+          }
+        }
+        return document.title = typeof prefix != "undefined" && prefix != 1 ? 'Duniter ' + version + ' : ' + printCurrency + '-' + prefix : 'Duniter ' + version + ' : ' + printCurrency;
       }
     };
   });
