@@ -98,7 +98,6 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
       "current": current,
       "rootBlock": rootBlock,
       "pubkey": server.keyPair.publicKey,
-      "seckey": server.keyPair.secretKey,
       "conf": {
         "cpu": server.conf.cpu,
         "prefix": server.conf.prefix
