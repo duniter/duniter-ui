@@ -13,12 +13,14 @@
             thead
               tr
                 th Pubkey
+                th WS2PID
                 th Member
                 th Type
                 th Connection
             tbody
               tr(ng-repeat="peer in info.connections.level1 track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
                 td {{ peer.pubkey.slice(0, 20) }}
+                td {{ peer.ws2pid }}
                 td {{ peer.uid }}
                 td OUTCOMING
                 td {{ peer.handle }}
@@ -35,17 +37,21 @@
           table.bordered.connections
             thead
               tr
+                th API
                 th Pubkey
                 th WS2PID
                 th Member
                 th HEAD
                 th Software
                 th Prefix
+                th Free Rooms
             tbody
               tr(ng-repeat="head in heads | orderBy:'-blockstamp' track by $index ")
+                td {{ head.api }}
                 td {{ head.pubkey.slice(0, 20) }}
                 td {{ head.ws2pId }}
                 td {{ head.uid }}
                 td {{ head.blockstamp.slice(0, 30) }}
                 td {{ head.software }} {{ head.softVersion }}
                 td {{ head.prefix }}
+                td {{ head.freeRooms }}

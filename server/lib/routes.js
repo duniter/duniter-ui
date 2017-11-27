@@ -157,10 +157,14 @@ module.exports = {
                         if (data.ws2p === 'heads') {
                           for (const head of data.added) {
                             let posPubkey = 3;
-                            // Gestion de l'ancien format
-                            if (!head.message.match(/:1:/)) {
-                              posPubkey = 2;
+                            // Gestion des anciens formats
+                            if (!head.message.match(/:2:/)) {
+                                posPubkey = 3;
+                                if (!head.message.match(/:1:/)) {
+                                    posPubkey = 2;
+                                }
                             }
+                            
                             const member = yield server.dal.getWrittenIdtyByPubkey(head.message.split(':')[posPubkey])
                             head.uid = member && member.uid || ''
                           }
