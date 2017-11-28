@@ -654,16 +654,19 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     if (server.ws2pCluster) {
       const heads = yield server.ws2pCluster.getKnownHeads()
       for (const head of heads) {
+        const headInfos = head.message.split(':')
         let posPubkey = 3;
-        // Gestion des anciens formats
-        if (!head.message.match(/:2:/)) {
-          posPubkey = 3;
-          if (!head.message.match(/:1:/)) {
-            posPubkey = 2;
-          }
+        // Gestion des différents formats
+        if (head.message.match(/:2:/)) {
+          //HEAD v2
+          head.freeRooms = headInfos[9] + "/" + headInfos[10]
+        } else if (head.message.match(/:1:/)) {
+          // HEAD V1
+        } else {
+          // HEAD V0
+          posPubkey = 2;
         }
-        
-        const member = yield duniterServer.dal.getWrittenIdtyByPubkey(head.message.split(':')[posPubkey])
+        const member = yield duniterServer.dal.getWrittenIdtyByPubkey(headInfos[posPubkey])
         head.uid = member && member.uid || ''
       }
       return heads

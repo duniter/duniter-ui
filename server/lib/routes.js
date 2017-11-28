@@ -156,16 +156,18 @@ module.exports = {
                       co(function*() {
                         if (data.ws2p === 'heads') {
                           for (const head of data.added) {
+                            const headInfos = head.message.split(':')
                             let posPubkey = 3;
-                            // Gestion des anciens formats
-                            if (!head.message.match(/:2:/)) {
+                            // Gestion des différents formats
+                            if (head.message.match(/:2:/)) {
+                                head.freeRooms = headInfos[9] + "/" + headInfos[10]
+                            } else if (head.message.match(/:1:/)) {
                                 posPubkey = 3;
-                                if (!head.message.match(/:1:/)) {
-                                    posPubkey = 2;
-                                }
+                            } else {
+                                posPubkey = 2;
                             }
                             
-                            const member = yield server.dal.getWrittenIdtyByPubkey(head.message.split(':')[posPubkey])
+                            const member = yield server.dal.getWrittenIdtyByPubkey(headInfos[posPubkey])
                             head.uid = member && member.uid || ''
                           }
                           wssEvents.broadcast(JSON.stringify({

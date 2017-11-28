@@ -1127,23 +1127,17 @@ module.exports = function ($scope, Webmin, heads, info, conf, ws) {
         var software = sp[6];
         var softVersion = sp[7];
         var prefix = sp[8];
-        var freeRooms = ""
         var uid = value.uid;
-        // Gestion des différents formats
+        // Gestion de l'ancien format
         console.log(value.message);
-        if (value.message.match(/:2:/)) {
-          // HEAD v2
-          freeRooms= sp[9] + "/" + sp[10];
-        } else if (value.message.match(/:1:/)) {
-          // HEAD v1
-        } else {
-          // HEAD v0
+        if (!value.message.match(/:1:/)) {
           pubkey = sp[2];
           blockstamp = sp[3];
+          uid = value.uid;
         }
         var ws2pFullId = pubkey + "-" + ws2pId;
         headsMap[ws2pFullId] = {
-          api: api, blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix, freeRooms: freeRooms
+          api: api, blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix
         };
       }
     } catch (err) {
