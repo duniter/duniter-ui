@@ -41,6 +41,7 @@
                 th Pubkey
                 th WS2PID
                 th Member
+                th Step
                 th HEAD
                 th Software
                 th Prefix
@@ -51,7 +52,8 @@
                 td {{ head.pubkey.slice(0, 20) }}
                 td {{ head.ws2pId }}
                 td {{ head.uid }}
-                td {{ head.blockstamp.slice(0, 30) }}
+                td {{ head.step }}
+                td {{ head.blockstamp.slice(0, 25) }}
                 td {{ head.software }} {{ head.softVersion }}
                 td {{ head.prefix }}
                 td {{ head.freeRooms }}
