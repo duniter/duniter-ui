@@ -26,16 +26,26 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
       let softVersion = sp[7]
       let prefix = sp[8]
       let uid = value.uid
-      // Gestion de l'ancien format
+      let freeRooms = ""
+      let step = ""
+      // Gestion des anciens formats
       console.log(value.message)
-      if (!value.message.match(/:1:/)) {
+      if (value.messageV2 && value.messageV2.match(/:2:/)) {
+        // HEAD V2
+        freeRooms = value.freeRooms
+        step = value.step
+      }
+      if (value.message.match(/:1:/)) {
+        // HEAD v1
+      }
+      else {
+        // HEAD v0
         pubkey = sp[2]
         blockstamp = sp[3]
-        uid = value.uid
       }
       let ws2pFullId = pubkey+"-"+ws2pId
       headsMap[ws2pFullId] = {
-        api, blockstamp, uid, ws2pId, software, softVersion, prefix
+        api, blockstamp, uid, ws2pId, software, softVersion, prefix, freeRooms, step
       }
     }
     $scope.heads = Object.keys(headsMap).map(k => {
