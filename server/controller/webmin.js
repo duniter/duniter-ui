@@ -657,7 +657,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
         const headInfos = head.message.split(':')
         let posPubkey = 3;
         // Gestion des différents formats
-        if (head.messageV2.match(/:2:/)) {
+        if (head.messageV2 && head.messageV2.match(/:2:/)) {
           //HEAD v2
           const headV2Infos = head.messageV2.split(':')
           head.freeRooms = headV2Infos[9] + "/" + headV2Infos[10]
