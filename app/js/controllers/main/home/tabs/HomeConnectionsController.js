@@ -35,7 +35,7 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
         freeRooms = value.freeRooms
         step = value.step
       }
-      if (value.message.match(/:1:/)) {
+      else if (value.message.match(/:1:/)) {
         // HEAD v1
       }
       else {

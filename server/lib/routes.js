@@ -163,7 +163,7 @@ module.exports = {
                                 const headV2Infos = head.message.split(':')
                                 head.freeRooms = headV2Infos[9] + ":" + headV2Infos[10]
                             }
-                            if (head.message.match(/:1:/)) {
+                            else if (head.message.match(/:1:/)) {
                                 posPubkey = 3;
                             } else {
                                 posPubkey = 2;
