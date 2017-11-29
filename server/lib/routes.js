@@ -161,7 +161,7 @@ module.exports = {
                             // Gestion des différents formats
                             if (head.messageV2 && head.messageV2.match(/:2:/)) {
                                 const headV2Infos = head.message.split(':')
-                                head.freeRooms = headV2Infos[9] + "/" + headV2Infos[10]
+                                head.freeRooms = headV2Infos[9] + ":" + headV2Infos[10]
                             }
                             if (head.message.match(/:1:/)) {
                                 posPubkey = 3;
