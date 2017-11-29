@@ -155,12 +155,13 @@ module.exports = {
                     if (data.ws2p !== undefined) {
                       co(function*() {
                         if (data.ws2p === 'heads') {
-                          for (const head of data.added) {
+                          for (let head of data.added) {
                             const headInfos = head.message.split(':')
                             let posPubkey = 3;
                             // Gestion des différents formats
                             if (head.messageV2 && head.messageV2.match(/:2:/)) {
-                                head.freeRooms = headInfos[9] + "/" + headInfos[10]
+                                const headV2Infos = head.message.split(':')
+                                head.freeRooms = headV2Infos[9] + "/" + headV2Infos[10]
                             }
                             if (head.message.match(/:1:/)) {
                                 posPubkey = 3;
