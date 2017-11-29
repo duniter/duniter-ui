@@ -1137,7 +1137,7 @@ module.exports = function ($scope, Webmin, heads, info, conf, ws) {
         }
         var ws2pFullId = pubkey + "-" + ws2pId;
         headsMap[ws2pFullId] = {
-          api: api, blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix, freeRooms: value.freeRooms, step: value.step
+          api: api, blockstamp: blockstamp, uid: uid, ws2pId: ws2pId, software: software, softVersion: softVersion, prefix: prefix
         };
       }
     } catch (err) {
