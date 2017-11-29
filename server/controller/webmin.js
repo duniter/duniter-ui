@@ -657,10 +657,11 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
         const headInfos = head.message.split(':')
         let posPubkey = 3;
         // Gestion des différents formats
-        if (head.message.match(/:2:/)) {
+        if (head.messageV2.match(/:2:/)) {
           //HEAD v2
           head.freeRooms = headInfos[9] + "/" + headInfos[10]
-        } else if (head.message.match(/:1:/)) {
+        }
+        if (head.message.match(/:1:/)) {
           // HEAD V1
         } else {
           // HEAD V0
