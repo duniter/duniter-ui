@@ -1173,7 +1173,9 @@ module.exports = function ($scope, Webmin, heads, info, conf, ws) {
         ws2pId: headsMap[k].ws2pId,
         software: headsMap[k].software,
         softVersion: headsMap[k].softVersion,
-        prefix: headsMap[k].prefix
+        prefix: headsMap[k].prefix,
+        freeRooms: headsMap[k].freeRooms,
+        step: headsMap[k].step
       };
     });
   };

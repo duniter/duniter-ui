@@ -659,7 +659,8 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
         // Gestion des différents formats
         if (head.messageV2.match(/:2:/)) {
           //HEAD v2
-          head.freeRooms = headInfos[9] + "/" + headInfos[10]
+          const headV2Infos = head.messageV2.split(':')
+          head.freeRooms = headV2Infos[9] + "/" + headV2Infos[10]
         }
         if (head.message.match(/:1:/)) {
           // HEAD V1
