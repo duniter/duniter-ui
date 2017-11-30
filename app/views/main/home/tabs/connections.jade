@@ -26,7 +26,7 @@
                 td {{ peer.handle }}
               tr(ng-repeat="peer in info.connections.level2 track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
                 td {{ peer.pubkey.slice(0, 20) }}
-                td {{ peer.ws2pid }}
+                td -
                 td {{ peer.uid }}
                 td INCOMING
                 td {{ peer.handle }}
