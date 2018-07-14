@@ -31,3 +31,16 @@ publish:
   script:
     - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
     - npm publish
+
+
+
+force_publish:
+  stage: deploy
+  image: node:6.12-alpine
+  tags:
+    - nodejs
+  when: manuel
+  script:
+    - export NPM_TOKEN="$NPM_TOKEN"
+    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+    - npm publish
