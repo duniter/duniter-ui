@@ -52,6 +52,9 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, UIU
   $scope.startSync = () => {
     $scope.down_percent = 0;
     $scope.apply_percent = 0;
+    $scope.storage_percent = 0;
+    $scope.sbx_percent = 0;
+    $scope.peers_percent = 0;
     $scope.sync_failed = false;
     $scope.synchronizing = true;
     return co(function *() {
@@ -62,6 +65,9 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, UIU
         if (data.type == 'sync') {
           $scope.down_percent = 100;
           $scope.apply_percent = 100;
+          $scope.storage_percent = 100;
+          $scope.sbx_percent = 100;
+          $scope.peers_percent = 100;
           $scope.sync_failed = data.value;
           let errorMessage = data.msg && (data.msg.message || data.msg);
           errorMessage = translatedErr + ' « ' + errorMessage + ' »';
@@ -80,6 +86,18 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, UIU
           }
           if (data.type == 'applied' && $scope.apply_percent != data.value) {
             $scope.apply_percent = data.value;
+            changed = true;
+          }
+          if (data.type == 'saved' && $scope.storage_percent != data.value) {
+            $scope.storage_percent = data.value;
+            changed = true;
+          }
+          if (data.type == 'sandbox' && $scope.sbx_percent != data.value) {
+            $scope.sbx_percent = data.value;
+            changed = true;
+          }
+          if (data.type == 'peersSync' && $scope.peers_percent != data.value) {
+            $scope.peers_percent = data.value;
             changed = true;
           }
           if (changed) {

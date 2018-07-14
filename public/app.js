@@ -582,6 +582,9 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
   $scope.startSync = function () {
     $scope.down_percent = 0;
     $scope.apply_percent = 0;
+    $scope.storage_percent = 0;
+    $scope.sbx_percent = 0;
+    $scope.peers_percent = 0;
     $scope.sync_failed = false;
     $scope.synchronizing = true;
     return co( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
@@ -609,6 +612,9 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
                 if (data.type == 'sync') {
                   $scope.down_percent = 100;
                   $scope.apply_percent = 100;
+                  $scope.storage_percent = 100;
+                  $scope.sbx_percent = 100;
+                  $scope.peers_percent = 100;
                   $scope.sync_failed = data.value;
                   var errorMessage = data.msg && (data.msg.message || data.msg);
                   errorMessage = translatedErr + ' « ' + errorMessage + ' »';
@@ -628,6 +634,18 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
                   }
                   if (data.type == 'applied' && $scope.apply_percent != data.value) {
                     $scope.apply_percent = data.value;
+                    changed = true;
+                  }
+                  if (data.type == 'saved' && $scope.storage_percent != data.value) {
+                    $scope.storage_percent = data.value;
+                    changed = true;
+                  }
+                  if (data.type == 'sandbox' && $scope.sbx_percent != data.value) {
+                    $scope.sbx_percent = data.value;
+                    changed = true;
+                  }
+                  if (data.type == 'peersSync' && $scope.peers_percent != data.value) {
+                    $scope.peers_percent = data.value;
                     changed = true;
                   }
                   if (changed) {

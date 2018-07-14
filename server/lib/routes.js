@@ -115,6 +115,24 @@ module.exports = {
                             value: data.applied
                         }));
                     }
+                    if (data.saved !== undefined) {
+                        wssEvents.broadcast(JSON.stringify({
+                            type: 'saved',
+                            value: data.saved
+                        }));
+                    }
+                    if (data.sandbox !== undefined) {
+                        wssEvents.broadcast(JSON.stringify({
+                            type: 'sandbox',
+                            value: data.sandbox
+                        }));
+                    }
+                    if (data.peersSync !== undefined) {
+                        wssEvents.broadcast(JSON.stringify({
+                            type: 'peersSync',
+                            value: data.peersSync
+                        }));
+                    }
                     if (data.sync !== undefined) {
                         wssEvents.broadcast(JSON.stringify({
                             type: 'sync',

@@ -63,11 +63,26 @@ main(class="syncMain")
                 .progress
                   .determinate(style="width: {{ down_percent }}%")
               .col.s4.m3.left-align
-                span Downloading... ({{ down_percent }}%)
+                span Download... ({{ down_percent }}%)
+              .col.s8.m9
+                .progress
+                  .determinate(style="width: {{ storage_percent }}%")
+              .col.s4.m3.left-align
+                span Storage... ({{ storage_percent }}%)
               .col.s8.m9
                 .progress
                   .determinate(style="width: {{ apply_percent }}%")
               .col.s4.m3.left-align
-                span Applying... ({{ apply_percent }}%)
+                span Apply... ({{ apply_percent }}%)
+              .col.s8.m9
+                .progress
+                  .determinate(style="width: {{ sbx_percent }}%")
+              .col.s4.m3.left-align
+                span Sandbox... ({{ sbx_percent }}%)
+              .col.s8.m9
+                .progress
+                  .determinate(style="width: {{ peers_percent }}%")
+              .col.s4.m3.left-align
+                span Peers... ({{ peers_percent }}%)
 
             blockquote.card-panel.left-align(ng-show="sync_failed") {{ 'sync.failed' | translate }}
