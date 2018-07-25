@@ -22,14 +22,16 @@ push_to_github:
     only:
       - master
 
-publish:  
-  stage: deploy
-  image: node:6.12-alpine
+.nvm_env: &nvm_env
   tags:
-    - nodejs
-  only:
-    - tags
-    - triggers
+    - redshift
+  before_script:
+    - export NVM_DIR="$HOME/.nvm"
+    - . "$NVM_DIR/nvm.sh"
+
+publish:
+  <<: *nvm_env
+  stage: deploy
   script:
     - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
     - npm publish
