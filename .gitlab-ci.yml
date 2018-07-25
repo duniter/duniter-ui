@@ -19,8 +19,8 @@ push_to_github:
         - bash -c "cat packed-refs | grep -v 'refs/pull' > packed-refs-new; echo 'Removed pull refs.'"
         - mv packed-refs-new packed-refs
         - bash -c "git push --force --mirror github 2>&1 | grep -v duniter-gitlab; echo $?"
-  only:
-    - master
+    only:
+      - master
 
 publish:  
   stage: deploy
