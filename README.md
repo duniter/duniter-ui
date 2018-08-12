@@ -14,14 +14,14 @@ Issues can be submitted on github. However, all issues created on github will be
 
 # Duniter-ui
 
-Duniter graphical interface. This is a developement package which is embedded in [Duniter software](https://github.com/duniter/duniter) on build phase.
+Duniter graphical interface. This is a developement package which is embedded in [Duniter software](https://git.duniter.org/nodes/typescript/duniter) on build phase.
 
 ## Installation
 
 > Requires Nodejs v4+ and Duniter v0.20+
 
 ```bash
-git clone https://github.com/duniter/duniter.git
+git clone https://git.duniter.org/nodes/typescript/duniter.git
 cd duniter
 npm install
 ```
