@@ -7,8 +7,7 @@
     "b": "brunch build",
     "watch": "brunch watch",
     "start": "cd cesium && npm start",
-    "test": "mocha --growl tests/",
-    "prepublish": "cd node_modules/duniter && npm install"
+    "test": "mocha --growl tests/"
   },
   "repository": {
     "type": "git",
@@ -69,6 +68,6 @@
     "util-deprecate": "1.0.2"
   },
   "peerDependencies": {
-    "duniter": "1.6.x"
+    "duniter": "1.7.x"
   }
 }

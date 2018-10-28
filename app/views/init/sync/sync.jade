@@ -61,14 +61,14 @@ main(class="syncMain")
             .row(ng-show="synchronizing")
               .col.s8.m9
                 .progress
+                  .determinate(style="width: {{ storage_percent }}%")
+              .col.s4.m3.left-align
+                span Milestones... ({{ storage_percent }}%)
+              .col.s8.m9
+                .progress
                   .determinate(style="width: {{ down_percent }}%")
               .col.s4.m3.left-align
                 span Download... ({{ down_percent }}%)
-              .col.s8.m9
-                .progress
-                  .determinate(style="width: {{ storage_percent }}%")
-              .col.s4.m3.left-align
-                span Storage... ({{ storage_percent }}%)
               .col.s8.m9
                 .progress
                   .determinate(style="width: {{ apply_percent }}%")

@@ -112,7 +112,7 @@ module.exports = ($scope, $http, $state, $timeout, $stateParams, $translate, UIU
         host: sp[0],
         port: sp[1],
         to: $scope.to,
-        chunkLen: Math.max(500, Math.min(25, $scope.remote_current ? $scope.remote_current.number / 100 : 0))
+        chunkLen: Math.max(250, Math.min(25, $scope.remote_current ? $scope.remote_current.number / 100 : 0))
       });
     });
   };

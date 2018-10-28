@@ -134,7 +134,7 @@
   "home.pulling.state.unkown": "Next sync in few minutes",
   "home.pulling.state.synced": "Synced",
   "home.pulling.state.syncing": "Syncing...",
-  "home.pow.unit": "blocks made by this key",
+  "home.pow.unit": "blocks made by this key (last 2 months)",
   "home.pow.is_mirror": "This node is a mirror",
   "home.pow.is_waiting": "Waiting for better proof conditions",
   "home.tabs.overview": "Overview",

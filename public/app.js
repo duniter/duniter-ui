@@ -663,7 +663,7 @@ module.exports = function ($scope, $http, $state, $timeout, $stateParams, $trans
                 host: sp[0],
                 port: sp[1],
                 to: $scope.to,
-                chunkLen: Math.max(500, Math.min(25, $scope.remote_current ? $scope.remote_current.number / 100 : 0))
+                chunkLen: Math.max(250, Math.min(25, $scope.remote_current ? $scope.remote_current.number / 100 : 0))
               });
 
             case 16:
@@ -2609,7 +2609,7 @@ module.exports = {
   "home.pulling.state.unkown": "Next sync in few minutes",
   "home.pulling.state.synced": "Synced",
   "home.pulling.state.syncing": "Syncing...",
-  "home.pow.unit": "blocks made by this key",
+  "home.pow.unit": "blocks made by this key (last 2 months)",
   "home.pow.is_mirror": "This node is a mirror",
   "home.pow.is_waiting": "Waiting for better proof conditions",
   "home.tabs.overview": "Overview",
