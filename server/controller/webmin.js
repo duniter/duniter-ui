@@ -487,7 +487,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     yield server.BlockchainService.pushFIFO('uiResetData', () => co(function *() {
       yield that.stopAllServices();
       yield server.unplugFileSystem();
-      yield server.cleanDBData();
+      yield server.resetData();
       yield pluggedDALP;
       pluggedConfP = plugForConf();
       pluggedDALP = replugDAL();

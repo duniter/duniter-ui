@@ -15,7 +15,7 @@ process.on('uncaughtException', (err) => {
   }
 })
 
-const stack = require('duniter').statics.autoStack([{
+const stack = require('duniter').Statics.autoStack([{
   name: 'duniter-ui',
   required: require('./index')
 }]);
