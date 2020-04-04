@@ -105,7 +105,7 @@
         .card-content
           i.fa.fa-money.fa-5x
           .card-title
-            span {{ monetaryMass }}&nbsp;UD
+            span {{ Math.round(monetaryMass/1000) }}&nbsp;(k)UD
         .card-action
           p {{ 'home.current.mmass' | translate }}
 
