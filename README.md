@@ -4,9 +4,8 @@ Duniter graphical interface. This is a developement package which is embedded in
 
 ## Installation
 
-> Requires Nodejs v9
-> Requires NVM
-> Requires Yarn
+> Requires [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
+> Requires [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 
 ```bash
 nvm install 9
