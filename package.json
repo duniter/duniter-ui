@@ -6,7 +6,8 @@
     "build": "bower install && brunch build",
     "b": "brunch build",
     "watch": "brunch watch",
-    "start": "cd cesium && npm start",
+    "start": "brunch watch --server",
+    "cesium": "cd cesium && npm start",
     "webstart": "node run.js direct_webstart",
     "test": "mocha --growl tests/"
   },
@@ -55,7 +56,7 @@
     "brunch": "2.10.9",
     "core-util-is": "1.0.2",
     "css-brunch": "2.0.0",
-    "duniter": "1.7.x",
+    "duniter": "^1.7.21",
     "fb-flo-brunch": "1.7.22",
     "jade-brunch": "2.0.0",
     "javascript-brunch": "2.0.0",
