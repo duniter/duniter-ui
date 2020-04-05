@@ -8,13 +8,18 @@ Duniter graphical interface. This is a developement package which is embedded in
 > Requires [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 
 ```bash
+npm i -g nvm yarn
 nvm install 9
 nvm use 9
-yarn
+yarn --pure-lockfile
 ```
 
 ## Run
 
 ```bash
 node run.js direct_webstart
+```
+or
+```bash
+node_modules/brunch/bin/brunch watch --server
 ```
