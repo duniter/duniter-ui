@@ -18,16 +18,18 @@ Duniter graphical interface. This is a developement package which is embedded in
 
 ## Installation
 
-> Requires Nodejs v4+ and Duniter v0.20+
+> Requires Nodejs v9
+> Requires NVM
+> Requires Yarn
 
 ```bash
-git clone https://git.duniter.org/nodes/typescript/duniter.git
-cd duniter
-npm install
+nvm install 9
+nvm use 9
+yarn
 ```
 
 ## Run
 
 ```bash
-node_modules/brunch/bin/brunch watch --server
+node run.js direct_webstart
 ```

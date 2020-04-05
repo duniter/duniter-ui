@@ -2115,7 +2115,7 @@ domain-browser@~1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
 
-duniter@1.7.21:
+duniter@1.7.x:
   version "1.7.21"
   resolved "https://registry.yarnpkg.com/duniter/-/duniter-1.7.21.tgz#492f1a9ab6dccf22632d5cd7cd11af9a30cccfe4"
   dependencies:
