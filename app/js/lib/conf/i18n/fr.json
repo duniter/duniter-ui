@@ -135,7 +135,7 @@
   "home.pulling.state.unkown": "Prochaine syncro dans quelques minutes",
   "home.pulling.state.synced": "Syncronisé",
   "home.pulling.state.syncing": "En syncronisation...",
-  "home.pow.unit": "blocks made by this clé (last 2 months)",
+  "home.pow.unit": "blocks produits par cette clé (2 derniers mois)",
   "home.pow.is_mirror": "Ce noeud est un miroir",
   "home.pow.is_waiting": "Waiting for better proof conditions",
   "home.tabs.overview": "Tableau de bord",
