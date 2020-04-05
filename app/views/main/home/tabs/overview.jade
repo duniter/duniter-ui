@@ -68,7 +68,7 @@
         .card-content
           i.fa.fa-chain.fa-5x
           .card-title
-            span {{ current_number }}
+            span {{ current_number | number:0}}
         .card-action
           p {{ 'home.current.number' | translate }}
 
@@ -77,7 +77,7 @@
         .card-content
           i.fa.fa-users.fa-5x
           .card-title
-            span {{ current_membersCount }}
+            span {{ current_membersCount | number:0 }}
         .card-action
           p {{ 'home.current.membersCount' | translate }}
 
@@ -96,7 +96,7 @@
         .card-content
           i.fa.fa-graduation-cap.fa-5x
           .card-title
-            span {{ current_powMin }}
+            span {{ current_powMin | number:0}}
         .card-action
           p {{ 'home.current.powMin' | translate }}
 
@@ -105,7 +105,8 @@
         .card-content
           i.fa.fa-money.fa-5x
           .card-title
-            span {{ monetaryMass }}&nbsp;UD
+            span {{ (monetaryMass / 1000 ) | number:0:'fr-FR' }}
+            span(title="{{'home.current.mmass_kud' | translate }}") &nbsp;kUD
         .card-action
           p {{ 'home.current.mmass' | translate }}
 
