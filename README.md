@@ -8,13 +8,22 @@ Duniter graphical interface. This is a developement package which is embedded in
 > Requires [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 
 ```bash
+npm i -g nvm yarn bower
+bower install
 nvm install 9
 nvm use 9
-yarn
+yarn --pure-lockfile
 ```
 
 ## Run
 
 ```bash
-node run.js direct_webstart
+firefox http://localhost:9220 &
+yarn run webstart
+```
+
+## Dev server with hot reload on file save
+```bash
+firefox http://localhost:9220 &
+yarn run start
 ```
