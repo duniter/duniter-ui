@@ -36,6 +36,6 @@
       li.collection-item.install_package(ng-show="hasAccess")
           .input-field.col.s6
             i.material-icons.prefix language
-            input(type="text" ng-model="module_to_install" placeholder="Package: module@version, git+https://github.com/user/package.git, ...")
+            input(type="text" ng-model="module_to_install" placeholder="Package: module@version, git+https://git.duniter.org/user/package.git, ...")
           .switch.secondary-content
             button.btn.waves-effect(ng-click="installModule()" ng-disabled="installing") {{ 'settings.modules.install' | translate }}

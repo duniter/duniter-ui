@@ -77,7 +77,7 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, uiModules,
   };
 
   function checkUpdates() {
-    const LATEST_RELEASE_URL = 'https://api.github.com/repos/duniter/duniter/releases/latest';
+    const LATEST_RELEASE_URL = 'https://git.duniter.org/nodes/typescript/duniter/releases/latest';
     co(function*() {
       try {
         const latest = yield $http.get(LATEST_RELEASE_URL);
@@ -101,7 +101,7 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, uiModules,
             $scope.notifications.help.push({
               icon: 'play_for_work',
               message: 'help.new_version_available',
-              onclick: () => openExternal('https://github.com/duniter/duniter/releases/latest')
+              onclick: () => openExternal('https://git.duniter.org/nodes/typescript/duniter/releases/latest')
             });
           }
         }

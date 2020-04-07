@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:duniter/duniter-ui.git"
+    "url": "git@git.duniter.org:duniter/duniter-ui.git"
   },
   "keywords": [
     "duniter",
@@ -26,7 +26,7 @@
   "license": "AGPL-3.0",
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "https://github.com/duniter/duniter-ui/issues"
+    "url": "https://git.duniter.org/nodes/typescript/duniter/duniter-ui/issues"
   },
   "dependencies": {
     "adm-zip": "0.4.7",
