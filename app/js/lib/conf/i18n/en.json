@@ -129,6 +129,7 @@
   "home.current.medianTime": "Median time",
   "home.current.powMin": "Common difficulty level",
   "home.current.mmass": "Monetary mass",
+  "home.current.mmass_kud": "Monetary mass in thousands universal dividend (kilo UD)",
   "home.pulling.network": "Network",
   "home.pulling.peer": "Peer",
   "home.pulling.state.unkown": "Next sync in few minutes",
