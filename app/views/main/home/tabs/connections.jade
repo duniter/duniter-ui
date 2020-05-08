@@ -48,7 +48,7 @@
                 th Prefix
                 th Free Rooms
             tbody
-              tr(ng-repeat="head in heads | orderBy:'-blockstamp' track by $index ")
+              tr(ng-repeat="head in heads | orderBy:'-blockstamp' track by $index " ng-class="{ privileged: head.privileged, prefered: head.prefered }")
                 td {{ head.api }}
                 td {{ head.pubkey.slice(0, 20) }}
                 td {{ head.ws2pId }}

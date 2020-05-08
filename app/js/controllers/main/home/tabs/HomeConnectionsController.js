@@ -49,6 +49,7 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
       }
     }
     $scope.heads = Object.keys(headsMap).map(k => {
+      const pubkey = k.split('-')[0]
       return {
         pubkey: k,
         api: headsMap[k].api,
@@ -59,7 +60,9 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
         softVersion: headsMap[k].softVersion,
         prefix: headsMap[k].prefix,
         freeRooms: headsMap[k].freeRooms,
-        step: headsMap[k].step
+        step: headsMap[k].step,
+        prefered: (conf.preferedNodes || []).indexOf(pubkey) !== -1,
+        privileged: (conf.privilegedNodes || []).indexOf(pubkey) !== -1
       }
     })
   }
