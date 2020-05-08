@@ -3,6 +3,7 @@
   "version": "1.7.5",
   "main": "index.js",
   "scripts": {
+    "prepublish": "brunch build",
     "build": "bower install && brunch build",
     "b": "brunch build",
     "watch": "brunch watch",
