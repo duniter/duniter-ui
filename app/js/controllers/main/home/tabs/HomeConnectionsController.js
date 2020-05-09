@@ -1,7 +1,9 @@
 "use strict";
 
 module.exports = ($scope, Webmin, heads, info, conf, ws) => {
-  
+
+  const SPECIFIC_SUFFIX = '--------'
+  const UNKNOWN_VALUE = '-'
   $scope.discriminateNodes = (info) => {
     info.connections.level1.concat(info.connections.level2).forEach(c => {
       c.prefered = (conf.preferedNodes || []).indexOf(c.pubkey) !== -1
@@ -14,6 +16,34 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
   $scope.heads = []
 
   const headsMap = {}
+
+  $scope.removeBlanks = (confPrefPriv, headsMap) => {
+    for (const pp of confPrefPriv) {
+      const ws2pFullId = pp + '-' + SPECIFIC_SUFFIX
+      if (headsMap[ws2pFullId]) {
+        delete headsMap[ws2pFullId]
+      }
+    }
+  }
+
+  $scope.addBlanks = (confPrefPriv, headsMap) => {
+    const pubkeys = Object.keys(headsMap).map(k => k.split('-')[0])
+    const unknown = confPrefPriv.filter(pub => !pubkeys.includes(pub))
+    for (const pp of unknown) {
+      const ws2pFullId = pp + '-' + SPECIFIC_SUFFIX
+      headsMap[ws2pFullId] = {
+        api: UNKNOWN_VALUE,
+        blockstamp: UNKNOWN_VALUE,
+        uid: UNKNOWN_VALUE,
+        ws2pId: UNKNOWN_VALUE,
+        software: UNKNOWN_VALUE,
+        softVersion: UNKNOWN_VALUE,
+        prefix: UNKNOWN_VALUE,
+        freeRooms: UNKNOWN_VALUE,
+        step: UNKNOWN_VALUE
+      }
+    }
+  }
 
   $scope.headsIntoMap = (heads) => {
     for (const value of heads) {
@@ -48,6 +78,11 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
         api, blockstamp, uid, ws2pId, software, softVersion, prefix, freeRooms, step
       }
     }
+
+    const confPreferedPrivileged = conf.preferedNodes.concat(conf.privilegedNodes)
+    $scope.removeBlanks(confPreferedPrivileged, headsMap)
+    $scope.addBlanks(confPreferedPrivileged, headsMap)
+
     $scope.heads = Object.keys(headsMap).map(k => {
       const pubkey = k.split('-')[0]
       return {
