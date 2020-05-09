@@ -759,7 +759,8 @@ function getLAN(family) {
 async function getLastBlockWithDividend(server) {
   // server.dal.blockDAL.lastBlockWithDividend() is deprectated (too expensive)
   let stat = await server.dal.getStat('ud');
-  return server.dal.getBlock(stat.blocks.pop())
+  const blockNumbers = stat.blocks || stat // stat.blocks = Duniter v1.7.x, stat = Duniter 1.8.x
+  return server.dal.getBlock(blockNumbers.pop())
 }
 
 util.inherits(WebAdmin, stream.Duplex);
