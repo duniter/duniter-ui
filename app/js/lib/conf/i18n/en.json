@@ -148,6 +148,7 @@
   "home.tabs.connections.legend.title": "Legend",
   "home.tabs.connections.legend.prefered": "Prefered: nodes that you prefer for outcoming connections",
   "home.tabs.connections.legend.privileged": "Privileged: nodes that you privilege the incoming connections (= invitation)",
+  "home.tabs.connections.legend.prefered.and.privileged": "Both prefered and privileged",
   "home.tabs.logs": "Logs",
   "home.tabs.logs.follow.logs": "Follow logs",
   "home.tabs.logs.pause.logs": "Pause logs",
