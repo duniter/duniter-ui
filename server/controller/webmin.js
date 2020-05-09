@@ -90,7 +90,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     const host = peer.getURL();
     const current = yield server.dal.getCurrentBlockOrNull();
     const rootBlock = yield server.dal.getBlock(0);
-    const lastUDBlock = yield server.dal.blockDAL.lastBlockWithDividend();
+    const lastUDBlock = yield getLastBlockWithDividend(server);
     const parameters = yield server.dal.getParameters();
     return {
       "version": server.version,
@@ -754,6 +754,13 @@ function getLAN(family) {
     }
   }
   return res;
+}
+
+async function getLastBlockWithDividend(server) {
+  // server.dal.blockDAL.lastBlockWithDividend() is deprectated (too expensive)
+  let stat = await server.dal.getStat('ud');
+  let { blocks } = toJson.stat(stat)
+  return server.dal.getBlock(blocks.pop())
 }
 
 util.inherits(WebAdmin, stream.Duplex);
