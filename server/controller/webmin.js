@@ -11,6 +11,7 @@ const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
 const rawer = {}
+const toJson = require("duniter/app/modules/bma/lib/tojson");
 
 module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) => {
   return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins, stack);
@@ -111,7 +112,7 @@ function WebAdmin (duniterServer, startServices, stopServices, listDuniterUIPlug
     yield pluggedDALP;
     return {
       "total": yield server.getCountOfSelfMadePoW(),
-      "mirror": !(yield server.isServerMember()),
+      "mirror": !(yield isServerMember(server)),
       "waiting": true
     };
   });
@@ -764,3 +765,8 @@ async function getLastBlockWithDividend(server) {
 }
 
 util.inherits(WebAdmin, stream.Duplex);
+
+
+async function isServerMember(server) {
+  return server.dal.isMember(server.conf.pair.pub)
+}
