@@ -11,7 +11,6 @@ const _ = require('underscore');
 const Q = require('q');
 const co = require('co');
 const rawer = {}
-const toJson = require("duniter/app/modules/bma/lib/tojson");
 
 module.exports = (duniterServer, startServices, stopServices, listDuniterUIPlugins, stack) => {
   return new WebAdmin(duniterServer, startServices, stopServices, listDuniterUIPlugins, stack);
@@ -760,8 +759,7 @@ function getLAN(family) {
 async function getLastBlockWithDividend(server) {
   // server.dal.blockDAL.lastBlockWithDividend() is deprectated (too expensive)
   let stat = await server.dal.getStat('ud');
-  let { blocks } = toJson.stat(stat)
-  return server.dal.getBlock(blocks.pop())
+  return server.dal.getBlock(stat.blocks.pop())
 }
 
 util.inherits(WebAdmin, stream.Duplex);
