@@ -41,7 +41,7 @@ module.exports = ($scope, $state, $http, $timeout, $interval, Webmin, uiModules,
       openWindow(window.location.origin + '/#/about', {
         position: 'center',
         height: 380,
-        width: 510
+        width: 520
       }, function(subwin) {
         subwin.window.gui = window.gui;
         subwin.on('closed', () => {
