@@ -79,7 +79,7 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
       }
     }
 
-    const confPreferedPrivileged = conf.preferedNodes.concat(conf.privilegedNodes)
+    const confPreferedPrivileged = (conf.preferedNodes || []).concat(conf.privilegedNodes || [])
     $scope.removeBlanks(confPreferedPrivileged, headsMap)
     $scope.addBlanks(confPreferedPrivileged, headsMap)
 
