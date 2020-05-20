@@ -4,8 +4,23 @@ module.exports = ($scope, Webmin, heads, info, conf, ws) => {
 
   const SPECIFIC_SUFFIX = '--------'
   const UNKNOWN_VALUE = '-'
+  $scope.computeDisconnectedPreferedPrivileged = (info) => {
+    const connected = info.connections.level1
+        .concat(info.connections.level2)
+        .map(c => c.pubkey)
+    const disconnected = [];
+    (conf.preferedNodes || []).concat(conf.privilegedNodes || []).forEach(pubkey => {
+      if (connected.indexOf(pubkey) === -1 && disconnected.indexOf(pubkey) === -1) {
+        disconnected.push(pubkey)
+      }
+    })
+    return disconnected.map(pubkey => ({ pubkey }))
+  }
   $scope.discriminateNodes = (info) => {
-    info.connections.level1.concat(info.connections.level2).forEach(c => {
+    info.connections.disconnected = $scope.computeDisconnectedPreferedPrivileged(info)
+    info.connections.level1
+        .concat(info.connections.level2)
+        .concat(info.connections.disconnected).forEach(c => {
       c.prefered = (conf.preferedNodes || []).indexOf(c.pubkey) !== -1
       c.privileged = (conf.privilegedNodes || []).indexOf(c.pubkey) !== -1
     })

@@ -30,6 +30,12 @@
                 td {{ peer.uid }}
                 td INCOMING
                 td {{ peer.handle }}
+              tr(ng-repeat="peer in info.connections.disconnected track by $index" ng-class="{ privileged: peer.privileged, prefered: peer.prefered }")
+                td {{ peer.pubkey.slice(0, 20) }}
+                td -
+                td -
+                td DISCONNECTED
+                td -
           .legend
             h5(translate="home.tabs.connections.legend.title")
             span.prefered(translate="home.tabs.connections.legend.prefered")
