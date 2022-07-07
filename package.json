@@ -38,7 +38,7 @@
     "express-fileupload": "0.0.5",
     "fs-extra": "2.1.2",
     "materialize-css": "0.98.1",
-    "moment": "2.18.1",
+    "moment": "2.29.4",
     "node-pre-gyp": "0.6.34",
     "q": "1.5.0",
     "request": "2.81.0",
