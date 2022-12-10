@@ -34,7 +34,7 @@
     "co": "4.6.0",
     "cors": "2.8.2",
     "event-stream": "3.3.4",
-    "express": "4.15.2",
+    "express": "4.17.3",
     "express-fileupload": "0.0.5",
     "fs-extra": "2.1.2",
     "materialize-css": "0.98.1",
